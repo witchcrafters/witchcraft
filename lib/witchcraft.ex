@@ -1,0 +1,2 @@
+defmodule Witchcraft do
+end
