@@ -1,6 +1,5 @@
 # Witchcraft
-
-**TODO: Add description**
+A monoid, functor, applicative, and monad library
 
 ## Installation
 
