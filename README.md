@@ -1,5 +1,5 @@
 # Witchcraft
-A monoid, functor, applicative, and monad library
+A monoid, functor, applicative, monad, and arrow library
 
 ## Installation
 
