@@ -1,4 +1,6 @@
 # Witchcraft
+![](./witchcraft-logo.png)
+
 A monoid, functor, applicative, monad, and arrow library
 
 ## Installation
