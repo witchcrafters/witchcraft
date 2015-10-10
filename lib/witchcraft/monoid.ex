@@ -11,18 +11,20 @@ defprotocol Witchcraft.Monoid do
 
   ## Identity element
   - Unique element (`id`, sometimes called the 'zero' of the set)
-  - Behaves as an identity with op
+  - Behaves as an identity with `op`
 
   # Examples
   ## Theory
 
   ```
+  # Pseudocode
   id = 0
   op = &(&1 + &2) # Integer addition
   op(34, id) == 34
   ```
 
   ```
+  # Pseudocode
   id = 1
   op = &(&1 * &2) # Integer multiplication
   op(42, id) == 42
