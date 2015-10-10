@@ -3,6 +3,8 @@
 
 A monoid, functor, applicative, monad, and arrow library
 
+*This is currently very Haskell-flavoured*
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:

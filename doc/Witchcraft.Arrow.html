@@ -90,7 +90,37 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#t:arrow/3">arrow(a, b, c)</a>
+    <a href="#t:a/0">a()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:a_to_b/0">a_to_b()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:arrow/3">arrow(a, a_to_b, b_to_c)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:b/0">b()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:b_to_c/0">b_to_c()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:c/0">c()</a>
   </div>
   
 </div>
@@ -153,12 +183,32 @@
             Types
           </h1>
           <div class="types-list">
-            <div id="t:arrow/3" class="type-detail">
-  <pre><code class="elixir"><a href="#t:arrow/3">arrow(a, b, c)</a> :: {a, b, c}</code></pre>
+            <div id="t:a/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:a/0">a</a> :: any</code></pre>
+  
+</div>
+<div id="t:a_to_b/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:a_to_b/0">a_to_b</a> :: (<a href="#t:a/0">a</a> -> <a href="#t:b/0">b</a>)</code></pre>
+  
+</div>
+<div id="t:arrow/3" class="type-detail">
+  <pre><code class="elixir"><a href="#t:arrow/3">arrow(a, a_to_b, b_to_c)</a> :: {a, a_to_b, b_to_c}</code></pre>
+  
+</div>
+<div id="t:b/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:b/0">b</a> :: any</code></pre>
+  
+</div>
+<div id="t:b_to_c/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:b_to_c/0">b_to_c</a> :: (<a href="#t:b/0">b</a> -> <a href="#t:c/0">c</a>)</code></pre>
+  
+</div>
+<div id="t:c/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:c/0">c</a> :: any</code></pre>
   
 </div>
 <div id="t:split/2" class="type-detail">
-  <pre><code class="elixir"><a href="#t:split/2">split(b, c)</a> :: {b, c}</code></pre>
+  <pre><code class="elixir"><a href="#t:split/2">split(b, c)</a> :: {(<a href="#t:a/0">a</a> -> b), (b -> c)}</code></pre>
   
 </div>
 <div id="t:t/0" class="type-detail">
@@ -185,7 +235,7 @@
     </a>
     <span class="signature">arr(b_to_c)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/arrow.ex#L6" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/arrow.ex#L13" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -195,7 +245,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">arr((any -> any)) :: <a href="#t:arrow/3">arrow(any, any, any)</a></code></pre>
+          <pre><code class="elixir">arr((<a href="#t:b/0">b</a> -> <a href="#t:c/0">c</a>)) :: <a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:a_to_b/0&quot;&gt;a_to_b&lt;/a&gt;, &lt;a href=&quot;#t:b_to_c/0&quot;&gt;b_to_c&lt;/a&gt;)</a></code></pre>
         
       </div>
     </div>
@@ -211,7 +261,7 @@
     </a>
     <span class="signature">first(arrow)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/arrow.ex#L9" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/arrow.ex#L16" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -221,7 +271,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">first(<a href="#t:arrow/3">arrow(any, any, any)</a>) :: <a href="#t:arrow/3">arrow(any, any, any)</a></code></pre>
+          <pre><code class="elixir">first(<a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:b/0&quot;&gt;b&lt;/a&gt;, &lt;a href=&quot;#t:c/0&quot;&gt;c&lt;/a&gt;)</a>) :: <a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:b/0&quot;&gt;b&lt;/a&gt;, &lt;a href=&quot;#t:c/0&quot;&gt;c&lt;/a&gt;)</a></code></pre>
         
       </div>
     </div>
@@ -237,7 +287,7 @@
     </a>
     <span class="signature">second(arrow)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/arrow.ex#L12" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/arrow.ex#L19" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -247,7 +297,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">second(<a href="#t:arrow/3">arrow(any, any, any)</a>) :: <a href="#t:arrow/3">arrow(any, any, any)</a></code></pre>
+          <pre><code class="elixir">second(<a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:b/0&quot;&gt;b&lt;/a&gt;, &lt;a href=&quot;#t:c/0&quot;&gt;c&lt;/a&gt;)</a>) :: <a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:b/0&quot;&gt;b&lt;/a&gt;, &lt;a href=&quot;#t:c/0&quot;&gt;c&lt;/a&gt;)</a></code></pre>
         
       </div>
     </div>
