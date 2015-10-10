@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Witchcraft.Applicative – Witchcraft v0.0.1</title>
+    <title>Witchcraft.Category.Extra – Witchcraft v0.0.1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
-  <body data-type="protocols">
+  <body data-type="modules">
 
     <div class="main">
 <button class="sidebar-toggle">
@@ -62,12 +62,10 @@
 
 
       <h1>
-        Witchcraft.Applicative
-        
-          <small>protocol</small>
+        Witchcraft.Category.Extra
         
         
-          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/category/extra.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -84,25 +82,6 @@
             Summary
           </h1>
           
-  <div class="summary-types summary">
-    <h2>
-      <a href="#types">Types</a>
-    </h2>
-    <div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:pure/1">pure(a)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:t/0">t()</a>
-  </div>
-  
-</div>
-
-  </div>
-
 
           
   <div class="summary-functions summary">
@@ -111,13 +90,13 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#apply/2">apply(collection, function)</a>
+    <a href="#compose_left_to_right/2">compose_left_to_right(a_to_b, b_to_c)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#pure/1">pure(member)</a>
+    <a href="#compose_right_to_left/2">compose_right_to_left(b_to_c, a_to_b)</a>
   </div>
   
 </div>
@@ -132,26 +111,6 @@
         </section>
       
 
-      
-        <section id="types" class="types details-list">
-          <h1 class="section-heading">
-            <a class="hover-link" href="#types">
-              <i class="icon-link"></i>
-            </a>
-            Types
-          </h1>
-          <div class="types-list">
-            <div id="t:pure/1" class="type-detail">
-  <pre><code class="elixir"><a href="#t:pure/1">pure(a)</a> :: {a}</code></pre>
-  
-</div>
-<div id="t:t/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:t/0">t</a> :: term</code></pre>
-  
-</div>
-
-          </div>
-        </section>
       
 
       
@@ -162,53 +121,35 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="apply/2">
+          <div class="detail" id="compose_left_to_right/2">
   <div class="detail-header">
-    <a href="#apply/2" class="detail-link" title="Link to this function">
+    <a href="#compose_left_to_right/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">apply(collection, function)</span>
+    <span class="signature">compose_left_to_right(a_to_b, b_to_c)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative.ex#L15" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/category/extra.ex#L4" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">apply((any -> any), any) :: any</code></pre>
-        
-      </div>
-    </div>
   
   <section class="docstring">
     
   </section>
 </div>
-<div class="detail" id="pure/1">
+<div class="detail" id="compose_right_to_left/2">
   <div class="detail-header">
-    <a href="#pure/1" class="detail-link" title="Link to this function">
+    <a href="#compose_right_to_left/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">pure(member)</span>
+    <span class="signature">compose_right_to_left(b_to_c, a_to_b)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative.ex#L11" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/category/extra.ex#L8" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir"><a href="#t:pure/1">pure(any)</a> :: <a href="#t:pure/1">pure(any)</a></code></pre>
-        
-      </div>
-    </div>
   
   <section class="docstring">
     

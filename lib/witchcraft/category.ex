@@ -1,4 +1,4 @@
 defprotocol Witchcraft.Category do
-  def id
-  def compose
+  def id(a)
+  def compose(a, b)
 end

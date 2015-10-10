@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Witchcraft.Applicative – Witchcraft v0.0.1</title>
+    <title>Witchcraft.Category – Witchcraft v0.0.1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -62,12 +62,12 @@
 
 
       <h1>
-        Witchcraft.Applicative
+        Witchcraft.Category
         
           <small>protocol</small>
         
         
-          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/category.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -90,12 +90,6 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#t:pure/1">pure(a)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
     <a href="#t:t/0">t()</a>
   </div>
   
@@ -111,13 +105,13 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#apply/2">apply(collection, function)</a>
+    <a href="#compose/2">compose(a, b)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#pure/1">pure(member)</a>
+    <a href="#id/1">id(a)</a>
   </div>
   
 </div>
@@ -141,11 +135,7 @@
             Types
           </h1>
           <div class="types-list">
-            <div id="t:pure/1" class="type-detail">
-  <pre><code class="elixir"><a href="#t:pure/1">pure(a)</a> :: {a}</code></pre>
-  
-</div>
-<div id="t:t/0" class="type-detail">
+            <div id="t:t/0" class="type-detail">
   <pre><code class="elixir"><a href="#t:t/0">t</a> :: term</code></pre>
   
 </div>
@@ -162,53 +152,35 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="apply/2">
+          <div class="detail" id="compose/2">
   <div class="detail-header">
-    <a href="#apply/2" class="detail-link" title="Link to this function">
+    <a href="#compose/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">apply(collection, function)</span>
+    <span class="signature">compose(a, b)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative.ex#L15" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/category.ex#L3" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">apply((any -> any), any) :: any</code></pre>
-        
-      </div>
-    </div>
   
   <section class="docstring">
     
   </section>
 </div>
-<div class="detail" id="pure/1">
+<div class="detail" id="id/1">
   <div class="detail-header">
-    <a href="#pure/1" class="detail-link" title="Link to this function">
+    <a href="#id/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">pure(member)</span>
+    <span class="signature">id(a)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative.ex#L11" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/category.ex#L2" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir"><a href="#t:pure/1">pure(any)</a> :: <a href="#t:pure/1">pure(any)</a></code></pre>
-        
-      </div>
-    </div>
   
   <section class="docstring">
     

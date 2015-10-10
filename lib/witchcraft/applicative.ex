@@ -2,10 +2,12 @@ defprotocol Witchcraft.Applicative do
   # @doc """
   # """
 
+  @type pure(a) :: {a}
+
   @fallback_to_any true
 
   # Lift
-  @spec pure(any) :: any
+  @spec pure(any) :: pure(any)
   def pure(member)
 
   # Sequential application
