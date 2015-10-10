@@ -4,12 +4,12 @@ defprotocol Witchcraft.Monoid do
   returns another member of the set.
 
   # Properties
-  1. Associativity
-  - Given a binary joining operation `.`, and
-  - All `a`, `b`, and `c` of the set:
-  - `a . (b . c) == (a . b) . c`
+  ## Associativity
+  1. Given a binary joining operation `•`,
+  2. and all `a`, `b`, and `c` of the set,
+  3. then: `a • (b • c) == (a • b) • c`
 
-  2. Identity element
+  ## Identity element
   - Unique element (`id`, sometimes called the 'zero' of the set)
   - Behaves as an identity with op
 
