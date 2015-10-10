@@ -12,21 +12,21 @@ defmodule Witchcraft.Applicative.Extra do
   end
 
   @spec liftA3(any, any, any, ({any, any, any} -> any)) :: any
-  def lift3(wrapped1, wrapped2, wrapped3, trinary_func) do
+  def liftA3(wrapped1, wrapped2, wrapped3, trinary_func) do
     A.apply(wrapped3,
             A.apply(wrapped2,
                     F.fmap(wrapped1, trinary_func)))
   end
 
   # Sequential application, discard first value
-  # @spec apply_discard_first(any, any) :: any
+  @spec apply_discard_first(any, any) :: any
   def apply_discard_first(wrapped1, wrapped2) do
     liftA2(wrapped1, wrapped2, &(U.const(U.id, &1)))
   end
 
   # Sequential application, discard second value
-  # @spec apply_discard_second(any, any) :: any
+  @spec apply_discard_second(any, any) :: any
   def apply_discard_second(wrapped1, wrapped2) do
-    liftA2(wrapped1, wrapped2, const)
+    liftA2(wrapped1, wrapped2, U.const)
   end
 end
