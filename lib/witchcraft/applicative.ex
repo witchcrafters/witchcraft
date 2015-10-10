@@ -2,11 +2,15 @@ defprotocol Witchcraft.Applicative do
   # @doc """
   # """
 
-  # use Behaviour
+  @fallback_to_any true
 
-  # def pure :: a -> [a]
-  # def applic :: [a] -> (a -> [b]) -> [b]
+  # Lift
+  @spec pure(any) :: any
+  def pure(member)
 
+  # Sequential application
+  @spec apply((any -> any), any) :: any
+  def apply(collection, function)
 
   # def identity(id, elem, applic) do
   #   applic(pure(id), elem) == elem
