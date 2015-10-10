@@ -76,25 +76,24 @@
       
         <section id="moduledoc" class="docstring">
           <p>Functors provide a way to apply a function to every element in a collection
-(lists, trees, etc). For example, the fmap/2 for lists is Enum.map/2.</p>
+(lists, trees, etc).</p>
 <p>All elements of the collection being mapped over need to be consumable by
 the mapping function. The simplest way to handle this is to have only one
 type in the collection.</p>
-<p>Functor Properties:</p>
-<ol>
-<li><p>Identity
-Mapping the identity function over the object returns the same object
-ex. fmap([1,2,3], &amp;(&amp;1)) == [1,2,3]</p>
-</li>
-<li>Distributivity
-fmap coll (f |&gt; g) == coll |&gt; fmap f |&gt; fmap g
-</li>
-</ol>
-<p>Notes:</p>
+<h1>Properties</h1>
+<h2>Identity</h2>
+<p>Mapping the identity function over the object returns the same object
+ex. <code class="inline">fmap([1,2,3], &amp;(&amp;1)) == [1,2,3]</code></p>
+<h2>Distributivity</h2>
+<p><code class="inline">fmap(coll, (f |&gt; g)) == coll |&gt; fmap f |&gt; fmap g</code></p>
+<h1>Notes:</h1>
 <ul>
 <li>The argument order convention is reversed from most other lanaguges
 </li>
-<li>All implimentations of fmap should be expressable in terms of Enum.reduce/2
+<li>Most (if not all) implimentations of <code class="inline">fmap</code> should be
+  expressable in terms of <a href="http://elixir-lang.org/docs/v1.0/elixir/Enum.html#reduce/3"><code class="inline">Enum.reduce/3</code></a>
+</li>
+<li>Falls back to <a href="http://elixir-lang.org/docs/v1.0/elixir/Enum.html#map/2"><code class="inline">Enum.map/2</code></a>
 </li>
 </ul>
 
@@ -135,7 +134,7 @@ fmap coll (f |&gt; g) == coll |&gt; fmap f |&gt; fmap g
   </div>
   
     <div class="summary-synopsis"><p>Apply a function to every element in a collection, tree, or other structure.
-The collection will retain it’s structure (list, tree, and so on)</p>
+The collection will retain its structure (list, tree, and so on)</p>
 </div>
   
 </div>
@@ -183,7 +182,7 @@ The collection will retain it’s structure (list, tree, and so on)</p>
     </a>
     <span class="signature">fmap(collection, function)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor.ex#L29" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor.ex#L32" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -200,7 +199,7 @@ The collection will retain it’s structure (list, tree, and so on)</p>
   
   <section class="docstring">
     <p>Apply a function to every element in a collection, tree, or other structure.
-The collection will retain it’s structure (list, tree, and so on).</p>
+The collection will retain its structure (list, tree, and so on).</p>
 
   </section>
 </div>

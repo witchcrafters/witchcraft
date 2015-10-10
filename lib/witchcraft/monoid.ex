@@ -1,5 +1,5 @@
 defprotocol Witchcraft.Monoid do
-  @moduledoc """
+  @moduledoc ~S"""
   Monoids are a set, plus a binary combining operation (`op`) that
   returns another member of the set.
 
@@ -46,7 +46,7 @@ defprotocol Witchcraft.Monoid do
 
   # Notes
   You can of course use abuse this protocol to define a fake "monoid" that behaves differently.
-  For the protocol to operate as intended, you need to respect the above laws.
+  For the protocol to operate as intended, you need to respect the above properties.
   """
 
   @doc """
