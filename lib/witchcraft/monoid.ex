@@ -1,14 +1,14 @@
 defprotocol Witchcraft.Monoid do
   @moduledoc """
-  Monoids are a set, plus a binary combining operation ("op") that
+  Monoids are a set, plus a binary combining operation (`op`) that
   returns another member of the set.
 
   # Properties
   1. Associativity
-  For all a, b, and c: a op (b op c) == (a op b) op c
+  For all `a`, `b`, and `c`: `a op (b op c) == (a op b) op c`
 
   2. Identity element
-  - Unique element ("id", sometimes called the 'zero' of the set)
+  - Unique element (`id`, sometimes called the 'zero' of the set)
   - Behaves as an identity with op
 
   # Examples
