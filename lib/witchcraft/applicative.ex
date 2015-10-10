@@ -23,4 +23,8 @@ defmodule Witchcraft.Applicative do
   def composition(u, v, w, applic) do
     pure &(&2 |> &1) `applic` u `applic` v `applic` w == u `applic` (v `applic` w)
   end
+
+  def bonus_law(coll, func) do
+    fmap(coll, func) == applic(coll, pure(func))
+  end
 end
