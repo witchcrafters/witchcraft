@@ -91,15 +91,17 @@ returns another member of the set.</p>
 <ul>
 <li>Unique element (<code class="inline">id</code>, sometimes called the ‘zero’ of the set)
 </li>
-<li>Behaves as an identity with op
+<li>Behaves as an identity with <code class="inline">op</code>
 </li>
 </ul>
 <h1>Examples</h1>
 <h2>Theory</h2>
-<pre><code class="elixir">id = 0
+<pre><code class="elixir"># Pseudocode
+id = 0
 op = &amp;(&amp;1 + &amp;2) # Integer addition
 op(34, id) == 34</code></pre>
-<pre><code class="elixir">id = 1
+<pre><code class="elixir"># Pseudocode
+id = 1
 op = &amp;(&amp;1 * &amp;2) # Integer multiplication
 op(42, id) == 42</code></pre>
 <h2>Concrete</h2>
@@ -219,7 +221,7 @@ Doubles as a definition of what belongs to the monoid</p>
     </a>
     <span class="signature">id(a)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L59" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L61" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -246,7 +248,7 @@ Doubles as a definition of what belongs to the monoid</p>
     </a>
     <span class="signature">member?(value)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L55" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L57" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -274,7 +276,7 @@ Doubles as a definition of what belongs to the monoid.</p>
     </a>
     <span class="signature">op(a, b)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L63" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L65" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
