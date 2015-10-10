@@ -5,7 +5,9 @@ defprotocol Witchcraft.Monoid do
 
   # Properties
   1. Associativity
-  - For all `a`, `b`, and `c`, and binary operation `.`: `a . (b . c) == (a . b) . c`
+  - Given a binary joining operation `.`, and
+  - All `a`, `b`, and `c` of the set:
+  - `a . (b . c) == (a . b) . c`
 
   2. Identity element
   - Unique element (`id`, sometimes called the 'zero' of the set)
