@@ -1,11 +1,11 @@
-defmodule Witchcraft.Applicative do
+defprotocol Witchcraft.Applicative do
   @doc """
   """
 
   use Behaviour
 
-  defcallback pure :: a -> [a]
-  defcallback applic :: [a] -> (a -> [b]) -> [b]
+  def pure :: a -> [a]
+  def applic :: [a] -> (a -> [b]) -> [b]
 
 
   def identity(id, elem, applic) do
