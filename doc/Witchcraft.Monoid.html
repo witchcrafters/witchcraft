@@ -79,9 +79,18 @@
 returns another member of the set.</p>
 <h1>Properties</h1>
 <ol>
-<li><p>Associativity
-For all <code class="inline">a</code>, <code class="inline">b</code>, and <code class="inline">c</code>: <code class="inline">a op (b op c) == (a op b) op c</code></p>
+<li>Associativity
 </li>
+</ol>
+<ul>
+<li>Given a binary joining operation <code class="inline">.</code>, and
+</li>
+<li>All <code class="inline">a</code>, <code class="inline">b</code>, and <code class="inline">c</code> of the set:
+</li>
+<li><code class="inline">a . (b . c) == (a . b) . c</code>
+</li>
+</ul>
+<ol>
 <li>Identity element
 </li>
 </ol>
@@ -216,7 +225,7 @@ Doubles as a definition of what belongs to the monoid</p>
     </a>
     <span class="signature">id(a)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L57" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L59" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -243,7 +252,7 @@ Doubles as a definition of what belongs to the monoid</p>
     </a>
     <span class="signature">member?(value)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L53" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L55" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -271,7 +280,7 @@ Doubles as a definition of what belongs to the monoid.</p>
     </a>
     <span class="signature">op(a, b)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L61" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L63" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
