@@ -126,7 +126,7 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#t:split/2">split(b, c)</a>
+    <a href="#t:split/2">split(a_to_b, b_to_c)</a>
   </div>
   
 </div>
@@ -208,7 +208,7 @@
   
 </div>
 <div id="t:split/2" class="type-detail">
-  <pre><code class="elixir"><a href="#t:split/2">split(b, c)</a> :: {(<a href="#t:a/0">a</a> -> b), (b -> c)}</code></pre>
+  <pre><code class="elixir"><a href="#t:split/2">split(a_to_b, b_to_c)</a> :: {a_to_b, b_to_c}</code></pre>
   
 </div>
 <div id="t:t/0" class="type-detail">
@@ -245,7 +245,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">arr((<a href="#t:b/0">b</a> -> <a href="#t:c/0">c</a>)) :: <a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:a_to_b/0&quot;&gt;a_to_b&lt;/a&gt;, &lt;a href=&quot;#t:b_to_c/0&quot;&gt;b_to_c&lt;/a&gt;)</a></code></pre>
+          <pre><code class="elixir">arr(<a href="#t:b_to_c/0">b_to_c</a>) :: <a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:a_to_b/0&quot;&gt;a_to_b&lt;/a&gt;, &lt;a href=&quot;#t:b_to_c/0&quot;&gt;b_to_c&lt;/a&gt;)</a></code></pre>
         
       </div>
     </div>
@@ -271,7 +271,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">first(<a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:b/0&quot;&gt;b&lt;/a&gt;, &lt;a href=&quot;#t:c/0&quot;&gt;c&lt;/a&gt;)</a>) :: <a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:b/0&quot;&gt;b&lt;/a&gt;, &lt;a href=&quot;#t:c/0&quot;&gt;c&lt;/a&gt;)</a></code></pre>
+          <pre><code class="elixir">first(<a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:a_to_b/0&quot;&gt;a_to_b&lt;/a&gt;, &lt;a href=&quot;#t:b_to_c/0&quot;&gt;b_to_c&lt;/a&gt;)</a>) :: <a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:a_to_b/0&quot;&gt;a_to_b&lt;/a&gt;, &lt;a href=&quot;#t:b_to_c/0&quot;&gt;b_to_c&lt;/a&gt;)</a></code></pre>
         
       </div>
     </div>
@@ -297,7 +297,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">second(<a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:b/0&quot;&gt;b&lt;/a&gt;, &lt;a href=&quot;#t:c/0&quot;&gt;c&lt;/a&gt;)</a>) :: <a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:b/0&quot;&gt;b&lt;/a&gt;, &lt;a href=&quot;#t:c/0&quot;&gt;c&lt;/a&gt;)</a></code></pre>
+          <pre><code class="elixir">second(<a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:a_to_b/0&quot;&gt;a_to_b&lt;/a&gt;, &lt;a href=&quot;#t:b_to_c/0&quot;&gt;b_to_c&lt;/a&gt;)</a>) :: <a href="#t:arrow/3">arrow(&lt;a href=&quot;#t:a/0&quot;&gt;a&lt;/a&gt;, &lt;a href=&quot;#t:a_to_b/0&quot;&gt;a_to_b&lt;/a&gt;, &lt;a href=&quot;#t:b_to_c/0&quot;&gt;b_to_c&lt;/a&gt;)</a></code></pre>
         
       </div>
     </div>

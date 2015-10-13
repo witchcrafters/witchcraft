@@ -12,7 +12,7 @@ defprotocol Witchcraft.Functor do
   Mapping the identity function over the object returns the same object
   ex. `fmap([1,2,3], &(&1)) == [1,2,3]`
 
-  ## Distributivity
+  ## Distributive
   `fmap(coll, (f |> g)) == coll |> fmap f |> fmap g`
 
   # Notes:

@@ -1,4 +1,4 @@
-defmodule Witchcraft.Applicative.Extra do
+defmodule Witchcraft.Applicative.Functions do
   alias Witchcraft.Utils,       as: U
   alias Witchcraft.Functor,     as: F
   alias Witchcraft.Applicative, as: A
