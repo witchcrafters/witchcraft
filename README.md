@@ -3,7 +3,7 @@
 
 A monoid, functor, applicative, monad, and arrow library
 
-*This is currently very Haskell-flavoured*
+*This is currently very Haskell-flavoured*. It will become more idiomatic after the first pass.
 
 ## Installation
 
