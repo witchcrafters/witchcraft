@@ -47,7 +47,7 @@ defmodule Witchcraft.Monad.Functions do
       bind(ma2, fn(x2) ->
         bind(ma3, fn(x3) ->
           bind(ma4, fn(x4) ->
-            bind(ma4, fn(x5) ->
+            bind(ma5, fn(x5) ->
               return(func.(x1, x2, x3, x4, x5))
             end)
           end)
