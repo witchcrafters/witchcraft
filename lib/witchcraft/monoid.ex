@@ -63,7 +63,4 @@ defprotocol Witchcraft.Monoid do
   @doc "Combine two members of the monoid, and return another member"
   @spec op(any, any) :: any
   def op(a, b)
-
-  # May want to have users impliment prop_id/2 et al,
-  # to prove that the properties hold
 end

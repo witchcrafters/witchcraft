@@ -19,14 +19,14 @@ defmodule Witchcraft.Applicative.Functions do
   end
 
   # Sequential application, discard first value
-  @spec apply_discard_first(any, any) :: any
-  def apply_discard_first(wrapped1, wrapped2) do
+  @spec then(any, any) :: any
+  def then(wrapped1, wrapped2) do
     liftA2(wrapped1, wrapped2, &(U.const(U.id, &1)))
   end
 
   # Sequential application, discard second value
-  @spec apply_discard_second(any, any) :: any
-  def apply_discard_second(wrapped1, wrapped2) do
+  @spec after_(any, any) :: any
+  def after_(wrapped1, wrapped2) do
     liftA2(wrapped1, wrapped2, U.const)
   end
 end
