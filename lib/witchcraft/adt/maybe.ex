@@ -15,7 +15,12 @@ defmodule ADT.Maybe do
 
   defstruct maybe: nil
 
-  @type maybe(a) :: %ADT.Maybe{maybe: a}
+  @type nothing :: :nothing
+  @type just(a) :: any
+  @type maybe(a) :: just(a) | nothing
+
+  # @type maybe(a) :: %ADT.Maybe{maybe: a}
+  @type maybe(a) :: any | :nothing
 
   @doc "Common useage"
   @spec from_status_tuple({atom, any}) :: maybe(any)
