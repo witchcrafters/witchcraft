@@ -5,7 +5,7 @@ defmodule Witchcraft.Mixfile do
     [app:     :witchcraft,
      name:    "Witchcraft",
 
-     version: "0.0.1",
+     version: "0.1.0",
      elixir:  "~> 1.1",
 
      source_url:   "https://github.com/robot-overlord/witchcraft",
