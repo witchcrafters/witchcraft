@@ -1,12 +1,16 @@
 defmodule Witchcraft.Monoid.Properties do
-  # @moduledoc """
-  # Quick check to confirm that your data adheres to the monoid properties
-  # """
+  @moduledoc """
+  Check samples to confirm that your data adheres to monoidal properties
+  """
 
-  # @spec confirm_membership([any]) :: boolean
-  # def confirm_membership(candidates) do
-  #   Enum.reduce(candidates, true, &(&2 and member?(&1)))
-  # end
+  alias Witchcraft.Monoid, as: Mon
+
+  @type a :: any
+
+  @spec confirm_membership([a]) :: boolean
+  def confirm_membership(candidates) do
+    Enum.reduce(candidates, true, &(&2 and Mon.member?(&1)))
+  end
 
   # @spec test_id :: boolean
   # def spotcheck_id(member) do

@@ -77,11 +77,37 @@
       <h1 class="section-heading">Modules</h1>
       <div class="summary">
         <div class="summary-row">
+  <div class="summary-signature"><a href="ADT.Maybe.html">ADT.Maybe</a></div>
+  
+    <div class="summary-synopsis"><p><code class="inline">Maybe</code> encapulates the idea of a value that might not be there.
+This is often a failed computation, but in some cases an empty value may be the
+expected behaviour</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="ADT.MaybePlus.html">ADT.MaybePlus</a></div>
+  
+    <div class="summary-synopsis"><p><code class="inline">MaybePlus</code> encapulates the idea of a value that might not be there.
+This is often a failed computation, but in some cases an empty value may be
+the expected behaviour</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="Witchcraft.html">Witchcraft</a></div>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Witchcraft.Applicative.Extra.html">Witchcraft.Applicative.Extra</a></div>
+  <div class="summary-signature"><a href="Witchcraft.Applicative.Functions.html">Witchcraft.Applicative.Functions</a></div>
+  
+    <div class="summary-synopsis"><p>Note that what would be <code class="inline">Applicative.lift</code> is <code class="inline">Functor.lift</code>.
+Given that yu have implimented Functor, this should not be an issue</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Witchcraft.Applicative.Properties.html">Witchcraft.Applicative.Properties</a></div>
   
 </div>
 <div class="summary-row">
@@ -93,7 +119,26 @@
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="Witchcraft.Functor.Functions.html">Witchcraft.Functor.Functions</a></div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Witchcraft.Monad.Axioms.html">Witchcraft.Monad.Axioms</a></div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Witchcraft.Monad.Functions.html">Witchcraft.Monad.Functions</a></div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Witchcraft.Monoid.Functions.html">Witchcraft.Monoid.Functions</a></div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="Witchcraft.Monoid.Properties.html">Witchcraft.Monoid.Properties</a></div>
+  
+    <div class="summary-synopsis"><p>Check samples to confirm that your data adheres to monoidal properties</p>
+</div>
   
 </div>
 <div class="summary-row">
@@ -114,6 +159,10 @@
         <div class="summary-row">
   <div class="summary-signature"><a href="Witchcraft.Applicative.html">Witchcraft.Applicative</a></div>
   
+    <div class="summary-synopsis"><p>Applicative functors provide a method of applying a function contained in a
+datatype to a value of the same datatype</p>
+</div>
+  
 </div>
 <div class="summary-row">
   <div class="summary-signature"><a href="Witchcraft.Arrow.html">Witchcraft.Arrow</a></div>
@@ -126,13 +175,18 @@
 <div class="summary-row">
   <div class="summary-signature"><a href="Witchcraft.Functor.html">Witchcraft.Functor</a></div>
   
-    <div class="summary-synopsis"><p>Functors provide a way to apply a function to every element in a collection
+    <div class="summary-synopsis"><p>Functors provide a way to apply a function to every element in a datatype
 (lists, trees, etc)</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature"><a href="Witchcraft.Monad.html">Witchcraft.Monad</a></div>
+  
+    <div class="summary-synopsis"><p>Expects that you have implimented <a href="Witchcraft.Functor.html"><code class="inline">Witchcraft.Functor</code></a> and <a href="Witchcraft.Applicative.html"><code class="inline">Witchcraft.Applicative</code></a>
+  for the datatype that you wish to use with <code class="inline">Wicthcraft.Monad</code>. All sensible
+  monads are also functors and applicatives</p>
+</div>
   
 </div>
 <div class="summary-row">

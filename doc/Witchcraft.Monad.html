@@ -74,6 +74,13 @@
       </h1>
 
       
+        <section id="moduledoc" class="docstring">
+          <p>  Expects that you have implimented <a href="Witchcraft.Functor.html"><code class="inline">Witchcraft.Functor</code></a> and <a href="Witchcraft.Applicative.html"><code class="inline">Witchcraft.Applicative</code></a>
+  for the datatype that you wish to use with <code class="inline">Wicthcraft.Monad</code>. All sensible
+  monads are also functors and applicatives.</p>
+
+        </section>
+      
 
       
         <section id="summary" class="details-list">
@@ -90,6 +97,12 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#t:a/0">a()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#t:t/0">t()</a>
   </div>
   
@@ -105,19 +118,7 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#bind/2">bind(wrapped_element, wrapping_func)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#return/1">return(bare)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#then/2">then(wrapped_element, wrapped_element)</a>
+    <a href="#join/1">join(a)</a>
   </div>
   
 </div>
@@ -141,7 +142,11 @@
             Types
           </h1>
           <div class="types-list">
-            <div id="t:t/0" class="type-detail">
+            <div id="t:a/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:a/0">a</a> :: any</code></pre>
+  
+</div>
+<div id="t:t/0" class="type-detail">
   <pre><code class="elixir"><a href="#t:t/0">t</a> :: term</code></pre>
   
 </div>
@@ -158,14 +163,14 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="bind/2">
+          <div class="detail" id="join/1">
   <div class="detail-header">
-    <a href="#bind/2" class="detail-link" title="Link to this function">
+    <a href="#join/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">bind(wrapped_element, wrapping_func)</span>
+    <span class="signature">join(a)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monad.ex#L7" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monad.ex#L15" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -175,59 +180,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">bind(any, (any -> any)) :: any</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="return/1">
-  <div class="detail-header">
-    <a href="#return/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">return(bare)</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monad.ex#L4" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">return(any) :: any</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="then/2">
-  <div class="detail-header">
-    <a href="#then/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">then(wrapped_element, wrapped_element)</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monad.ex#L10" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">then(any, any) :: any</code></pre>
+          <pre><code class="elixir">join(<a href="#t:a/0">a</a>) :: <a href="#t:a/0">a</a></code></pre>
         
       </div>
     </div>

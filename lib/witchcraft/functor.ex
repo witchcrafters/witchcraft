@@ -10,28 +10,33 @@ defprotocol Witchcraft.Functor do
   # Properties
   ## Identity
   Mapping the identity function over the object returns the same object
-  ex. `fmap([1,2,3], &(&1)) == [1,2,3]`
+  ex. `lift([1,2,3], &(&1)) == [1,2,3]`
 
   ## Distributive
-  `fmap(data, (f |> g)) == data |> fmap f |> fmap g`
+  `lift(data, (f |> g)) == data |> lift f |> lift g`
 
   # Notes:
   - The argument order convention is reversed from most other lanaguges
-  - Most (if not all) implimentations of `fmap` should be
+  - Most (if not all) implimentations of `lift` should be
     expressable in terms of [`Enum.reduce/3`](http://elixir-lang.org/docs/v1.0/elixir/Enum.html#reduce/3)
   - Falls back to [`Enum.map/2`](http://elixir-lang.org/docs/v1.0/elixir/Enum.html#map/2)
   """
 
   @fallback_to_any true
 
+  @type a  :: any
+  @type wa :: any
+  @type r  :: any
+  @type wr :: any
+
   @doc """
   Apply a function to every element in some collection, tree, or other structure.
   The collection will retain its structure (list, tree, and so on).
   """
-  @spec fmap(any, (any -> any)) :: any
-  def fmap(data, function)
+  @spec lift(wa, (a -> r)) :: wr
+  def lift(data, function)
 end
 
 defimpl Witchcraft.Functor, for: Any do
-  def fmap(data, func), do: Enum.map(data, func)
+  def lift(data, func), do: Enum.map(data, func)
 end

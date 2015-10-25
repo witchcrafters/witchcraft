@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Witchcraft.Applicative.Extra – Witchcraft v0.0.1</title>
+    <title>Witchcraft.Applicative.Functions – Witchcraft v0.0.1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -62,15 +62,21 @@
 
 
       <h1>
-        Witchcraft.Applicative.Extra
+        Witchcraft.Applicative.Functions
         
         
-          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/extra.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/functions.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
       </h1>
 
+      
+        <section id="moduledoc" class="docstring">
+          <p>Note that what would be <code class="inline">Applicative.lift</code> is <code class="inline">Functor.lift</code>.
+Given that yu have implimented Functor, this should not be an issue.</p>
+
+        </section>
       
 
       
@@ -90,31 +96,40 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#apply_discard_first/2">apply_discard_first(wrapped1, wrapped2)</a>
+    <a href="#%3C~%3E/2">left &lt;~&gt; right</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Alias for <code class="inline">apply</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#lift2/3">lift2(wrapped1, wrapped2, binary_func)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#apply_discard_second/2">apply_discard_second(wrapped1, wrapped2)</a>
+    <a href="#lift3/4">lift3(wrapped1, wrapped2, wrapped3, trinary_func)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#liftA/2">liftA(wrapped_element, func)</a>
+    <a href="#prior/2">prior(wrapped1, wrapped2)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#liftA2/3">liftA2(wrapped1, wrapped2, binary_func)</a>
+    <a href="#then/2">then(wrapped1, wrapped2)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#liftA3/4">liftA3(wrapped1, wrapped2, wrapped3, trinary_func)</a>
+    <a href="#wrap/1">wrap(a)</a>
   </div>
   
 </div>
@@ -139,14 +154,32 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="apply_discard_first/2">
+          <div class="detail" id="%3C~%3E/2">
   <div class="detail-header">
-    <a href="#apply_discard_first/2" class="detail-link" title="Link to this function">
+    <a href="#%3C~%3E/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">apply_discard_first(wrapped1, wrapped2)</span>
+    <span class="signature">left &lt;~&gt; right</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/extra.ex#L23" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/functions.ex#L14" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Alias for <code class="inline">apply</code></p>
+
+  </section>
+</div>
+<div class="detail" id="lift2/3">
+  <div class="detail-header">
+    <a href="#lift2/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">lift2(wrapped1, wrapped2, binary_func)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/functions.ex#L19" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -156,7 +189,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">apply_discard_first(any, any) :: any</code></pre>
+          <pre><code class="elixir">lift2(any, any, ({any, any} -> any)) :: any</code></pre>
         
       </div>
     </div>
@@ -165,14 +198,14 @@
     
   </section>
 </div>
-<div class="detail" id="apply_discard_second/2">
+<div class="detail" id="lift3/4">
   <div class="detail-header">
-    <a href="#apply_discard_second/2" class="detail-link" title="Link to this function">
+    <a href="#lift3/4" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">apply_discard_second(wrapped1, wrapped2)</span>
+    <span class="signature">lift3(wrapped1, wrapped2, wrapped3, trinary_func)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/extra.ex#L29" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/functions.ex#L24" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -182,7 +215,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">apply_discard_second(any, any) :: any</code></pre>
+          <pre><code class="elixir">lift3(any, any, any, ({any, any, any} -> any)) :: any</code></pre>
         
       </div>
     </div>
@@ -191,14 +224,14 @@
     
   </section>
 </div>
-<div class="detail" id="liftA/2">
+<div class="detail" id="prior/2">
   <div class="detail-header">
-    <a href="#liftA/2" class="detail-link" title="Link to this function">
+    <a href="#prior/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">liftA(wrapped_element, func)</span>
+    <span class="signature">prior(wrapped1, wrapped2)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/extra.ex#L7" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/functions.ex#L38" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -208,7 +241,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">liftA(any, (any -> any)) :: any</code></pre>
+          <pre><code class="elixir">prior(any, any) :: any</code></pre>
         
       </div>
     </div>
@@ -217,14 +250,14 @@
     
   </section>
 </div>
-<div class="detail" id="liftA2/3">
+<div class="detail" id="then/2">
   <div class="detail-header">
-    <a href="#liftA2/3" class="detail-link" title="Link to this function">
+    <a href="#then/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">liftA2(wrapped1, wrapped2, binary_func)</span>
+    <span class="signature">then(wrapped1, wrapped2)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/extra.ex#L10" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/functions.ex#L32" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -234,7 +267,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">liftA2(any, any, ({any, any} -> any)) :: any</code></pre>
+          <pre><code class="elixir">then(any, any) :: any</code></pre>
         
       </div>
     </div>
@@ -243,27 +276,18 @@
     
   </section>
 </div>
-<div class="detail" id="liftA3/4">
+<div class="detail" id="wrap/1">
   <div class="detail-header">
-    <a href="#liftA3/4" class="detail-link" title="Link to this function">
+    <a href="#wrap/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">liftA3(wrapped1, wrapped2, wrapped3, trinary_func)</span>
+    <span class="signature">wrap(a)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/extra.ex#L15" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/functions.ex#L11" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">liftA3(any, any, any, ({any, any, any} -> any)) :: any</code></pre>
-        
-      </div>
-    </div>
   
   <section class="docstring">
     

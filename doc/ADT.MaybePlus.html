@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Witchcraft.Monoid – Witchcraft v0.0.1</title>
+    <title>ADT.MaybePlus – Witchcraft v0.0.1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
-  <body data-type="protocols">
+  <body data-type="modules">
 
     <div class="main">
 <button class="sidebar-toggle">
@@ -62,12 +62,10 @@
 
 
       <h1>
-        Witchcraft.Monoid
-        
-          <small>protocol</small>
+        ADT.MaybePlus
         
         
-          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/adt/maybe_plus.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -75,48 +73,19 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Monoids are a set, plus a binary combining operation (<code class="inline">op</code>) that
-returns another member of the set.</p>
-<h1>Properties</h1>
-<h2>Associativity</h2>
-<ol>
-<li>Given a binary joining operation <code class="inline">•</code>,
-</li>
-<li>and all <code class="inline">a</code>, <code class="inline">b</code>, and <code class="inline">c</code> of the set,
-</li>
-<li>then: <code class="inline">a • (b • c) == (a • b) • c</code>
-</li>
-</ol>
-<h2>Identity element</h2>
-<ul>
-<li>Unique element (<code class="inline">id</code>, sometimes called the ‘zero’ of the set)
-</li>
-<li>Behaves as an identity with <code class="inline">op</code>
-</li>
-</ul>
-<h1>Examples</h1>
-<h2>Theory</h2>
-<pre><code class="elixir"># Pseudocode
-id = 0
-op = &amp;(&amp;1 + &amp;2) # Integer addition
-op(34, id) == 34</code></pre>
-<pre><code class="elixir"># Pseudocode
-id = 1
-op = &amp;(&amp;1 * &amp;2) # Integer multiplication
-op(42, id) == 42</code></pre>
-<h2>Concrete</h2>
-<pre><code class="iex elixir">iex&gt; defimpl Monoid, for: Integer do
-iex&gt;   def id(_), do: 0
-iex&gt;   def op(a, b), do: a + b
-iex&gt; end
-iex&gt; Monoid.op(1, 4) |&gt; Monoid.op 2 |&gt; Monoid.op 10
-17</code></pre>
-<h2>Counter-Example</h2>
-<p>Integer division is not a monoid.
-Because you cannot divide by zero, the property does not hold for all values in the set.</p>
-<h1>Notes</h1>
-<p>You can of course use abuse this protocol to define a fake “monoid” that behaves differently.
-For the protocol to operate as intended, you need to respect the above properties.</p>
+          <p><code class="inline">MaybePlus</code> encapulates the idea of a value that might not be there.
+This is often a failed computation, but in some cases an empty value may be
+the expected behaviour.</p>
+<p>Much like <code class="inline">%Maybe{}</code>, a <code class="inline">%MaybePlus{}</code> value can either be <code class="inline">Just some_value</code>,
+or <code class="inline">Nothing</code>, but with error reason tracking intact.</p>
+<p>More typical of Elixir is to use <code class="inline">{:ok, some_value}</code>, or <code class="inline">{:error, some_reason}</code>.
+By contrast, <code class="inline">%MaybePlus{}</code> has an implied <code class="inline">:ok</code>, if there is a value in the
+<code class="inline">maybe</code> key.</p>
+<p>The additional <code class="inline">meta</code> key exists to track error reasons, but may be used
+for general purpose metadata (including success messaging). This has the
+potential to enter an inconsitent state, where the <code class="inline">maybe</code> and <code class="inline">meta</code> values
+come out of sync. It is recommended to <em>always</em> set both values when updating
+the struct.</p>
 
         </section>
       
@@ -136,7 +105,7 @@ For the protocol to operate as intended, you need to respect the above propertie
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#t:t/0">t()</a>
+    <a href="#t:maybe_plus/2">maybe_plus(a, b)</a>
   </div>
   
 </div>
@@ -151,30 +120,26 @@ For the protocol to operate as intended, you need to respect the above propertie
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#id/1">id(a)</a>
+    <a href="#from_status_tuple/1">from_status_tuple(arg)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Get the idenity (‘zero’) element of the monoid by passing in any element of the set</p>
-</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#member?/1">member?(value)</a>
+    <a href="#just?/1">just?(maybe_plus)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Check if the argument is a member of the monoid.
-Doubles as a definition of what belongs to the monoid</p>
-</div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#op/2">op(a, b)</a>
+    <a href="#meta/1">meta(maybe_plus)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Combine two members of the monoid, and return another member</p>
 </div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#nothing?/1">nothing?(x)</a>
+  </div>
   
 </div>
 
@@ -197,8 +162,8 @@ Doubles as a definition of what belongs to the monoid</p>
             Types
           </h1>
           <div class="types-list">
-            <div id="t:t/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:t/0">t</a> :: term</code></pre>
+            <div id="t:maybe_plus/2" class="type-detail">
+  <pre><code class="elixir"><a href="#t:maybe_plus/2">maybe_plus(a, b)</a> :: %ADT.MaybePlus{maybe: a, meta: b}</code></pre>
   
 </div>
 
@@ -214,14 +179,14 @@ Doubles as a definition of what belongs to the monoid</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="id/1">
+          <div class="detail" id="from_status_tuple/1">
   <div class="detail-header">
-    <a href="#id/1" class="detail-link" title="Link to this function">
+    <a href="#from_status_tuple/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">id(a)</span>
+    <span class="signature">from_status_tuple(arg)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L61" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/adt/maybe_plus.ex#L26" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -231,24 +196,23 @@ Doubles as a definition of what belongs to the monoid</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">id(any) :: any</code></pre>
+          <pre><code class="elixir">from_status_tuple({atom, any}) :: <a href="#t:maybe_plus/2">maybe_plus(any, any)</a></code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Get the idenity (‘zero’) element of the monoid by passing in any element of the set</p>
-
+    
   </section>
 </div>
-<div class="detail" id="member?/1">
+<div class="detail" id="just?/1">
   <div class="detail-header">
-    <a href="#member?/1" class="detail-link" title="Link to this function">
+    <a href="#just?/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">member?(value)</span>
+    <span class="signature">just?(maybe_plus)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L57" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/adt/maybe_plus.ex#L30" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -258,25 +222,40 @@ Doubles as a definition of what belongs to the monoid</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">member?(any) :: boolean</code></pre>
+          <pre><code class="elixir">just?(<a href="#t:maybe_plus/2">maybe_plus(any, any)</a>) :: boolean</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Check if the argument is a member of the monoid.
-Doubles as a definition of what belongs to the monoid.</p>
-
+    
   </section>
 </div>
-<div class="detail" id="op/2">
+<div class="detail" id="meta/1">
   <div class="detail-header">
-    <a href="#op/2" class="detail-link" title="Link to this function">
+    <a href="#meta/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">op(a, b)</span>
+    <span class="signature">meta(maybe_plus)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L65" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/adt/maybe_plus.ex#L35" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="nothing?/1">
+  <div class="detail-header">
+    <a href="#nothing?/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">nothing?(x)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/adt/maybe_plus.ex#L33" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -286,14 +265,13 @@ Doubles as a definition of what belongs to the monoid.</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">op(any, any) :: any</code></pre>
+          <pre><code class="elixir">nothing?(<a href="#t:maybe_plus/2">maybe_plus(any, any)</a>) :: boolean</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Combine two members of the monoid, and return another member</p>
-
+    
   </section>
 </div>
 

@@ -33,8 +33,8 @@ defprotocol Witchcraft.Monoid do
   ## Concrete
   ```
   iex> defimpl Monoid, for: Integer do
-  iex> def id(_), do: 0
-  iex> def op(a, b), do: a + b
+  iex>   def id(_), do: 0
+  iex>   def op(a, b), do: a + b
   iex> end
   iex> Monoid.op(1, 4) |> Monoid.op 2 |> Monoid.op 10
   17

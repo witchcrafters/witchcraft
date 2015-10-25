@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Witchcraft.Utils – Witchcraft v0.0.1</title>
+    <title>Witchcraft.Monad.Functions – Witchcraft v0.0.1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -62,10 +62,10 @@
 
 
       <h1>
-        Witchcraft.Utils
+        Witchcraft.Monad.Functions
         
         
-          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/utils.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monad/functions.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -82,6 +82,31 @@
             Summary
           </h1>
           
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:a/0">a()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:ma/0">ma()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:mb/0">mb()</a>
+  </div>
+  
+</div>
+
+  </div>
+
 
           
   <div class="summary-functions summary">
@@ -90,22 +115,13 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#compose/1">compose(func_list)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Compose functions</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#const/2">const(a, )</a>
+    <a href="#bind/2">bind(data, endofunctor)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#id/1">id(a)</a>
+    <a href="#return/1">return(a)</a>
   </div>
   
 </div>
@@ -121,6 +137,30 @@
       
 
       
+        <section id="types" class="types details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <i class="icon-link"></i>
+            </a>
+            Types
+          </h1>
+          <div class="types-list">
+            <div id="t:a/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:a/0">a</a> :: any</code></pre>
+  
+</div>
+<div id="t:ma/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:ma/0">ma</a> :: any</code></pre>
+  
+</div>
+<div id="t:mb/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:mb/0">mb</a> :: any</code></pre>
+  
+</div>
+
+          </div>
+        </section>
+      
 
       
         <section id="functions" class="details-list">
@@ -130,14 +170,14 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="compose/1">
+          <div class="detail" id="bind/2">
   <div class="detail-header">
-    <a href="#compose/1" class="detail-link" title="Link to this function">
+    <a href="#bind/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">compose(func_list)</span>
+    <span class="signature">bind(data, endofunctor)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/utils.ex#L14" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monad/functions.ex#L13" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -147,45 +187,23 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">compose([(... -> any)]) :: (... -> any)</code></pre>
+          <pre><code class="elixir">bind(<a href="#t:ma/0">ma</a>, (<a href="#t:a/0">a</a> -> <a href="#t:mb/0">mb</a>)) :: <a href="#t:mb/0">mb</a></code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Compose functions</p>
-<h1>Example</h1>
-<p>iex&gt; sum_plus_one = compose([&(Enum.sum(&1)), &(&1 + 1)])
-iex&gt; [1,2,3] |&gt; sum_plus_one.()
-7</p>
-
-  </section>
-</div>
-<div class="detail" id="const/2">
-  <div class="detail-header">
-    <a href="#const/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">const(a, )</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/utils.ex#L3" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-  <section class="docstring">
     
   </section>
 </div>
-<div class="detail" id="id/1">
+<div class="detail" id="return/1">
   <div class="detail-header">
-    <a href="#id/1" class="detail-link" title="Link to this function">
+    <a href="#return/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">id(a)</span>
+    <span class="signature">return(a)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/utils.ex#L2" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monad/functions.ex#L10" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     

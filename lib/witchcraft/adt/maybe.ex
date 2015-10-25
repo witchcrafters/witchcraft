@@ -15,22 +15,22 @@ defmodule ADT.Maybe do
 
   defstruct maybe: nil
 
-  @type nothing :: :nothing
-  @type just(a) :: any
-  @type maybe(a) :: just(a) | nothing
+  # @type nothing :: :nothing
+  # @type just(a) :: any
+  # @type maybe(a) :: just(a) | nothing
 
   # @type maybe(a) :: %ADT.Maybe{maybe: a}
-  @type maybe(a) :: any | :nothing
+  # @type maybe(a) :: any | :nothing
 
   @doc "Common useage"
-  @spec from_status_tuple({atom, any}) :: maybe(any)
+  # @spec from_status_tuple({atom, any}) :: maybe(any)
   def from_status_tuple({:ok,    payload}), do: %ADT.Maybe{maybe: payload}
   def from_status_tuple({:error, reason}),  do: %ADT.Maybe{maybe: nil}
 
-  @spec just?(maybe(any)) :: boolean
+  # @spec just?(maybe(any)) :: boolean
   def just?(%ADT.Maybe{maybe: maybe}), do: !!maybe
 
-  @spec nothing?(maybe(any)) :: boolean
+  # @spec nothing?(maybe(any)) :: boolean
   def nothing?(x), do: not just?(x)
 end
 

@@ -1,32 +1,47 @@
 defmodule Witchcraft.Applicative.Functions do
+  @moduledoc ~S"""
+  Note that what would be `Applicative.lift` is `Functor.lift`.
+  Given that yu have implimented Functor, this should not be an issue.
+  """
+
   alias Witchcraft.Utils,       as: U
   alias Witchcraft.Functor,     as: F
   alias Witchcraft.Applicative, as: A
 
-  @spec liftA(any, (any -> any)) :: any
-  def liftA(wrapped_element, func), do: A.apply(wrapped_element, A.pure(func))
+  def wrap(a), do: A.pure(a)
 
-  @spec liftA2(any, any, ({any, any} -> any)) :: any
-  def liftA2(wrapped1, wrapped2, binary_func) do
-    wrapped2 |> A.apply(F.fmap(wrapped1, binary_func))
+  @doc "Alias for `apply`"
+  def left <~> right do
+    Witchcraft.Applicative.apply(left, right)
   end
 
-  @spec liftA3(any, any, any, ({any, any, any} -> any)) :: any
-  def liftA3(wrapped1, wrapped2, wrapped3, trinary_func) do
+  @spec lift2(any, any, ({any, any} -> any)) :: any
+  def lift2(wrapped1, wrapped2, binary_func) do
+    wrapped2 |> A.apply(F.lift(wrapped1, binary_func))
+  end
+
+  @spec lift3(any, any, any, ({any, any, any} -> any)) :: any
+  def lift3(wrapped1, wrapped2, wrapped3, trinary_func) do
     A.apply(wrapped3,
             A.apply(wrapped2,
-                    F.fmap(wrapped1, trinary_func)))
+                    F.lift(wrapped1, trinary_func)))
   end
 
   # Sequential application, discard first value
   @spec then(any, any) :: any
   def then(wrapped1, wrapped2) do
-    liftA2(wrapped1, wrapped2, &(U.const(U.id, &1)))
+    lift2(wrapped1, wrapped2, &(U.const(U.id, &1)))
   end
 
   # Sequential application, discard second value
-  @spec after_(any, any) :: any
-  def after_(wrapped1, wrapped2) do
-    liftA2(wrapped1, wrapped2, U.const)
+  @spec prior(any, any) :: any
+  def prior(wrapped1, wrapped2) do
+    lift2(wrapped1, wrapped2, U.const)
   end
+
+  # traverse :: Applicative f => (a -> f b) -> t a -> f (t b)
+  #   traverse f = sequenceA . fmap f
+
+  # sequenceA :: Applicative f => t (f a) -> f (t a)
+  #   sequenceA = traverse id
 end

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Witchcraft.Utils – Witchcraft v0.0.1</title>
+    <title>ADT.Maybe – Witchcraft v0.0.1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -62,15 +62,28 @@
 
 
       <h1>
-        Witchcraft.Utils
+        ADT.Maybe
         
         
-          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/utils.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/adt/maybe.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
       </h1>
 
+      
+        <section id="moduledoc" class="docstring">
+          <p><code class="inline">Maybe</code> encapulates the idea of a value that might not be there.
+This is often a failed computation, but in some cases an empty value may be the
+expected behaviour.</p>
+<p>A <code class="inline">%Maybe{}</code> value can either be <code class="inline">Just some_value</code> or <code class="inline">Nothing</code>. More typical of
+Elixir is to use <code class="inline">{:ok, some_value}</code>, or <code class="inline">{:error, some_reason}</code>. By contrast,
+<code class="inline">%Maybe{}</code> has an implied <code class="inline">:ok</code>, if there is a value in the <code class="inline">maybe</code> key.</p>
+<p>Please note that this approach does not track error reasons, as a <code class="inline">Nothing</code> value
+may not be an error. If you are looking for error tracking behaviour, consider
+<code class="inline">%MaybePlus{}</code></p>
+
+        </section>
       
 
       
@@ -90,22 +103,22 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#compose/1">compose(func_list)</a>
+    <a href="#from_status_tuple/1">from_status_tuple(arg)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Compose functions</p>
+    <div class="summary-synopsis"><p>Common useage</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#const/2">const(a, )</a>
+    <a href="#just?/1">just?(maybe)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#id/1">id(a)</a>
+    <a href="#nothing?/1">nothing?(x)</a>
   </div>
   
 </div>
@@ -130,45 +143,32 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="compose/1">
+          <div class="detail" id="from_status_tuple/1">
   <div class="detail-header">
-    <a href="#compose/1" class="detail-link" title="Link to this function">
+    <a href="#from_status_tuple/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">compose(func_list)</span>
+    <span class="signature">from_status_tuple(arg)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/utils.ex#L14" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/adt/maybe.ex#L27" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">compose([(... -> any)]) :: (... -> any)</code></pre>
-        
-      </div>
-    </div>
-  
   <section class="docstring">
-    <p>Compose functions</p>
-<h1>Example</h1>
-<p>iex&gt; sum_plus_one = compose([&(Enum.sum(&1)), &(&1 + 1)])
-iex&gt; [1,2,3] |&gt; sum_plus_one.()
-7</p>
+    <p>Common useage</p>
 
   </section>
 </div>
-<div class="detail" id="const/2">
+<div class="detail" id="just?/1">
   <div class="detail-header">
-    <a href="#const/2" class="detail-link" title="Link to this function">
+    <a href="#just?/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">const(a, )</span>
+    <span class="signature">just?(maybe)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/utils.ex#L3" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/adt/maybe.ex#L31" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -178,14 +178,14 @@ iex&gt; [1,2,3] |&gt; sum_plus_one.()
     
   </section>
 </div>
-<div class="detail" id="id/1">
+<div class="detail" id="nothing?/1">
   <div class="detail-header">
-    <a href="#id/1" class="detail-link" title="Link to this function">
+    <a href="#nothing?/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">id(a)</span>
+    <span class="signature">nothing?(x)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/utils.ex#L2" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/adt/maybe.ex#L34" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     

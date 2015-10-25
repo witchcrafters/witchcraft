@@ -74,6 +74,12 @@
       </h1>
 
       
+        <section id="moduledoc" class="docstring">
+          <p>Applicative functors provide a method of applying a function contained in a
+datatype to a value of the same datatype.</p>
+
+        </section>
+      
 
       
         <section id="summary" class="details-list">
@@ -90,12 +96,6 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#t:pure/1">pure(a)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
     <a href="#t:t/0">t()</a>
   </div>
   
@@ -111,7 +111,7 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#apply/2">apply(collection, function)</a>
+    <a href="#apply/2">apply(data, function)</a>
   </div>
   
 </div>
@@ -141,11 +141,7 @@
             Types
           </h1>
           <div class="types-list">
-            <div id="t:pure/1" class="type-detail">
-  <pre><code class="elixir"><a href="#t:pure/1">pure(a)</a> :: {a}</code></pre>
-  
-</div>
-<div id="t:t/0" class="type-detail">
+            <div id="t:t/0" class="type-detail">
   <pre><code class="elixir"><a href="#t:t/0">t</a> :: term</code></pre>
   
 </div>
@@ -167,22 +163,13 @@
     <a href="#apply/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">apply(collection, function)</span>
+    <span class="signature">apply(data, function)</span>
       
       <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative.ex#L15" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">apply((any -> any), any) :: any</code></pre>
-        
-      </div>
-    </div>
   
   <section class="docstring">
     
@@ -205,7 +192,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir"><a href="#t:pure/1">pure(any)</a> :: <a href="#t:pure/1">pure(any)</a></code></pre>
+          <pre><code class="elixir">pure(any) :: any</code></pre>
         
       </div>
     </div>
