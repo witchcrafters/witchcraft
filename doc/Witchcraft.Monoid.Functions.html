@@ -93,6 +93,9 @@
     <a href="#%3C%7C%3E/2">a &lt;|&gt; b</a>
   </div>
   
+    <div class="summary-synopsis"><p>Infix variant of <code class="inline">Monoid.op</code></p>
+</div>
+  
 </div>
 
   </div>
@@ -122,7 +125,7 @@
     </a>
     <span class="signature">a &lt;|&gt; b</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid/functions.ex#L5" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid/functions.ex#L19" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -138,7 +141,18 @@
     </div>
   
   <section class="docstring">
-    
+    <p>Infix variant of <code class="inline">Monoid.op</code></p>
+<h1>Example</h1>
+<p>iex&gt; alias Witchcraft.Monoid, as: Monoid
+iex&gt; defimpl Monoid, for: Integer do
+iex&gt;   def identity(_), do: 0
+iex&gt;   def op(a, b), do: a + b
+iex&gt; end
+iex&gt; Monoid.op(1, 4) |&gt; Monoid.op 2 |&gt; Monoid.op 10
+17
+iex&gt; 1 &lt;|&gt; 4 &lt;|&gt; 2 &lt;|&gt; 10
+17</p>
+
   </section>
 </div>
 
