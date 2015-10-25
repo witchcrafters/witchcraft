@@ -1,6 +1,6 @@
 defprotocol Witchcraft.Monoid do
   @moduledoc ~S"""
-  Monoids are a set, plus a binary combining operation (`op`) that
+  Monoids are a set of elements, and a binary combining operation (`op`) that
   returns another member of the set.
 
   # Properties
@@ -18,26 +18,29 @@ defprotocol Witchcraft.Monoid do
 
   ```
   # Pseudocode
-  id = 0
+  identity = 0
   op = &(&1 + &2) # Integer addition
   op(34, id) == 34
   ```
 
   ```
   # Pseudocode
-  id = 1
+  identity = 1
   op = &(&1 * &2) # Integer multiplication
   op(42, id) == 42
   ```
 
   ## Concrete
   ```
+
+  iex> alias Witchcraft.Monoid, as: Monoid
   iex> defimpl Monoid, for: Integer do
-  iex>   def id(_), do: 0
+  iex>   def identity(_), do: 0
   iex>   def op(a, b), do: a + b
   iex> end
   iex> Monoid.op(1, 4) |> Monoid.op 2 |> Monoid.op 10
   17
+
   ```
 
   ## Counter-Example
@@ -57,7 +60,7 @@ defprotocol Witchcraft.Monoid do
   def member?(value)
 
   @doc "Get the idenity ('zero') element of the monoid by passing in any element of the set"
-  @spec id(any) :: any
+  @spec identity(any) :: any
   def identity(a)
 
   @doc "Combine two members of the monoid, and return another member"

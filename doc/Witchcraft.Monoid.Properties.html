@@ -87,19 +87,6 @@
             Summary
           </h1>
           
-  <div class="summary-types summary">
-    <h2>
-      <a href="#types">Types</a>
-    </h2>
-    <div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:a/0">a()</a>
-  </div>
-  
-</div>
-
-  </div>
-
 
           
   <div class="summary-functions summary">
@@ -112,6 +99,24 @@
   </div>
   
 </div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#spotcheck/3">spotcheck(a, b, c)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#spotcheck_associativity/3">spotcheck_associativity(member1, member2, member3)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#spotcheck_identity/1">spotcheck_identity(member)</a>
+  </div>
+  
+</div>
 
   </div>
 
@@ -123,22 +128,6 @@
         </section>
       
 
-      
-        <section id="types" class="types details-list">
-          <h1 class="section-heading">
-            <a class="hover-link" href="#types">
-              <i class="icon-link"></i>
-            </a>
-            Types
-          </h1>
-          <div class="types-list">
-            <div id="t:a/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:a/0">a</a> :: any</code></pre>
-  
-</div>
-
-          </div>
-        </section>
       
 
       
@@ -156,7 +145,7 @@
     </a>
     <span class="signature">confirm_membership(candidates)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid/properties.ex#L11" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid/properties.ex#L10" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -166,7 +155,85 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">confirm_membership([<a href="#t:a/0">a</a>]) :: boolean</code></pre>
+          <pre><code class="elixir">confirm_membership([any]) :: boolean</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="spotcheck/3">
+  <div class="detail-header">
+    <a href="#spotcheck/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">spotcheck(a, b, c)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid/properties.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">spotcheck(any, any, any) :: boolean</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="spotcheck_associativity/3">
+  <div class="detail-header">
+    <a href="#spotcheck_associativity/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">spotcheck_associativity(member1, member2, member3)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid/properties.ex#L20" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">spotcheck_associativity(any, any, any) :: boolean</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="spotcheck_identity/1">
+  <div class="detail-header">
+    <a href="#spotcheck_identity/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">spotcheck_identity(member)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid/properties.ex#L15" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">spotcheck_identity(any) :: boolean</code></pre>
         
       </div>
     </div>
