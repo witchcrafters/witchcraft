@@ -5,6 +5,8 @@ defmodule Witchcraft.Monoid.Functions do
   Infix variant of `Monoid.op`
 
   # Example
+  ```
+
   iex> alias Witchcraft.Monoid, as: Monoid
   iex> defimpl Monoid, for: Integer do
   iex>   def identity(_), do: 0
@@ -14,6 +16,8 @@ defmodule Witchcraft.Monoid.Functions do
   17
   iex> 1 <|> 4 <|> 2 <|> 10
   17
+
+  ```
   """
   @spec any <|> any :: any
   def a <|> b, do: Mon.op(a, b)
