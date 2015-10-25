@@ -52,13 +52,6 @@ defprotocol Witchcraft.Monoid do
   For the protocol to operate as intended, you need to respect the above properties.
   """
 
-  @doc """
-  Check if the argument is a member of the monoid.
-  Doubles as a definition of what belongs to the monoid.
-  """
-  @spec member?(any) :: boolean
-  def member?(value)
-
   @doc "Get the idenity ('zero') element of the monoid by passing in any element of the set"
   @spec identity(any) :: any
   def identity(a)
