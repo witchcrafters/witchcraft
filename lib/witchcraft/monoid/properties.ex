@@ -8,16 +8,26 @@ defmodule Witchcraft.Monoid.Properties do
   import Witchcraft.Monoid
   import Witchcraft.Monoid.Functions
 
+  @doc """
+  Check that some member of your monoid combines with the identity to return itself
+  """
   @spec spotcheck_identity(any) :: boolean
   def spotcheck_identity(member) do
     (identity(member) <|> member) == member
   end
 
+  @doc ~S"""
+  Check that `Monoid.op` is [associative](https://en.wikipedia.org/wiki/Associative_property)
+  (ie: brackets don't matter)
+  """
   @spec spotcheck_associativity(any, any, any) :: boolean
   def spotcheck_associativity(member1, member2, member3) do
     (member1 <|> (member2 <|> member3)) == ((member1 <|> member2) <|> member3)
   end
 
+  @doc """
+  Spotcheck all monoid properties
+  """
   @spec spotcheck(any, any, any) :: boolean
   def spotcheck(a, b, c) do
     spotcheck_identity(a) and spotcheck_associativity(a, b, c)
