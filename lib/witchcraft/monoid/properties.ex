@@ -14,7 +14,7 @@ defmodule Witchcraft.Monoid.Properties do
 
   # @spec test_id :: boolean
   # def spotcheck_id(member) do
-  #   op(id, member) == member
+  #   op(identity, member) == member
   # end
 
   # def spotcheck_associativity(member1, member2, member3) do

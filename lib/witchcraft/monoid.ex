@@ -45,7 +45,7 @@ defprotocol Witchcraft.Monoid do
   Because you cannot divide by zero, the property does not hold for all values in the set.
 
   # Notes
-  You can of course use abuse this protocol to define a fake "monoid" that behaves differently.
+  You can of course use abuse this protocol to define a fake 'monoid' that behaves differently.
   For the protocol to operate as intended, you need to respect the above properties.
   """
 
@@ -58,7 +58,7 @@ defprotocol Witchcraft.Monoid do
 
   @doc "Get the idenity ('zero') element of the monoid by passing in any element of the set"
   @spec id(any) :: any
-  def id(a)
+  def identity(a)
 
   @doc "Combine two members of the monoid, and return another member"
   @spec op(any, any) :: any
