@@ -2,7 +2,7 @@ defmodule Witchcraft.Monoid.Properties do
   @moduledoc """
   Check samples of your monoid to confirm that your data adheres to the
   monoidal properties. *All members* of your datatype should adhere to these rules.
-  There are placed here as a quick way to spotcheck some of your values.
+  They are placed here as a quick way to spotcheck some of your values.
   """
 
   import Witchcraft.Monoid
