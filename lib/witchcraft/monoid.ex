@@ -20,14 +20,14 @@ defprotocol Witchcraft.Monoid do
   # Pseudocode
   identity = 0
   op = &(&1 + &2) # Integer addition
-  op(34, id) == 34
+  op(34, identity) == 34
   ```
 
   ```
   # Pseudocode
   identity = 1
   op = &(&1 * &2) # Integer multiplication
-  op(42, id) == 42
+  op(42, identity) == 42
   ```
 
   ## Concrete
@@ -48,11 +48,11 @@ defprotocol Witchcraft.Monoid do
   Because you cannot divide by zero, the property does not hold for all values in the set.
 
   # Notes
-  You can of course use abuse this protocol to define a fake 'monoid' that behaves differently.
+  You can of course abuse this protocol to define a fake 'monoid' that behaves differently.
   For the protocol to operate as intended, you need to respect the above properties.
   """
 
-  @doc "Get the idenity ('zero') element of the monoid by passing in any element of the set"
+  @doc "Get the identity ('zero') element of the monoid by passing in any element of the set"
   @spec identity(any) :: any
   def identity(a)
 
