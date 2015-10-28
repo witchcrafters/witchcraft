@@ -3,9 +3,9 @@ defmodule Witchcraft do
   import Witchcraft.Monoid.Functions
   import Witchcraft.Monoid.Properties
 
-  # import Witchcraft.Functor
-  # import Witchcraft.Functor.Functions
-  # import Witchcraft.Functor.Properties
+  import Witchcraft.Functor
+  import Witchcraft.Functor.Functions
+  import Witchcraft.Functor.Properties
 
   # import Witchcraft.Applicative
   # import Witchcraft.Applicative.Functions

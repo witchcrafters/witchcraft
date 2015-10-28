@@ -1,0 +1,3 @@
+defprotocol MultiFunctor do
+
+end
