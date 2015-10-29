@@ -99,11 +99,11 @@ returns another member of the set.</p>
 <pre><code class="elixir"># Pseudocode
 identity = 0
 op = &amp;(&amp;1 + &amp;2) # Integer addition
-op(34, id) == 34</code></pre>
+op(34, identity) == 34</code></pre>
 <pre><code class="elixir"># Pseudocode
 identity = 1
 op = &amp;(&amp;1 * &amp;2) # Integer multiplication
-op(42, id) == 42</code></pre>
+op(42, identity) == 42</code></pre>
 <h2>Concrete</h2>
 <pre><code class="iex elixir">iex&gt; alias Witchcraft.Monoid, as: Monoid
 iex&gt; defimpl Monoid, for: Integer do
@@ -116,7 +116,7 @@ iex&gt; Monoid.op(1, 4) |&gt; Monoid.op 2 |&gt; Monoid.op 10
 <p>Integer division is not a monoid.
 Because you cannot divide by zero, the property does not hold for all values in the set.</p>
 <h1>Notes</h1>
-<p>You can of course use abuse this protocol to define a fake ‘monoid’ that behaves differently.
+<p>You can of course abuse this protocol to define a fake ‘monoid’ that behaves differently.
 For the protocol to operate as intended, you need to respect the above properties.</p>
 
         </section>
@@ -155,7 +155,7 @@ For the protocol to operate as intended, you need to respect the above propertie
     <a href="#identity/1">identity(a)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Get the idenity (‘zero’) element of the monoid by passing in any element of the set</p>
+    <div class="summary-synopsis"><p>Get the identity (‘zero’) element of the monoid by passing in any element of the set</p>
 </div>
   
 </div>
@@ -228,7 +228,7 @@ For the protocol to operate as intended, you need to respect the above propertie
     </div>
   
   <section class="docstring">
-    <p>Get the idenity (‘zero’) element of the monoid by passing in any element of the set</p>
+    <p>Get the identity (‘zero’) element of the monoid by passing in any element of the set</p>
 
   </section>
 </div>

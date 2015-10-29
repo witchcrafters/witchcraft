@@ -75,17 +75,30 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Functors provide a way to apply a function to every element in a datatype
-(lists, trees, etc).</p>
+          <p>Functors provide a way to apply a function to value(s) a datatype
+(lists, trees, maybes, etc).</p>
 <p>All elements of the data being mapped over need to be consumable by
-the mapping function. The simplest way to handle this is to have only one
+the lifted function. The simplest way to handle this is to have only one
 type in the data/collection.</p>
+<p>The term <code class="inline">lift</code> is used rather than the more common <code class="inline">map</code>.
+First, this makes clear that the use is to lift functions into containers.
+Second, if you want mapping behaviour on collections, check out
+<a href="http://elixir-lang.org/docs/v1.1/elixir/Enum.html#map/2"><code class="inline">Enum.map</code></a>.
+In fact, the default implimentation <em>is</em> <code class="inline">Enum.map</code>, so you can use this with the
+build-in datatypes.
+Third, the naming becomes more consistent with
+<a href="http://www.robotoverlord.io/witchcraft/Witchcraft.Applicative.Functions.html"><code class="inline">Applicative</code></a>‘s
+<code class="inline">lift2</code>, <code class="inline">lift3</code>, and so on.</p>
 <h1>Properties</h1>
 <h2>Identity</h2>
 <p>Mapping the identity function over the object returns the same object
 ex. <code class="inline">lift([1,2,3], &amp;(&amp;1)) == [1,2,3]</code></p>
 <h2>Distributive</h2>
 <p><code class="inline">lift(data, (f |&gt; g)) == data |&gt; lift f |&gt; lift g</code></p>
+<h2>Associates all objects</h2>
+<p>Mapping a function onto an object returns a value.
+ie: does not throw an error, returns a value of the target type (not of
+the wrong type, or the type <code class="inline">none</code>)</p>
 <h1>Notes:</h1>
 <ul>
 <li>The argument order convention is reversed from most other lanaguges
@@ -96,6 +109,15 @@ ex. <code class="inline">lift([1,2,3], &amp;(&amp;1)) == [1,2,3]</code></p>
 <li>Falls back to <a href="http://elixir-lang.org/docs/v1.0/elixir/Enum.html#map/2"><code class="inline">Enum.map/2</code></a>
 </li>
 </ul>
+<h1>Examples</h1>
+<pre><code class="iex elixir">iex&gt; Witchcraft.Functor.lift([1,2,3], &amp;(&amp;1 + 1))
+[2,3,4]
+
+iex&gt; defimpl Witchcraft.Functor, for: Witchcraft.Utility.Id do
+iex&gt;   def lift(%Witchcraft.Utility.Id{id: inner}, func), do: %Witchcraft.Utility.Id{id: func.(inner)}
+iex&gt; end
+iex&gt; Witchcraft.Functor.lift(%Witchcraft.Utility.Id{id: 1}, &amp;(&amp;1 + 1))
+%Witchcraft.Utility.Id{id: 2}</code></pre>
 
         </section>
       
@@ -115,31 +137,7 @@ ex. <code class="inline">lift([1,2,3], &amp;(&amp;1)) == [1,2,3]</code></p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#t:a/0">a()</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:r/0">r()</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
     <a href="#t:t/0">t()</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:wa/0">wa()</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:wr/0">wr()</a>
   </div>
   
 </div>
@@ -182,24 +180,8 @@ The collection will retain its structure (list, tree, and so on)</p>
             Types
           </h1>
           <div class="types-list">
-            <div id="t:a/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:a/0">a</a> :: any</code></pre>
-  
-</div>
-<div id="t:r/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:r/0">r</a> :: any</code></pre>
-  
-</div>
-<div id="t:t/0" class="type-detail">
+            <div id="t:t/0" class="type-detail">
   <pre><code class="elixir"><a href="#t:t/0">t</a> :: term</code></pre>
-  
-</div>
-<div id="t:wa/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:wa/0">wa</a> :: any</code></pre>
-  
-</div>
-<div id="t:wr/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:wr/0">wr</a> :: any</code></pre>
   
 </div>
 
@@ -222,7 +204,7 @@ The collection will retain its structure (list, tree, and so on)</p>
     </a>
     <span class="signature">lift(data, function)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor.ex#L37" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor.ex#L63" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -232,7 +214,7 @@ The collection will retain its structure (list, tree, and so on)</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">lift(<a href="#t:wa/0">wa</a>, (<a href="#t:a/0">a</a> -> <a href="#t:r/0">r</a>)) :: <a href="#t:wr/0">wr</a></code></pre>
+          <pre><code class="elixir">lift(any, (any -> any)) :: any</code></pre>
         
       </div>
     </div>
