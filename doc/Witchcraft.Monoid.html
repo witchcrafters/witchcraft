@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Witchcraft.Monoid – Witchcraft v0.0.1</title>
+    <title>Witchcraft.Monoid – Witchcraft v0.1.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -28,7 +28,7 @@
         Witchcraft
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.0.1
+        v0.1.0
       </h2>
     </div>
     
@@ -75,7 +75,7 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Monoids are a set, plus a binary combining operation (<code class="inline">op</code>) that
+          <p>Monoids are a set of elements, and a binary combining operation (<code class="inline">op</code>) that
 returns another member of the set.</p>
 <h1>Properties</h1>
 <h2>Associativity</h2>
@@ -97,16 +97,17 @@ returns another member of the set.</p>
 <h1>Examples</h1>
 <h2>Theory</h2>
 <pre><code class="elixir"># Pseudocode
-id = 0
+identity = 0
 op = &amp;(&amp;1 + &amp;2) # Integer addition
 op(34, id) == 34</code></pre>
 <pre><code class="elixir"># Pseudocode
-id = 1
+identity = 1
 op = &amp;(&amp;1 * &amp;2) # Integer multiplication
 op(42, id) == 42</code></pre>
 <h2>Concrete</h2>
-<pre><code class="iex elixir">iex&gt; defimpl Monoid, for: Integer do
-iex&gt;   def id(_), do: 0
+<pre><code class="iex elixir">iex&gt; alias Witchcraft.Monoid, as: Monoid
+iex&gt; defimpl Monoid, for: Integer do
+iex&gt;   def identity(_), do: 0
 iex&gt;   def op(a, b), do: a + b
 iex&gt; end
 iex&gt; Monoid.op(1, 4) |&gt; Monoid.op 2 |&gt; Monoid.op 10
@@ -115,7 +116,7 @@ iex&gt; Monoid.op(1, 4) |&gt; Monoid.op 2 |&gt; Monoid.op 10
 <p>Integer division is not a monoid.
 Because you cannot divide by zero, the property does not hold for all values in the set.</p>
 <h1>Notes</h1>
-<p>You can of course use abuse this protocol to define a fake “monoid” that behaves differently.
+<p>You can of course use abuse this protocol to define a fake ‘monoid’ that behaves differently.
 For the protocol to operate as intended, you need to respect the above properties.</p>
 
         </section>
@@ -151,20 +152,10 @@ For the protocol to operate as intended, you need to respect the above propertie
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#id/1">id(a)</a>
+    <a href="#identity/1">identity(a)</a>
   </div>
   
     <div class="summary-synopsis"><p>Get the idenity (‘zero’) element of the monoid by passing in any element of the set</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#member?/1">member?(value)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Check if the argument is a member of the monoid.
-Doubles as a definition of what belongs to the monoid</p>
 </div>
   
 </div>
@@ -214,39 +205,12 @@ Doubles as a definition of what belongs to the monoid</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="id/1">
+          <div class="detail" id="identity/1">
   <div class="detail-header">
-    <a href="#id/1" class="detail-link" title="Link to this function">
+    <a href="#identity/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">id(a)</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L61" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">id(any) :: any</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    <p>Get the idenity (‘zero’) element of the monoid by passing in any element of the set</p>
-
-  </section>
-</div>
-<div class="detail" id="member?/1">
-  <div class="detail-header">
-    <a href="#member?/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">member?(value)</span>
+    <span class="signature">identity(a)</span>
       
       <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L57" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
@@ -258,14 +222,13 @@ Doubles as a definition of what belongs to the monoid</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">member?(any) :: boolean</code></pre>
+          <pre><code class="elixir">identity(any) :: any</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Check if the argument is a member of the monoid.
-Doubles as a definition of what belongs to the monoid.</p>
+    <p>Get the idenity (‘zero’) element of the monoid by passing in any element of the set</p>
 
   </section>
 </div>
@@ -276,7 +239,7 @@ Doubles as a definition of what belongs to the monoid.</p>
     </a>
     <span class="signature">op(a, b)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L65" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid.ex#L61" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     

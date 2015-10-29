@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Witchcraft.Monoid.Functions – Witchcraft v0.0.1</title>
+    <title>Witchcraft.Monoid.Functions – Witchcraft v0.1.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -28,7 +28,7 @@
         Witchcraft
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.0.1
+        v0.1.0
       </h2>
     </div>
     
@@ -93,6 +93,9 @@
     <a href="#%3C%7C%3E/2">a &lt;|&gt; b</a>
   </div>
   
+    <div class="summary-synopsis"><p>Infix variant of <code class="inline">Monoid.op</code></p>
+</div>
+  
 </div>
 
   </div>
@@ -122,14 +125,34 @@
     </a>
     <span class="signature">a &lt;|&gt; b</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid/functions.ex#L4" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monoid/functions.ex#L23" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">any <|> any :: any</code></pre>
+        
+      </div>
+    </div>
+  
   <section class="docstring">
-    
+    <p>Infix variant of <code class="inline">Monoid.op</code></p>
+<h1>Example</h1>
+<pre><code class="iex elixir">iex&gt; alias Witchcraft.Monoid, as: Monoid
+iex&gt; defimpl Monoid, for: Integer do
+iex&gt;   def identity(_), do: 0
+iex&gt;   def op(a, b), do: a + b
+iex&gt; end
+iex&gt; Monoid.op(1, 4) |&gt; Monoid.op 2 |&gt; Monoid.op 10
+17
+iex&gt; 1 &lt;|&gt; 4 &lt;|&gt; 2 &lt;|&gt; 10
+17</code></pre>
+
   </section>
 </div>
 
