@@ -39,4 +39,11 @@ defmodule Witchcraft.Mixfile do
     [{:earmark, "~> 0.1", only: :dev},
      {:ex_doc, "~> 0.10", only: :dev}]
   end
+
+  defp package do
+    [maintaners: ["Brooklyn Zelenka", "Jennifer Cooper"],
+     licenses: ["MIT"],
+     links: %{"GitHub" => "https://github.com/robot-overlord/witchcraft",
+              "Docs" => "http://robot-overlord.github.io/witchcraft/"}]
+  end
 end
