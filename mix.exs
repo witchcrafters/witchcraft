@@ -5,6 +5,9 @@ defmodule Witchcraft.Mixfile do
     [app:     :witchcraft,
      name:    "Witchcraft",
 
+     description: "Common algebraic structures and functions",
+     package: package,
+
      version: "0.2.0",
      elixir:  "~> 1.1",
 
@@ -41,7 +44,7 @@ defmodule Witchcraft.Mixfile do
   end
 
   defp package do
-    [maintaners: ["Brooklyn Zelenka", "Jennifer Cooper"],
+    [maintainers: ["Brooklyn Zelenka", "Jennifer Cooper"],
      licenses: ["MIT"],
      links: %{"GitHub" => "https://github.com/robot-overlord/witchcraft",
               "Docs" => "http://robot-overlord.github.io/witchcraft/"}]
