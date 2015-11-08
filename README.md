@@ -1,7 +1,9 @@
 # Witchcraft
 ![](./witchcraft-logo.png)
 
-[![Circle CI](https://circleci.com/gh/robot-overlord/witchcraft/tree/master.svg?style=svg)](https://circleci.com/gh/robot-overlord/witchcraft/tree/master)
+| Build Status | Documentation |
+|--------------|------|
+| [![Circle CI](https://circleci.com/gh/robot-overlord/witchcraft/tree/master.svg?style=svg)](https://circleci.com/gh/robot-overlord/witchcraft/tree/master) | [http://www.robotoverlord.io/witchcraft](http://www.robotoverlord.io/witchcraft/extra-readme.html) |
 
 A monoid, functor, applicative, monad, and arrow library
 
