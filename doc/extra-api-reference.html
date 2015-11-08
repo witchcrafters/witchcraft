@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>API Reference – Witchcraft v0.1.0</title>
+    <title>API Reference – Witchcraft v0.2.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.10.0">
     <link rel="stylesheet" href="dist/app.css" />
@@ -28,7 +28,7 @@
         Witchcraft
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.1.0
+        v0.2.0
       </h2>
     </div>
     
@@ -99,26 +99,6 @@ the expected behaviour</p>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="Witchcraft.Applicative.Functions.html">Witchcraft.Applicative.Functions</a></div>
-  
-    <div class="summary-synopsis"><p>Note that what would be <code class="inline">Applicative.lift</code> is <code class="inline">Functor.lift</code>.
-Given that yu have implimented Functor, this should not be an issue</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Witchcraft.Applicative.Properties.html">Witchcraft.Applicative.Properties</a></div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Witchcraft.Arrow.Extra.html">Witchcraft.Arrow.Extra</a></div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Witchcraft.Category.Extra.html">Witchcraft.Category.Extra</a></div>
-  
-</div>
-<div class="summary-row">
   <div class="summary-signature"><a href="Witchcraft.Functor.Functions.html">Witchcraft.Functor.Functions</a></div>
   
 </div>
@@ -129,14 +109,6 @@ Given that yu have implimented Functor, this should not be an issue</p>
 functor properties. <em>All members</em> of your datatype should adhere to these rules.
 They are placed here as a quick way to spotcheck some of your values</p>
 </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Witchcraft.Monad.Axioms.html">Witchcraft.Monad.Axioms</a></div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Witchcraft.Monad.Functions.html">Witchcraft.Monad.Functions</a></div>
   
 </div>
 <div class="summary-row">
@@ -175,43 +147,10 @@ They are placed here as a quick way to spotcheck some of your values</p>
       <h1 class="section-heading">Protocols</h1>
       <div class="summary">
         <div class="summary-row">
-  <div class="summary-signature"><a href="MultiFunctor.html">MultiFunctor</a></div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Witchcraft.Applicative.html">Witchcraft.Applicative</a></div>
-  
-    <div class="summary-synopsis"><p>Applicative functors provide a method of applying a function contained in a
-datatype to a value of the same datatype</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Witchcraft.Arrow.html">Witchcraft.Arrow</a></div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Witchcraft.BinaryFunctor.html">Witchcraft.BinaryFunctor</a></div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Witchcraft.Category.html">Witchcraft.Category</a></div>
-  
-</div>
-<div class="summary-row">
   <div class="summary-signature"><a href="Witchcraft.Functor.html">Witchcraft.Functor</a></div>
   
     <div class="summary-synopsis"><p>Functors provide a way to apply a function to value(s) a datatype
 (lists, trees, maybes, etc)</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="Witchcraft.Monad.html">Witchcraft.Monad</a></div>
-  
-    <div class="summary-synopsis"><p>Expects that you have implimented <a href="Witchcraft.Functor.html"><code class="inline">Witchcraft.Functor</code></a> and <a href="Witchcraft.Applicative.html"><code class="inline">Witchcraft.Applicative</code></a>
-  for the datatype that you wish to use with <code class="inline">Wicthcraft.Monad</code>. All sensible
-  monads are also functors and applicatives</p>
 </div>
   
 </div>
