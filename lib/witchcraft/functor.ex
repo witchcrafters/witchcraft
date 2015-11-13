@@ -39,18 +39,15 @@ defprotocol Witchcraft.Functor do
 
   # Examples
 
-  ```
+      iex> [1,2,3] |> Witchcraft.Functor.lift &(&1 + 1)
+      [2,3,4]
 
-  iex> Witchcraft.Functor.lift([1,2,3], &(&1 + 1))
-  [2,3,4]
+      iex> defimpl Witchcraft.Functor, for: Witchcraft.Utility.Id do
+      iex>   def lift(%Witchcraft.Utility.Id{id: inner}, func), do: %Witchcraft.Utility.Id{id: func.(inner)}
+      iex> end
+      iex> Witchcraft.Functor.lift(%Witchcraft.Utility.Id{id: 1}, &(&1 + 1))
+      %Witchcraft.Utility.Id{id: 2}
 
-  iex> defimpl Witchcraft.Functor, for: Witchcraft.Utility.Id do
-  iex>   def lift(%Witchcraft.Utility.Id{id: inner}, func), do: %Witchcraft.Utility.Id{id: func.(inner)}
-  iex> end
-  iex> Witchcraft.Functor.lift(%Witchcraft.Utility.Id{id: 1}, &(&1 + 1))
-  %Witchcraft.Utility.Id{id: 2}
-
-  ```
   """
 
   @fallback_to_any true

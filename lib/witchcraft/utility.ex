@@ -2,19 +2,15 @@ defmodule Witchcraft.Utility do
   @doc ~S"""
   Do nothing to an argument; just return it
 
-  # Examples
-  ```
+      iex> Witchcraft.Utility.id("88 miles per hour")
+      "88 miles per hour"
 
-  iex> Witchcraft.Utility.id("88 miles per hour")
-  "88 miles per hour"
+      iex> Witchcraft.Utility.id(42)
+      42
 
-  iex> Witchcraft.Utility.id(42)
-  42
+      iex> Enum.map([1,2,3], &Witchcraft.Utility.id&1)
+      [1,2,3]
 
-  iex> Enum.map([1,2,3], &Witchcraft.Utility.id&1)
-  [1,2,3]
-
-  ```
   """
   @spec id(any) :: any
   def id(a), do: a
@@ -23,16 +19,12 @@ defmodule Witchcraft.Utility do
   Return the *first* of two arguments. Can be used to repeatedly apply the same value
   in functions such as folds.
 
-  # Examples
-  ```
+      iex> Witchcraft.Utility.first(43, 42)
+      43
 
-  iex> Witchcraft.Utility.first(43, 42)
-  43
+      iex> Enum.reduce([1,2,3], [42], &Witchcraft.Utility.first(&1, &2))
+      3
 
-  iex> Enum.reduce([1,2,3], [42], &Witchcraft.Utility.first(&1, &2))
-  3
-
-  ```
   """
   @spec first(any, any) :: any
   def first(a, _), do: a
@@ -41,16 +33,12 @@ defmodule Witchcraft.Utility do
   Return the *second* of two arguments. Can be used to repeatedly apply the same value
   in functions such as folds.
 
-  # Examples
-  ```
+      iex> Witchcraft.Utility.second(43, 42)
+      42
 
-  iex> Witchcraft.Utility.second(43, 42)
-  42
+      iex> Enum.reduce([1,2,3], [], &Witchcraft.Utility.second(&1, &2))
+      []
 
-  iex> Enum.reduce([1,2,3], [], &Witchcraft.Utility.second(&1, &2))
-  []
-
-  ```
   """
   @spec second(any, any) :: any
   def second(_, b), do: b
@@ -62,29 +50,63 @@ defmodule Witchcraft.Utility do
   @doc """
   Function composition, from the back of the lift to the front
 
-  # Example
-  iex> sum_plus_one = Witchcraft.Utility.compose([&(&1 + 1), &(Enum.sum(&1))])
-  iex> [1,2,3] |> sum_plus_one.()
-  7
+      iex> sum_plus_one = Witchcraft.Utility.compose(&(&1 + 1), &(Enum.sum(&1)))
+      iex> [1,2,3] |> sum_plus_one.()
+      7
+
   """
-  @spec compose([(... -> any)]) :: (... -> any)
-  def compose(func_list) do
-    List.foldr(func_list, &(id(&1)), fn(f, acc) -> &(f.(acc.(&1))) end)
-  end
+  @spec compose((... -> any), (... -> any)) :: (... -> any)
+  def compose(g, f), do: &(g.(f.(&1)))
+
+  @doc ~S"""
+  Infix compositon operator
+
+      iex> sum_plus_one = &(&1 + 1) <|> &(Enum.sum(&1))
+      iex> sum_plus_one.([1,2,3])
+      7
+
+      iex> pipe = [1,2,3] |> &(Enum.sum(&1)).() |> &(&1 + 1).()
+      iex> compose = [1,2,3] |> (&(&1 + 1) <|> &(Enum.sum(&1))).()
+      iex> pipe == compose
+      True
+
+  """
+  @spec (... -> any) <|> (... -> any) :: (... -> any)
+  def g <|> f, do: compose(g, f)
+
+  @doc """
+  Function composition, from the back of the lift to the front
+
+     iex> sum_plus_one = Witchcraft.Utility.compose_forward(&(Enum.sum(&1)), &(&1 + 1))
+     iex> [1,2,3] |> sum_plus_one.()
+     7
+
+  """
+  @spec compose_forward((... -> any), (... -> any)) :: (... -> any)
+  def compose_forward(f,g), do: &(g.(f.(&1)))
+
+  @doc """
+  Function composition, from the tail of the list to the head
+
+      iex> sum_plus_one = Witchcraft.Utility.compose([&(&1 + 1), &(Enum.sum(&1))])
+      iex> [1,2,3] |> sum_plus_one.()
+      7
+
+  """
+  @spec compose_list([(... -> any)]) :: (... -> any)
+  def compose_list(func_list), do: List.foldr(func_list, id, &compose(&1,&2))
 
   @doc ~S"""
   Compose functions, from the head of the list of functions. The is the reverse
   order versus what one would normally expect (left to right rather than right to left).
 
-  # Example
-  iex> sum_plus_one = Witchcraft.Utility.reverse_compose([&(Enum.sum(&1)), &(&1 + 1)])
-  iex> [1,2,3] |> sum_plus_one.()
-  7
+      iex> sum_plus_one = Witchcraft.Utility.compose_list_forward([&(Enum.sum(&1)), &(&1 + 1)])
+      iex> [1,2,3] |> sum_plus_one.()
+      7
+
   """
-  @spec reverse_compose([(... -> any)]) :: (... -> any)
-  def reverse_compose(func_list) do
-    Enum.reduce(func_list, &(id(&1)), fn(f, acc) -> &(f.(acc.(&1))) end)
-  end
+  @spec compose_list_forward([(... -> any)]) :: (... -> any)
+  def reverse_compose_list(func_list), do: Enum.reduce(func_list, id, &compose(&1,&2))
 
   defmodule Id do
     @moduledoc ~S"""

@@ -10,6 +10,6 @@ Functors, monads, arrows, and categories
 
 ```
 def deps do
-  [{:witchcraft, "~> 0.2.0"}]
+  [{:witchcraft, "~> 0.3.0"}]
 end
 ```
