@@ -10,36 +10,46 @@ defprotocol Witchcraft.Applicative do
   ## Identity
   `apply`ing a lifted `id` to some lifted value `v` does not change `v`
 
-      iex> (v |> apply (wrap &(&1))) == v
+      iex> apply(v, wrap(&id(&1))) == v
       True
 
   ## Composition
   `apply` composes normally.
 
-      iex> (wrap Witchcraft.Utility.<|>) <*> u <*> v <*> w == u <*> (v <*> w)
-      iex> (wrap compose) <*> u <*> v <*> w == u <*> (v <*> w)
+      iex> apply((wrap &compose(&1,&2)),(apply(u,(apply(v, w))))) == apply(u,(apply(v, w)))
       True
 
   ## Homomorphism
   `apply`ing a `wrap`ped function to a `wrap`ped value is the same as wrapping the
   result of the function on that value.
 
-      iex> apply(wrap(x), wrap(f)) == wrap(f(x))
+      iex> apply(wrap x, wrap f) == wrap f(x))
       True
 
   ## Interchange
   The order does not matter when `apply`ing to a `wrap`ped value
   and a `wrap`ped function.
 
-      iex> u <*> pure y == pure ($ y) <*> u
-      iex> apply(wrap(y), u) == u |> apply wrap(&(lift(y, &1))
+      iex> apply(wrap y, u) == apply(u, wrap &(lift(y, &1))
       True
 
   ## Functor
   Being an applicative _functor_, `apply` behaves as `lift` on `wrap`ped values
 
-      iex> lift f x == apply (wrap f) x
+      iex> lift(x, f) == apply(x, (wrap f))
       True
+
+  # Notes
+  Given that Elixir functons are right-associative, you can write clean looking,
+  but much more ambiguous versions:
+
+      iex> wrap y |> apply u == u |> apply wrap &lift(y, &1)
+      True
+
+      iex> x |> lift f == x |> apply wrap f
+      True
+
+  However, it is strongly recommended to include the parentheses for clarity.
 
   """
 
@@ -55,7 +65,7 @@ defprotocol Witchcraft.Applicative do
   @doc ~S"""
   Sequentially apply lifted function(s) to lifted data.
   """
-  @spec apply((any -> any), any) :: any
+  @spec apply(any, (... -> any)) :: any
   def apply(wrapped_value, wrapped_function)
 end
 

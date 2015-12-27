@@ -47,7 +47,13 @@ defmodule Witchcraft.Utility do
   @spec constant(any, any) :: any
   def constant(_, b), do: b
 
-  @doc """
+  @doc ~S"""
+  Reverse the order fo two arguments
+  """
+  @spec flip(((any, any) -> any)) :: (any, any) -> any
+  def flip(func), do: &func.(&2, &1)
+
+  @doc ~S"""
   Function composition, from the back of the lift to the front
 
       iex> sum_plus_one = Witchcraft.Utility.compose(&(&1 + 1), &(Enum.sum(&1)))
@@ -107,6 +113,22 @@ defmodule Witchcraft.Utility do
   """
   @spec compose_list_forward([(... -> any)]) :: (... -> any)
   def reverse_compose_list(func_list), do: Enum.reduce(func_list, id, &compose(&1,&2))
+
+  @doc ~S"""
+  Curry is copied from http://blog.patrikstorm.com/function-currying-in-elixir
+  """
+  def curry(fun) do
+    {_, arity} = :erlang.fun_info(fun, :arity)
+    curry(fun, arity)
+  end
+
+  def curry(fun, 0, arguments) do
+    apply(fun, Enum.reverse arguments)
+  end
+
+  def curry(fun, arity, arguments) do
+    fn arg -> curry(fun, arity - 1, [arg | arguments]) end
+  end
 
   defmodule Id do
     @moduledoc ~S"""
