@@ -1,6 +1,12 @@
 defmodule Witchcraft.Functor.Functions do
+  @moduledoc ~S"""
+  """
+
+  alias Quark, as: Q
   alias Witchcraft.Functor, as: F
-  alias Witchcraft.Utility, as: U
+
+  @spec lift((... -> any)) :: (any -> any)
+  def lift(fun), do: &lift(&1, fun)
 
   @doc ~S"""
   Replace all of the input's data nodes with some constant value
@@ -11,7 +17,7 @@ defmodule Witchcraft.Functor.Functions do
   """
   @spec map_replace(any, any) :: any
   def map_replace(a, constant) do
-    F.lift(a, &(U.constant(&1, constant)))
+    F.lift(a, &(Q.const(&1, constant)))
   end
 
   @doc ~S"""

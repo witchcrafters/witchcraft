@@ -1,5 +1,5 @@
 defprotocol Witchcraft.Functor do
-  require Witchcraft.Utility.Id
+  require Witchcraft.ADT.Id
   @moduledoc ~S"""
   Functors provide a way to apply a function to value(s) a datatype
   (lists, trees, maybes, etc).
@@ -42,11 +42,11 @@ defprotocol Witchcraft.Functor do
       iex> [1,2,3] |> Witchcraft.Functor.lift &(&1 + 1)
       [2,3,4]
 
-      iex> defimpl Witchcraft.Functor, for: Witchcraft.Utility.Id do
-      iex>   def lift(%Witchcraft.Utility.Id{id: inner}, func), do: %Witchcraft.Utility.Id{id: func.(inner)}
+      iex> defimpl Witchcraft.Functor, for: Witchcraft.ADT.Id do
+      iex>   def lift(%Witchcraft.ADT.Id{id: inner}, func), do: %Witchcraft.ADT.Id{id: func.(inner)}
       iex> end
-      iex> Witchcraft.Functor.lift(%Witchcraft.Utility.Id{id: 1}, &(&1 + 1))
-      %Witchcraft.Utility.Id{id: 2}
+      iex> Witchcraft.Functor.lift(%Witchcraft.ADT.Id{id: 1}, &(&1 + 1))
+      %Witchcraft.ADT.Id{id: 2}
 
   """
 
@@ -65,7 +65,7 @@ defimpl Witchcraft.Functor, for: Any do
   def lift(data, func), do: Enum.map(data, func)
 end
 
-defimpl Witchcraft.Functor, for: Witchcraft.Utility.Id do
+defimpl Witchcraft.Functor, for: Witchcraft.ADT.Id do
   @doc "Example struct implimentation"
-  def lift(%Witchcraft.Utility.Id{id: data}, func), do: %Witchcraft.Utility.Id{id: func.(data)}
+  def lift(%Witchcraft.ADT.Id{id: data}, func), do: %Witchcraft.ADT.Id{id: func.(data)}
 end

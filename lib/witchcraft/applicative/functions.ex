@@ -5,7 +5,7 @@ defmodule Witchcraft.Applicative.Functions do
 
   alias Witchcraft.Functor
   alias Witchcraft.Applicative, as: A
-  alias Witchcraft.Utility, as: U
+  alias Quark, as: Q
 
   @doc ~S"""
   `lift` a function that takes a list of arguments
@@ -23,8 +23,8 @@ defmodule Witchcraft.Applicative.Functions do
   @spec lift([any], (... -> a)) :: any
   def lift([value|[]], func), do: F.lift(value, func)
   def lift([head|tail], func) do
-    lifted = U.curry(func) ~> head
-    Enum.reduce(tail, lifted, U.flip(apply))
+    lifted = Q.Curry.curry(func) ~> head
+    Enum.reduce(tail, lifted, Q.flip(apply))
   end
 
   @doc ~S"""

@@ -5,15 +5,15 @@ defmodule Witchcraft.Functor.Properties do
   They are placed here as a quick way to spotcheck some of your values.
   """
 
-  import Witchcraft.Utility
+  import Quark, only: [id: 1]
   import Witchcraft.Functor
   import Witchcraft.Functor.Functions
 
   @doc ~S"""
   Check that lifting a function into some context returns a member of the target type
 
-      iex> alias Witchcraft.Utility.Id, as: Id
-      iex> spotcheck_associates_object(%Id{id: 42}, &(&1), &Id.is_id&1)
+      iex> alias Witchcraft.ADT.Id, as: Id
+      iex> spotcheck_associates_object(%Id{id: 42}, &(&1), &Id.is_id/1)
       true
 
   """
@@ -36,7 +36,7 @@ defmodule Witchcraft.Functor.Properties do
        B ---- id ----> B
 
 
-      iex> spotcheck_preserve_identity(%Witchcraft.Utility.Id{id: 7}, &(&1 + 1))
+      iex> spotcheck_preserve_identity(%Witchcraft.ADT.Id{id: 7}, &(&1 + 1))
       true
 
   """
@@ -48,7 +48,7 @@ defmodule Witchcraft.Functor.Properties do
   @doc ~S"""
   Check that lifting a composed function is the same as lifting functions in sequence
 
-      iex> spotcheck_preserve_compositon(%Witchcraft.Utility.Id{id: 5}, &(&1 + 1), &(&1 * 10))
+      iex> spotcheck_preserve_compositon(%Witchcraft.ADT.Id{id: 5}, &(&1 + 1), &(&1 * 10))
       true
   """
   @spec spotcheck_preserve_compositon(any, (any -> any), (any -> any)) :: boolean
@@ -59,7 +59,7 @@ defmodule Witchcraft.Functor.Properties do
   @doc ~S"""
   Spotcheck all functor properties
 
-      iex> alias Witchcraft.Utility.Id, as: Id
+      iex> alias Witchcraft.ADT.Id, as: Id
       iex> spotcheck(%Id{id: 42}, &(&1 + 1), &(&1 * 2), &Id.is_id&1)
       true
 

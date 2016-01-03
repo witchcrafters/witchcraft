@@ -1,5 +1,5 @@
 defprotocol Witchcraft.Applicative do
-  require Witchcraft.Utility.Id
+  require Witchcraft.ADT.Id
   @moduledoc """
   Applicative functors provide a method of applying a function contained in a
   data structure to a value of the same type. This allows you to apply and compose

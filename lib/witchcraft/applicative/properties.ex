@@ -2,9 +2,10 @@ defmoule Witchraft.Applicative.Properties do
   @moduledoc ~S"""
   """
 
-  import Witchcraft.Utility
   import Witchcraft.Applicative
   # import Witchcraft.Applicative.Functions
+
+  import Quark
 
   @doc ~S"""
   `apply`ing a lifted `id` to some lifted value `v` does not change `v`
