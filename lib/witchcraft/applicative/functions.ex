@@ -47,17 +47,4 @@ defmodule Witchcraft.Applicative.Functions do
   """
   @spec (any -> any) ~>> any :: any
   def func ~>> value, do: value <<~ func
-
-  @doc ~S"""
-  Operator alias for `wrap`, punning on `@spec`'s `::`.
-
-      iex> 1 ::: []
-      [1]
-
-      iex> "cool story, bro" ::: %U.Id{}
-      %U.Id{id: "cool story, bro"}
-
-  """
-  @spec any ::: any :: any
-  def bare ::: target, do: wrap(target, bare)
 end

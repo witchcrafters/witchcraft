@@ -60,7 +60,7 @@ defprotocol Witchcraft.Applicative do
   or empty value of that type, but not nessesarily).
   """
   @spec wrap(any, any) :: any
-  def wrap(specimen, value)
+  def wrap(specimen, bare)
 
   @doc ~S"""
   Sequentially apply lifted function(s) to lifted data.
@@ -73,7 +73,7 @@ defimpl Witchcraft.Applicative, for: Any do
   @doc ~S"""
   By default, use the true identity functor (ie: don't wrap)
   """
-  def wrap(_, value), do: value
+  def wrap(_, bare), do: bare
 
   @doc ~S"""
   For un`wrap`ped values, treat `apply` as plain function application.
