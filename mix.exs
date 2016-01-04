@@ -18,7 +18,7 @@ defmodule Witchcraft.Mixfile do
      start_permanent: Mix.env == :prod,
 
      deps: deps,
-     docs: [#logo: "path/to/logo.png",
+     docs: [logo: "https://github.com/robot-overlord/witchcraft/blob/master/logo.png?raw=true",
            extras: ["README.md"]]]
   end
 

@@ -1,5 +1,5 @@
 # Witchcraft
-![](./witchcraft-logo.png)
+![](./logo.png)
 
 | Build Status | Maintainer Message | Documentation | Hosted Package |
 |--------------|--------------------|---------------|----------------|
