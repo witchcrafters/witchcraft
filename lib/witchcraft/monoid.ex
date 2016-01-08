@@ -16,29 +16,29 @@ defprotocol Witchcraft.Monoid do
   # Examples
   ## Theory
 
-  ```
+  ```elixir
+
   # Pseudocode
   identity = 0
   op = &(&1 + &2) # Integer addition
-  op(34, identity) == 34
-  ```
+  append(34, identity) == 34
 
-  ```
-  # Pseudocode
   identity = 1
-  op = &(&1 * &2) # Integer multiplication
-  op(42, identity) == 42
+  append = &(&1 * &2) # Integer multiplication
+  append(42, identity) == 42
+
   ```
 
   ## Concrete
-  ```
 
-  iex> alias Witchcraft.Monoid, as: Monoid
-  iex> defimpl Monoid, for: Integer do
-  iex>   def identity(_), do: 0
-  iex>   def op(a, b), do: a + b
-  iex> end
-  iex> Monoid.op(1, 4) |> Monoid.op 2 |> Monoid.op 10
+  ```elixir
+
+  iex> defimpl Witchcraft.Monoid, for: Integer do
+  ...>   def identity(_), do: 0
+  ...>   def append(a, b), do: a + b
+  ...> end
+  iex>
+  iex> 1 |> op 4 |> op 2 |> op 10
   17
 
   ```
@@ -52,11 +52,33 @@ defprotocol Witchcraft.Monoid do
   For the protocol to operate as intended, you need to respect the above properties.
   """
 
+  @fallback_to_any true
+
   @doc "Get the identity ('zero') element of the monoid by passing in any element of the set"
   @spec identity(any) :: any
   def identity(a)
 
   @doc "Combine two members of the monoid, and return another member"
-  @spec op(any, any) :: any
-  def op(a, b)
+  @spec append(any, any) :: any
+  def append(a, b)
+end
+
+defimpl Witchcraft.Monoid, for: Integer do
+  def identity(_integer), do: 0
+  def append(a, b), do: a + b
+end
+
+defimpl Witchcraft.Monoid, for: Float do
+  def identity(_integer), do: 0.0
+  def append(a, b), do: a + b
+end
+
+defimpl Witchcraft.Monoid, for: List do
+  def identity(_list), do: []
+  def append(as, bs), do: as ++ bs
+end
+
+defimpl Witchcraft.Monoid, for: Map do
+  def identity(_map), do: %{}
+  def append(ma, mb), do: Dict.merge(ma, mb)
 end
