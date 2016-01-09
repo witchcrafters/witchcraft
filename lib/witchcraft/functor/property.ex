@@ -1,4 +1,4 @@
-defmodule Witchcraft.Functor.Properties do
+defmodule Witchcraft.Functor.Property do
   @moduledoc ~S"""
   Check samples of your functor to confirm that your data adheres to the
   functor properties. *All members* of your datatype should adhere to these rules.
@@ -7,7 +7,7 @@ defmodule Witchcraft.Functor.Properties do
 
   import Quark, only: [id: 1]
   import Witchcraft.Functor
-  import Witchcraft.Functor.Functions
+  import Witchcraft.Functor.Function
 
   @doc ~S"""
   Check that lifting a function into some context returns a member of the target type

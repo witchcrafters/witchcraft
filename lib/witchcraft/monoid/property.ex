@@ -5,24 +5,24 @@ defmodule Witchcraft.Monoid.Properties do
   They are placed here as a quick way to spotcheck some of your values.
   """
 
-  import Witchcraft.Monoid
-  import Witchcraft.Monoid.Functions
+  use Witchcraft.Monoid.Operator
+  import Witchcraft.Monoid, only: [identity: 1, append: 2]
 
   @doc """
   Check that some member of your monoid combines with the identity to return itself
   """
   @spec spotcheck_identity(any) :: boolean
   def spotcheck_identity(member) do
-    (identity(member) <|> member) == member
+    (identity(member) <> member) == member
   end
 
   @doc ~S"""
-  Check that `Monoid.op` is [associative](https://en.wikipedia.org/wiki/Associative_property)
+  Check that `Monoid.append` is [associative](https://en.wikipedia.org/wiki/Associative_property)
   (ie: brackets don't matter)
   """
   @spec spotcheck_associativity(any, any, any) :: boolean
   def spotcheck_associativity(member1, member2, member3) do
-    (member1 <|> (member2 <|> member3)) == ((member1 <|> member2) <|> member3)
+    (member1 <> (member2 <> member3)) == ((member1 <> member2) <> member3)
   end
 
   @doc """

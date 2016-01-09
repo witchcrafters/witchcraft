@@ -52,8 +52,6 @@ defprotocol Witchcraft.Monoid do
   For the protocol to operate as intended, you need to respect the above properties.
   """
 
-  @fallback_to_any true
-
   @doc "Get the identity ('zero') element of the monoid by passing in any element of the set"
   @spec identity(any) :: any
   def identity(a)

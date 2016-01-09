@@ -1,5 +1,4 @@
 defprotocol Witchcraft.Applicative do
-  require Witchcraft.ADT.Id
   @moduledoc """
   Applicative functors provide a method of applying a function contained in a
   data structure to a value of the same type. This allows you to apply and compose
@@ -53,6 +52,8 @@ defprotocol Witchcraft.Applicative do
 
   """
 
+  require Witchcraft.Id
+
   @fallback_to_any true
 
   @doc ~S"""
@@ -73,10 +74,10 @@ defimpl Witchcraft.Applicative, for: Any do
   @doc ~S"""
   By default, use the true identity functor (ie: don't wrap)
   """
-  def wrap(_, bare), do: bare
+  def wrap(_, bare_value), do: bare_value
 
   @doc ~S"""
   For un`wrap`ped values, treat `apply` as plain function application.
   """
-  def apply(bare_value, bare_function), do: bare_function.(bare_value)
+  def apply(bare_value, bare_function), do: Quary.curry(bare_function).(bare_value)
 end

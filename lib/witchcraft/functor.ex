@@ -1,5 +1,6 @@
 defprotocol Witchcraft.Functor do
-  require Witchcraft.ADT.Id
+  require Witchcraft.Id
+
   @moduledoc ~S"""
   Functors provide a way to apply a function to value(s) a datatype
   (lists, trees, maybes, etc).
@@ -42,15 +43,13 @@ defprotocol Witchcraft.Functor do
       iex> [1,2,3] |> Witchcraft.Functor.lift &(&1 + 1)
       [2,3,4]
 
-      iex> defimpl Witchcraft.Functor, for: Witchcraft.ADT.Id do
-      iex>   def lift(%Witchcraft.ADT.Id{id: inner}, func), do: %Witchcraft.ADT.Id{id: func.(inner)}
+      iex> defimpl Witchcraft.Functor, for: Witchcraft.Id do
+      iex>   def lift(%Witchcraft.Id{id: inner}, func), do: %Witchcraft.Id{id: func.(inner)}
       iex> end
-      iex> Witchcraft.Functor.lift(%Witchcraft.ADT.Id{id: 1}, &(&1 + 1))
-      %Witchcraft.ADT.Id{id: 2}
+      iex> Witchcraft.Functor.lift(%Witchcraft.Id{id: 1}, &(&1 + 1))
+      %Witchcraft.Id{id: 2}
 
   """
-
-  @fallback_to_any true
 
   @doc """
   Apply a function to every element in some collection, tree, or other structure.
@@ -60,12 +59,12 @@ defprotocol Witchcraft.Functor do
   def lift(data, function)
 end
 
-defimpl Witchcraft.Functor, for: Any do
+defimpl Witchcraft.Functor, for: Enum.t do
   @doc "Default implementation of `Functor` is `Enum.map`"
   def lift(data, func), do: Enum.map(data, func)
 end
 
-defimpl Witchcraft.Functor, for: Witchcraft.ADT.Id do
+defimpl Witchcraft.Functor, for: Witchcraft.Id do
   @doc "Example struct implimentation"
-  def lift(%Witchcraft.ADT.Id{id: data}, func), do: %Witchcraft.ADT.Id{id: func.(data)}
+  def lift(%Witchcraft.Id{id: data}, func), do: %Witchcraft.Id{id: func.(data)}
 end
