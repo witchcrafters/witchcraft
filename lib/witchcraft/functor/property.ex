@@ -5,16 +5,19 @@ defmodule Witchcraft.Functor.Property do
   They are placed here as a quick way to spotcheck some of your values.
   """
 
-  import Quark, only: [id: 1]
-  import Witchcraft.Functor
-  import Witchcraft.Functor.Function
+  import Quark, only: [compose: 1, id: 1]
+  import Witchcraft.Functor, only: [lift: 2]
 
   @doc ~S"""
   Check that lifting a function into some context returns a member of the target type
 
-      iex> alias Witchcraft.ADT.Id, as: Id
-      iex> spotcheck_associates_object(%Id{id: 42}, &(&1), &Id.is_id/1)
-      true
+  ```elixir
+
+  iex> alias Witchcraft.Id, as: Id
+  iex> spotcheck_associates_object(%Id{id: 42}, &Quark.id/1, &Id.is_id/1)
+  true
+
+  ```
 
   """
   @spec spotcheck_associates_object(any, (any -> any), (any -> boolean)) :: boolean
@@ -36,8 +39,12 @@ defmodule Witchcraft.Functor.Property do
        B ---- id ----> B
 
 
-      iex> spotcheck_preserve_identity(%Witchcraft.ADT.Id{id: 7}, &(&1 + 1))
-      true
+  ```elixir
+
+  iex> spotcheck_preserve_identity(%Witchcraft.Id{id: 7}, &(&1 + 1))
+  true
+
+  ```
 
   """
   @spec spotcheck_preserve_identity(any, (any -> any)) :: boolean
@@ -48,8 +55,13 @@ defmodule Witchcraft.Functor.Property do
   @doc ~S"""
   Check that lifting a composed function is the same as lifting functions in sequence
 
-      iex> spotcheck_preserve_compositon(%Witchcraft.ADT.Id{id: 5}, &(&1 + 1), &(&1 * 10))
-      true
+  ```elixir
+
+  iex> spotcheck_preserve_compositon(%Witchcraft.Id{id: 5}, &(&1 + 1), &(&1 * 10))
+  true
+
+  ```
+
   """
   @spec spotcheck_preserve_compositon(any, (any -> any), (any -> any)) :: boolean
   def spotcheck_preserve_compositon(context, f, g) do
@@ -59,9 +71,13 @@ defmodule Witchcraft.Functor.Property do
   @doc ~S"""
   Spotcheck all functor properties
 
-      iex> alias Witchcraft.ADT.Id, as: Id
-      iex> spotcheck(%Id{id: 42}, &(&1 + 1), &(&1 * 2), &Id.is_id&1)
-      true
+  ```elixir
+
+  iex> alias Witchcraft.Id, as: Id
+  iex> spotcheck(%Id{id: 42}, &(&1 + 1), &(&1 * 2), &Id.is_id&1)
+  true
+
+  ```
 
   """
   @spec spotcheck(any, (any -> any), (any -> any), (any -> boolean)) :: boolean

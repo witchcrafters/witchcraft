@@ -16,7 +16,7 @@ defprotocol Witchcraft.Monoid do
   # Examples
   ## Theory
 
-  ```elixir
+  ```
 
   # Pseudocode
   identity = 0
@@ -38,7 +38,7 @@ defprotocol Witchcraft.Monoid do
   ...>   def append(a, b), do: a + b
   ...> end
   iex>
-  iex> 1 |> op 4 |> op 2 |> op 10
+  iex> 1 |> append(4) |> append(2) |> append(10)
   17
 
   ```

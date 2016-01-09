@@ -1,4 +1,4 @@
-defmodule Witchcraft.Monoid.Properties do
+defmodule Witchcraft.Monoid.Property do
   @moduledoc """
   Check samples of your monoid to confirm that your data adheres to the
   monoidal properties. *All members* of your datatype should adhere to these rules.
@@ -6,7 +6,7 @@ defmodule Witchcraft.Monoid.Properties do
   """
 
   use Witchcraft.Monoid.Operator
-  import Witchcraft.Monoid, only: [identity: 1, append: 2]
+  import Witchcraft.Monoid
 
   @doc """
   Check that some member of your monoid combines with the identity to return itself

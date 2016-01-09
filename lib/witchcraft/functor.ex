@@ -1,6 +1,4 @@
 defprotocol Witchcraft.Functor do
-  require Witchcraft.Id
-
   @moduledoc ~S"""
   Functors provide a way to apply a function to value(s) a datatype
   (lists, trees, maybes, etc).
@@ -22,10 +20,10 @@ defprotocol Witchcraft.Functor do
   # Properties
   ## Identity
   Mapping the identity function over the object returns the same object
-  ex. `lift([1,2,3], &(&1)) == [1,2,3]`
+  ex. `lift([1,2,3], id) == [1,2,3]`
 
   ## Distributive
-  `lift(data, (f |> g)) == data |> lift f |> lift g`
+  `lift(data, (f |> g)) == data |> lift(f) |> lift(g)`
 
   ## Associates all objects
   Mapping a function onto an object returns a value.
@@ -40,16 +38,18 @@ defprotocol Witchcraft.Functor do
 
   # Examples
 
-      iex> [1,2,3] |> Witchcraft.Functor.lift &(&1 + 1)
+      iex> [1,2,3] |> lift(&(&1 + 1))
       [2,3,4]
 
       iex> defimpl Witchcraft.Functor, for: Witchcraft.Id do
       iex>   def lift(%Witchcraft.Id{id: inner}, func), do: %Witchcraft.Id{id: func.(inner)}
       iex> end
-      iex> Witchcraft.Functor.lift(%Witchcraft.Id{id: 1}, &(&1 + 1))
+      iex> lift(%Witchcraft.Id{id: 1}, &(&1 + 1))
       %Witchcraft.Id{id: 2}
 
   """
+
+  @fallback_to_any true
 
   @doc """
   Apply a function to every element in some collection, tree, or other structure.
@@ -59,7 +59,7 @@ defprotocol Witchcraft.Functor do
   def lift(data, function)
 end
 
-defimpl Witchcraft.Functor, for: Enum.t do
+defimpl Witchcraft.Functor, for: Any do
   @doc "Default implementation of `Functor` is `Enum.map`"
   def lift(data, func), do: Enum.map(data, func)
 end

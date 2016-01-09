@@ -7,4 +7,7 @@ defmodule Witchcraft.Id do
   """
   @type t :: %Witchcraft.Id{id: any}
   defstruct [:id]
+
+  def is_id(%Witchcraft.Id{id: _}), do: true
+  def is_id(_), do: false
 end
