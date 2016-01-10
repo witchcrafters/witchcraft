@@ -49,8 +49,6 @@ defprotocol Witchcraft.Functor do
 
   """
 
-  @fallback_to_any true
-
   @doc """
   Apply a function to every element in some collection, tree, or other structure.
   The collection will retain its structure (list, tree, and so on).
@@ -59,12 +57,30 @@ defprotocol Witchcraft.Functor do
   def lift(data, function)
 end
 
-defimpl Witchcraft.Functor, for: Any do
-  @doc "Default implementation of `Functor` is `Enum.map`"
+defimpl Witchcraft.Functor, for: List do
+  @doc ~S"""
+
+  ```elixir
+
+  iex> lift([1,2,3], &(&1 + 1))
+  [2,3,4]
+
+  ```
+
+  """
   def lift(data, func), do: Enum.map(data, func)
 end
 
 defimpl Witchcraft.Functor, for: Witchcraft.Id do
-  @doc "Example struct implimentation"
+  @doc ~S"""
+
+  ```elixir
+
+  iex> lift(%Witchcraft.Id{id: 5}, &(&1 * 101))
+  %Witchcraft.Id{id: 505}
+
+  ```
+
+  """
   def lift(%Witchcraft.Id{id: data}, func), do: %Witchcraft.Id{id: func.(data)}
 end

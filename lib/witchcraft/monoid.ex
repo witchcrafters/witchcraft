@@ -13,12 +13,8 @@ defprotocol Witchcraft.Monoid do
   - Unique element (`id`, sometimes called the 'zero' of the set)
   - Behaves as an identity with `op`
 
-  # Examples
-  ## Theory
-
   ```
 
-  # Pseudocode
   identity = 0
   op = &(&1 + &2) # Integer addition
   append(34, identity) == 34
@@ -26,20 +22,6 @@ defprotocol Witchcraft.Monoid do
   identity = 1
   append = &(&1 * &2) # Integer multiplication
   append(42, identity) == 42
-
-  ```
-
-  ## Concrete
-
-  ```elixir
-
-  iex> defimpl Witchcraft.Monoid, for: Integer do
-  ...>   def identity(_), do: 0
-  ...>   def append(a, b), do: a + b
-  ...> end
-  iex>
-  iex> 1 |> append(4) |> append(2) |> append(10)
-  17
 
   ```
 
@@ -62,13 +44,85 @@ defprotocol Witchcraft.Monoid do
 end
 
 defimpl Witchcraft.Monoid, for: Integer do
+  @doc ~S"""
+
+  ```elixir
+
+  iex> identity(99) == identity(-9)
+  true
+
+  ```
+
+  """
   def identity(_integer), do: 0
+
+  @doc ~S"""
+
+  ```elixir
+
+  iex> 1 |> append(4) |> append(2) |> append(10)
+  17
+
+  ```
+
+  """
+  @spec append(integer, integer) :: integer
   def append(a, b), do: a + b
 end
 
 defimpl Witchcraft.Monoid, for: Float do
+  @doc ~S"""
+
+  ```elixir
+
+  iex> identity(98.5) == identity(-8.5)
+  true
+
+  ```
+
+  """
   def identity(_integer), do: 0.0
+
+  @doc ~S"""
+
+  ```elixir
+
+  iex> 1.0 |> append(4.0) |> append(2.0) |> append(10.1)
+  17.1
+
+  ```
+
+  """
   def append(a, b), do: a + b
+end
+
+defimpl Witchcraft.Monoid, for: BitString do
+  @doc ~S"""
+
+  ```elixir
+
+  iex> append(identity("welp"), "o hai")
+  "o hai"
+
+  ```
+
+  """
+  def identity(_), do: ""
+
+  @doc ~S"""
+
+  ```elixir
+
+  iex> append("o hai", identity("welp"))
+  "o hai"
+
+  iex> identity("") |> append(identity("")) == identity("")
+  true
+
+  ```
+
+  """
+  def append(a, b), do: a <> b
 end
 
 defimpl Witchcraft.Monoid, for: List do

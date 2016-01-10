@@ -11,3 +11,12 @@ defmodule Witchcraft.Id do
   def is_id(%Witchcraft.Id{id: _}), do: true
   def is_id(_), do: false
 end
+
+defmodule Witchcraft.Sad do
+  defstruct sad: -9.4
+end
+
+defimpl Witchcraft.Monoid, for: Witchcraft.Sad do
+  def identity(%Witchcraft.Sad{sad: _}), do: %Witchcraft.Sad{}
+  def append(%Witchcraft.Sad{sad: a}, %Witchcraft.Sad{sad: b}), do: %Witchcraft.Sad{sad: a / b}
+end

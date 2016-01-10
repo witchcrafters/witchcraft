@@ -4,34 +4,47 @@ defmodule Witchcraft.Applicative.Operator do
 
   import Kernel, except: [apply: 2]
   import Witchcraft.Applicative, only: [apply: 2]
+  import Witchcraft.Applicative.Function, only: [lift: 2]
 
   @doc ~S"""
-  Infix alias for `Witchcraft.Applicative.apply`
+  Infix alias for `Witchcraft.Applicative.apply`. If chaining, be sure to wrap
+  each layer in parentheses, as `~>>` and `~>` are left associative.
 
   ```elixir
 
-  iex>
-  iex> [1,2,3] <<~ [&(&1 + 1), &(&1 * 10)]
+  iex> [1,2,3] ~>> [&(&1 + 1), &(&1 * 10)]
   [2,3,4,10,20,30]
+
+  # iex> [9, 10] ~>> (Witchcraft.Applicative.Function.lift [1,2,3], &(fn x -> x + &1 end))
+  iex> [9, 10] ~>> ([1,2,3] ~> &(fn x -> x * &1 end))
+  [9, 10, 18, 20, 27, 30]
 
   ```
 
   """
-  @spec any <<~ (any -> any) :: any
-  def value <<~ func, do: apply(value, func)
+  @spec any ~>> any :: any
+  def value ~>> func, do: apply(value, func)
 
   @doc ~S"""
   Infix alias for `Witchcraft.Applicative.apply`, with arguments reversed.
-  This allows for easier reading in an classic "appicative style".
+
+  This version is preferred, as it makes chaining arguments along wrapped
+  partial applications clearer when reading left-to-right.
 
   ```elixir
 
-  iex> [&(&1 + 1), &(&1 * 10)] ~>> [1,2,3]
+  iex> [&(&1 + 1), &(&1 * 10)] <<~ [1,2,3]
   [2,3,4,10,20,30]
+
+  iex> (&(fn x -> x * &1 end)) <~ [1,2,3] <<~ [9,10,11]
+  [9,10,11,18,20,22,27,30,33]
 
   ```
 
   """
-  @spec (any -> any) ~>> any :: any
-  def func ~>> value, do: value <<~ func
+  @spec any <<~ any :: any
+  def func <<~ value, do: value ~>> func
+
+  defdelegate functor_value ~> bare_function, to: Witchcraft.Functor, as: :lift
+  def bare_function <~ functor_value, do: functor_value ~> bare_function
 end

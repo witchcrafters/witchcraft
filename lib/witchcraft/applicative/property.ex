@@ -1,72 +1,98 @@
-defmodule Witchraft.Applicative.Property do
+defmodule Witchcraft.Applicative.Property do
   @moduledoc ~S"""
-  ## Composition
-  `apply` composes normally.
+  Check samples of your applicative functor to confirm that your data adheres to the
+  applicative properties. *All members* of your datatype should adhere to these rules,
+  *plus* implement `Witchcraft.Functor`.
+
+  They are placed here as a quick way to spotcheck some of your values.
+  """
+
+  import Kernel, except: [apply: 2]
+
+  import Quark, only: [compose: 2, id: 1]
+  import Quark.Curry, only: [curry: 1]
+
+  import Witchcraft.Applicative, only: [apply: 2, wrap: 2]
+  import Witchcraft.Applicative.Operator, only: [~>: 2, <~: 2, ~>>: 2, <<~: 2]
+
+  @doc ~S"""
+  `apply`ing a lifted `id` to some lifted value `v` does not change `v`
 
   ```elixir
 
-  iex> apply((wrap &compose(&1,&2)),(apply(u,(apply(v, w))))) == apply(u,(apply(v, w)))
-  True
+  iex> spotcheck_identity []
+  true
+
+  iex> spotcheck_identity %Witchcraft.Id{}
+  true
 
   ```
 
-  ## Homomorphism
+  """
+  @spec spotcheck_identity(any) :: boolean
+  def spotcheck_identity(value), do: (value ~>> wrap(value, &id/1)) == value
+
+  # @doc ~S"""
+  # `apply` composes normally.
+
+  # iex> spotcheck_composition([1, 2], [&(&1)], [&(&1 * 2)], [&(&1 * 10)])
+  # true
+
+  # """
+  # # @spec
+  # def spotcheck_composition(x, u, v, w) do
+  #   x ~>> (wrap(u, &compose/2) <<~ u <<~ v <<~ w) ==  x ~>> u ~>> (v ~>> w)
+  # end
+  @doc ~S"""
   `apply`ing a `wrap`ped function to a `wrap`ped value is the same as wrapping the
   result of the function on that value.
 
   ```elixir
 
-  iex> apply(wrap x, wrap f) == wrap f(x)
-  True
+  iex> spotcheck_homomorphism([], 1, &(&1 * 10))
+  true
 
   ```
+  """
+  @spec spotcheck_homomorphism(any, any, fun) :: boolean
+  def spotcheck_homomorphism(specemin, val, fun) do
+    curried = curry(fun)
+    wrap(specemin, val) ~>> wrap(specemin, curried) == wrap(specemin, curried.(val))
+  end
 
-  ## Interchange
-  The order does not matter when `apply`ing to a `wrap`ped value
-  and a `wrap`ped function.
+  # @doc ~S"""
+  # The order does not matter when `apply`ing to a `wrap`ped value
+  # and a `wrap`ped function.
 
-  ```elixir
+  # ```elixir
 
-  iex> apply(wrap y, u) == apply(u, wrap &(lift(y, &1))
-  True
+  # iex> spotcheck_interchange(1, [&(&1 * 10)])
+  # true
 
-  ```
+  # ```
+  # """
+  # @spec spotcheck_interchange(any, any) :: boolean
+  # def spotcheck_interchange(bare_val, wrapped_fun) do
+  #   wrap(wrapped_fun, bare_val) ~>> wrapped_fun == wrapped_fun ~>> wrap(wrapped_fun, &(bare_val |> &1))
+  # end
 
-  ## Functor
+  @doc ~S"""
+
   Being an applicative _functor_, `apply` behaves as `lift` on `wrap`ped values
 
   ```elixir
 
-  iex> lift(x, f) == apply(x, (wrap f))
-  True
+  iex> spotcheck_functor([1,2,3], &(&1 * 10))
+  true
+
+  iex> spotcheck_functor(%Witchcraft.Id{id: 7}, &(&1 * 99))
+  true
 
   ```
 
-  # Notes
-  Given that Elixir functons are right-associative, you can write clean looking,
-  but much more ambiguous versions:
-
-  ```elixir
-
-  iex> wrap y |> apply u == u |> apply wrap &lift(y, &1)
-  True
-
-  iex> x |> lift f == x |> apply wrap f
-  True
-
-  ```
-
-  However, it is strongly recommended to include the parentheses for clarity.
   """
-
-  import Quark, only: [id: 1]
-  import Witchcraft.Applicative.Operator, only: [<<~: 2]
-
-  alias Witchcraft.Applicative, as: A
-
-  @doc ~S"""
-  `apply`ing a lifted `id` to some lifted value `v` does not change `v`
-  """
-  @spec spotcheck_applicative_identity(any) :: boolean
-  def spotcheck_applicative_identity(value), do: value <<~ fn x -> A.wrap(x, &id/1) end == value
+  @spec spotcheck_functor(any, fun) :: boolean
+  def spotcheck_functor(wrapped_value, fun) do
+    wrapped_value ~> fun == wrapped_value ~>> wrap(wrapped_value, fun)
+  end
 end

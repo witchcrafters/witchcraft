@@ -9,44 +9,37 @@ defprotocol Witchcraft.Applicative do
   ## Identity
   `apply`ing a lifted `id` to some lifted value `v` does not change `v`
 
-      # iex> apply(v, wrap(&id(&1))) == v
-      # True
+  `apply(v, wrap(&id(&1))) == v`
 
   ## Composition
   `apply` composes normally.
 
-      # iex> apply((wrap &compose(&1,&2)), (apply(u,(apply(v, w))))) == apply(u,(apply(v, w)))
-      # True
+  `apply((wrap &compose(&1,&2)), (apply(u,(apply(v, w))))) == apply(u,(apply(v, w)))`
 
   ## Homomorphism
   `apply`ing a `wrap`ped function to a `wrap`ped value is the same as wrapping the
   result of the function on that value.
 
-      # iex> apply(wrap x, wrap f) == wrap f(x))
-      # True
+  `apply(wrap x, wrap f) == wrap f(x))`
 
   ## Interchange
   The order does not matter when `apply`ing to a `wrap`ped value
   and a `wrap`ped function.
 
-      # iex> apply(wrap y, u) == apply(u, wrap &(lift(y, &1))
-      # True
+  `apply(wrap y, u) == apply(u, wrap &(lift(y, &1))`
 
   ## Functor
   Being an applicative _functor_, `apply` behaves as `lift` on `wrap`ped values
 
-      # iex> lift(x, f) == apply(x, (wrap f))
-      # True
+  `lift(x, f) == apply(x, (wrap f))`
 
   # Notes
   Given that Elixir functons are right-associative, you can write clean looking,
   but much more ambiguous versions:
 
-      # iex> wrap(y) |> apply(u) == apply(u, wrap(&lift(y, &1)))
-      # True
+  `wrap(y) |> apply(u) == apply(u, wrap(&lift(y, &1)))`
 
-      # iex> lift(x, f) == apply(x, wrap f)
-      # True
+  `lift(x, f) == apply(x, wrap f)`
 
   However, it is strongly recommended to include the parentheses for clarity.
 
@@ -83,16 +76,71 @@ end
 defimpl Witchcraft.Applicative, for: List do
   import Quark.Curry, only: [curry: 1]
 
-  def wrap(_, bare), do: [bare]
-  def apply(values, functions), do: Enum.reduce(functions, [], &helper(&1, values, &2))
+  @doc ~S"""
 
-  defp helper(acc, fun, vals), do: acc ++ Enum.map(vals, curry(fun))
+  ```elixir
+
+  iex> wrap([], 0)
+  [0]
+
+  ```
+
+  """
+  def wrap(_, bare), do: [bare]
+
+  @doc ~S"""
+
+  ```elixir
+
+  iex> import Kernel, except: [apply: 2]
+  iex> apply([1,2,3], [&(&1 + 1), &(&1 * 10)])
+  [2,3,4,10,20,30]
+
+  iex> import Kernel, except: [apply: 2]
+  iex> import Witchcraft.Functor, only: [lift: 2]
+  iex> apply([9,10,11], lift([1,2,3], &(fn x -> x * &1 end)))
+  [9,10,11,18,20,22,27,30,33]
+
+  ```
+
+  """
+  def apply(_, []), do: []
+  def apply(values, [fun|funs]) do
+    Enum.map(values, curry(fun)) ++ Witchcraft.Applicative.apply(values, funs)
+  end
 end
 
 defimpl Witchcraft.Applicative, for: Witchcraft.Id do
   import Quark.Curry, only: [curry: 1]
   alias Witchcraft.Id, as: Id
 
+  @doc ~S"""
+
+  ```elixir
+
+  iex> %Witchcraft.Id{} |> wrap(9)
+  %Witchcraft.Id{id: 9}
+
+  ```
+
+  """
   def wrap(_, bare), do: %Witchcraft.Id{id: bare}
+
+  @doc ~S"""
+  ```elixir
+
+  iex> import Kernel, except: [apply: 2]
+  iex> apply(%Witchcraft.Id{id: 42}, %Witchcraft.Id{id: &(&1 + 1)})
+  %Witchcraft.Id{id: 43}
+
+  iex> import Kernel, except: [apply: 2]
+  iex> import Witchcraft.Functor, only: [lift: 2]
+  iex> alias Witchcraft.Id, as: Id
+  iex> apply(%Id{id: 9}, lift(%Id{id: 2}, &(fn x -> x + &1 end)))
+  %Witchcraft.Id{id: 11}
+
+  ```
+
+  """
   def apply(%Id{id: value}, %Id{id: fun}), do: %Id{id: curry(fun).(value)}
 end
