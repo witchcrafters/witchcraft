@@ -1,0 +1,255 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.11.3">
+    <title>Witchcraft.Functor.Function – Witchcraft v0.3.0</title>
+    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="modules">
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+  <button class="sidebar-toggle">
+    <i class="icon-menu"></i>
+  </button>
+
+  
+  <a href="api-reference.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        Witchcraft
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.3.0
+      </h2>
+    </div>
+    
+      <img src="assets/logo.png" alt="Witchcraft" class="sidebar-projectImage">
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+      <li><a id="protocols-list" href="#full-list">Protocols</a></li>
+    
+  </ul>
+
+  <ul id="full-list" class="sidebar-fullList"></ul>
+  <div class="sidebar-noResults"></div>
+</section>
+
+<section class="content">
+  <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">Witchcraft v0.3.0</small>
+        Witchcraft.Functor.Function
+        
+        
+          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/function.ex#L1" title="View Source" class="view-source" rel="help">
+            <i class="icon-code"></i>
+          </a>
+        
+      </h1>
+
+      
+        <section id="moduledoc" class="docstring">
+          <p>Functions that come directly from <code class="inline">lift</code>.</p>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <i class="icon-link"></i>
+            </a>
+            Summary
+          </h1>
+          
+
+          
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#lift/0">lift()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Not strictly a curried version of <code class="inline">lift/2</code>. <a href="#lift/1"><code class="inline">lift/1</code></a> partially applies a function,
+to create a “lifted” version of that function</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#lift/1">lift(fun)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#replace/2">replace(functor, const)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Replace all of the input’s data nodes with some constant value</p>
+</div>
+  
+</div>
+
+  </div>
+
+
+          
+
+          
+
+        </section>
+      
+
+      
+
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <i class="icon-link"></i>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="lift/0">
+  <div class="detail-header">
+    <a href="#lift/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">lift()</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/function.ex#L27" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Not strictly a curried version of <code class="inline">lift/2</code>. <a href="#lift/1"><code class="inline">lift/1</code></a> partially applies a function,
+to create a “lifted” version of that function.</p>
+<pre><code class="elixir">
+iex&gt; x10 = &amp;lift(fn x -&gt; x * 10 end).(&amp;1)
+iex&gt; [1,2,3] |&gt; x10.()
+[10,20,30]
+
+iex&gt; x10 = &amp;lift(fn x -&gt; x * 10 end).(&amp;1)
+iex&gt; %Witchcraft.Id{id: 13} |&gt; x10.()
+%Witchcraft.Id{id: 130}
+</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="lift/1">
+  <div class="detail-header">
+    <a href="#lift/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">lift(fun)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/function.ex#L27" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">lift((... -> any)) :: (any -> any)</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="replace/2">
+  <div class="detail-header">
+    <a href="#replace/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">replace(functor, const)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/function.ex#L41" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">replace(any, any) :: any</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Replace all of the input’s data nodes with some constant value</p>
+<pre><code class="elixir">
+iex&gt; [1,2,3] |&gt; replace(42)
+[42, 42, 42]
+</code></pre>
+
+  </section>
+</div>
+
+        </section>
+      
+
+      
+
+      
+        <footer class="footer">
+      <p>
+        <span class="line">
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.3),
+        </span>
+        <span class="line">
+          designed by
+          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+      </p>
+      <button class="night-mode-toggle" />
+    </footer>
+  </div>
+</section>
+</div>
+  <script src="dist/app-6d2e071366.js"></script>
+  </body>
+</html>
+
