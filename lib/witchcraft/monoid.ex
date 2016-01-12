@@ -13,33 +13,15 @@ defprotocol Witchcraft.Monoid do
   - Unique element (`id`, sometimes called the 'zero' of the set)
   - Behaves as an identity with `op`
 
-  # Examples
-  ## Theory
-
   ```
-  # Pseudocode
+
   identity = 0
   op = &(&1 + &2) # Integer addition
-  op(34, identity) == 34
-  ```
+  append(34, identity) == 34
 
-  ```
-  # Pseudocode
   identity = 1
-  op = &(&1 * &2) # Integer multiplication
-  op(42, identity) == 42
-  ```
-
-  ## Concrete
-  ```
-
-  iex> alias Witchcraft.Monoid, as: Monoid
-  iex> defimpl Monoid, for: Integer do
-  iex>   def identity(_), do: 0
-  iex>   def op(a, b), do: a + b
-  iex> end
-  iex> Monoid.op(1, 4) |> Monoid.op 2 |> Monoid.op 10
-  17
+  append = &(&1 * &2) # Integer multiplication
+  append(42, identity) == 42
 
   ```
 
@@ -57,6 +39,98 @@ defprotocol Witchcraft.Monoid do
   def identity(a)
 
   @doc "Combine two members of the monoid, and return another member"
-  @spec op(any, any) :: any
-  def op(a, b)
+  @spec append(any, any) :: any
+  def append(a, b)
+end
+
+defimpl Witchcraft.Monoid, for: Integer do
+  @doc ~S"""
+
+  ```elixir
+
+  iex> identity(99) == identity(-9)
+  true
+
+  ```
+
+  """
+  def identity(_integer), do: 0
+
+  @doc ~S"""
+
+  ```elixir
+
+  iex> 1 |> append(4) |> append(2) |> append(10)
+  17
+
+  ```
+
+  """
+  @spec append(integer, integer) :: integer
+  def append(a, b), do: a + b
+end
+
+defimpl Witchcraft.Monoid, for: Float do
+  @doc ~S"""
+
+  ```elixir
+
+  iex> identity(98.5) == identity(-8.5)
+  true
+
+  ```
+
+  """
+  def identity(_integer), do: 0.0
+
+  @doc ~S"""
+
+  ```elixir
+
+  iex> 1.0 |> append(4.0) |> append(2.0) |> append(10.1)
+  17.1
+
+  ```
+
+  """
+  def append(a, b), do: a + b
+end
+
+defimpl Witchcraft.Monoid, for: BitString do
+  @doc ~S"""
+
+  ```elixir
+
+  iex> append(identity("welp"), "o hai")
+  "o hai"
+
+  ```
+
+  """
+  def identity(_), do: ""
+
+  @doc ~S"""
+
+  ```elixir
+
+  iex> append("o hai", identity("welp"))
+  "o hai"
+
+  iex> identity("") |> append(identity("")) == identity("")
+  true
+
+  ```
+
+  """
+  def append(a, b), do: a <> b
+end
+
+defimpl Witchcraft.Monoid, for: List do
+  def identity(_list), do: []
+  def append(as, bs), do: as ++ bs
+end
+
+defimpl Witchcraft.Monoid, for: Map do
+  def identity(_map), do: %{}
+  def append(ma, mb), do: Dict.merge(ma, mb)
 end

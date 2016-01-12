@@ -1,5 +1,4 @@
 defprotocol Witchcraft.Functor do
-  require Witchcraft.Utility.Id
   @moduledoc ~S"""
   Functors provide a way to apply a function to value(s) a datatype
   (lists, trees, maybes, etc).
@@ -21,10 +20,10 @@ defprotocol Witchcraft.Functor do
   # Properties
   ## Identity
   Mapping the identity function over the object returns the same object
-  ex. `lift([1,2,3], &(&1)) == [1,2,3]`
+  ex. `lift([1,2,3], id) == [1,2,3]`
 
   ## Distributive
-  `lift(data, (f |> g)) == data |> lift f |> lift g`
+  `lift(data, (f |> g)) == data |> lift(f) |> lift(g)`
 
   ## Associates all objects
   Mapping a function onto an object returns a value.
@@ -39,21 +38,16 @@ defprotocol Witchcraft.Functor do
 
   # Examples
 
-  ```
+      iex> [1,2,3] |> lift(&(&1 + 1))
+      [2,3,4]
 
-  iex> Witchcraft.Functor.lift([1,2,3], &(&1 + 1))
-  [2,3,4]
+      iex> defimpl Witchcraft.Functor, for: Witchcraft.Id do
+      iex>   def lift(%Witchcraft.Id{id: inner}, func), do: %Witchcraft.Id{id: func.(inner)}
+      iex> end
+      iex> lift(%Witchcraft.Id{id: 1}, &(&1 + 1))
+      %Witchcraft.Id{id: 2}
 
-  iex> defimpl Witchcraft.Functor, for: Witchcraft.Utility.Id do
-  iex>   def lift(%Witchcraft.Utility.Id{id: inner}, func), do: %Witchcraft.Utility.Id{id: func.(inner)}
-  iex> end
-  iex> Witchcraft.Functor.lift(%Witchcraft.Utility.Id{id: 1}, &(&1 + 1))
-  %Witchcraft.Utility.Id{id: 2}
-
-  ```
   """
-
-  @fallback_to_any true
 
   @doc """
   Apply a function to every element in some collection, tree, or other structure.
@@ -63,12 +57,30 @@ defprotocol Witchcraft.Functor do
   def lift(data, function)
 end
 
-defimpl Witchcraft.Functor, for: Any do
-  @doc "Default implementation of `Functor` is `Enum.map`"
+defimpl Witchcraft.Functor, for: List do
+  @doc ~S"""
+
+  ```elixir
+
+  iex> lift([1,2,3], &(&1 + 1))
+  [2,3,4]
+
+  ```
+
+  """
   def lift(data, func), do: Enum.map(data, func)
 end
 
-defimpl Witchcraft.Functor, for: Witchcraft.Utility.Id do
-  @doc "Example struct implimentation"
-  def lift(%Witchcraft.Utility.Id{id: data}, func), do: %Witchcraft.Utility.Id{id: func.(data)}
+defimpl Witchcraft.Functor, for: Witchcraft.Id do
+  @doc ~S"""
+
+  ```elixir
+
+  iex> lift(%Witchcraft.Id{id: 5}, &(&1 * 101))
+  %Witchcraft.Id{id: 505}
+
+  ```
+
+  """
+  def lift(%Witchcraft.Id{id: data}, func), do: %Witchcraft.Id{id: func.(data)}
 end

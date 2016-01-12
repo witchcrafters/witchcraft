@@ -1,21 +1,20 @@
-defmodule Witchcraft.Functor.Properties do
-  @moduledoc """
+defmodule Witchcraft.Functor.Property do
+  @moduledoc ~S"""
   Check samples of your functor to confirm that your data adheres to the
   functor properties. *All members* of your datatype should adhere to these rules.
   They are placed here as a quick way to spotcheck some of your values.
   """
 
-  import Witchcraft.Utility
-  import Witchcraft.Functor
-  import Witchcraft.Functor.Functions
+  import Quark, only: [compose: 1, id: 1]
+  import Witchcraft.Functor, only: [lift: 2]
 
   @doc ~S"""
   Check that lifting a function into some context returns a member of the target type
 
-  ```
+  ```elixir
 
-  iex> alias Witchcraft.Utility.Id, as: Id
-  iex> spotcheck_associates_object(%Id{id: 42}, &(&1), &Id.is_id&1)
+  iex> alias Witchcraft.Id, as: Id
+  iex> spotcheck_associates_object(%Id{id: 42}, &Quark.id/1, &Id.is_id/1)
   true
 
   ```
@@ -30,22 +29,19 @@ defmodule Witchcraft.Functor.Properties do
   Check that lifting a function does not interfere with identity.
   In other words, lifting `id(a)` shoud be the same as the identity of lifting `a`.
 
-  ```
+       A ---- id ----> A
 
-   A ---- id ----> A
+       |               |
+      (f)             (f)
+       |               |
+       v               v
 
-   |               |
-  (f)             (f)
-   |               |
-   v               v
+       B ---- id ----> B
 
-   B ---- id ----> B
 
-  ```
+  ```elixir
 
-  ```
-
-  iex> spotcheck_preserve_identity(%Witchcraft.Utility.Id{id: 7}, &(&1 + 1))
+  iex> spotcheck_preserve_identity(%Witchcraft.Id{id: 7}, &(&1 + 1))
   true
 
   ```
@@ -59,8 +55,13 @@ defmodule Witchcraft.Functor.Properties do
   @doc ~S"""
   Check that lifting a composed function is the same as lifting functions in sequence
 
-  iex> spotcheck_preserve_compositon(%Witchcraft.Utility.Id{id: 5}, &(&1 + 1), &(&1 * 10))
+  ```elixir
+
+  iex> spotcheck_preserve_compositon(%Witchcraft.Id{id: 5}, &(&1 + 1), &(&1 * 10))
   true
+
+  ```
+
   """
   @spec spotcheck_preserve_compositon(any, (any -> any), (any -> any)) :: boolean
   def spotcheck_preserve_compositon(context, f, g) do
@@ -70,9 +71,9 @@ defmodule Witchcraft.Functor.Properties do
   @doc ~S"""
   Spotcheck all functor properties
 
-  ```
+  ```elixir
 
-  iex> alias Witchcraft.Utility.Id, as: Id
+  iex> alias Witchcraft.Id, as: Id
   iex> spotcheck(%Id{id: 42}, &(&1 + 1), &(&1 * 2), &Id.is_id&1)
   true
 
