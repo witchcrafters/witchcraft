@@ -32,17 +32,18 @@ defmodule Witchcraft.Applicative.Property do
   @spec spotcheck_identity(any) :: boolean
   def spotcheck_identity(value), do: (value ~>> wrap(value, &id/1)) == value
 
-  # @doc ~S"""
-  # `apply` composes normally.
+  @doc ~S"""
+  `apply` composes normally.
 
-  # iex> spotcheck_composition([1, 2], [&(&1)], [&(&1 * 2)], [&(&1 * 10)])
-  # true
+  iex> spotcheck_composition([1, 2], [&(&1 * 2)], [&(&1 * 10)])
+  true
 
-  # """
-  # # @spec
-  # def spotcheck_composition(x, u, v, w) do
-  #   x ~>> (wrap(u, &compose/2) <<~ u <<~ v <<~ w) ==  x ~>> u ~>> (v ~>> w)
-  # end
+  """
+  @spec spotcheck_composition(any, any, any) :: boolean
+  def spotcheck_composition(value, fun1, fun2) do
+    wrap(value, &compose/2) <<~ fun1 <<~ fun2 <<~ value == fun1 <<~ (fun2 <<~ value)
+  end
+
   @doc ~S"""
   `apply`ing a `wrap`ped function to a `wrap`ped value is the same as wrapping the
   result of the function on that value.
@@ -60,21 +61,23 @@ defmodule Witchcraft.Applicative.Property do
     wrap(specemin, val) ~>> wrap(specemin, curried) == wrap(specemin, curried.(val))
   end
 
-  # @doc ~S"""
-  # The order does not matter when `apply`ing to a `wrap`ped value
-  # and a `wrap`ped function.
+  @doc ~S"""
+  The order does not matter when `apply`ing to a `wrap`ped value
+  and a `wrap`ped function.
 
-  # ```elixir
+  ```elixir
 
-  # iex> spotcheck_interchange(1, [&(&1 * 10)])
-  # true
+  iex> spotcheck_interchange(1, [&(&1 * 10)])
+  true
 
-  # ```
-  # """
-  # @spec spotcheck_interchange(any, any) :: boolean
-  # def spotcheck_interchange(bare_val, wrapped_fun) do
-  #   wrap(wrapped_fun, bare_val) ~>> wrapped_fun == wrapped_fun ~>> wrap(wrapped_fun, &(bare_val |> &1))
-  # end
+  ```
+
+  """
+  @spec spotcheck_interchange(any, any) :: boolean
+  def spotcheck_interchange(bare_val, wrapped_fun) do
+    wrap(wrapped_fun, bare_val) ~>> wrapped_fun
+      == wrapped_fun ~>> wrap(wrapped_fun, &(bare_val |> curry(&1).()))
+  end
 
   @doc ~S"""
 

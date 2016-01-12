@@ -5,7 +5,7 @@ defmodule Witchcraft.Applicative.Function do
 
   import Kernel, except: [apply: 2]
 
-  import Quark, only: [flip: 1]
+  import Quark, only: [id: 1, flip: 1, constant: 2]
   import Quark.Curry, only: [curry: 1]
 
   import Witchcraft.Applicative, only: [apply: 2]
@@ -31,4 +31,16 @@ defmodule Witchcraft.Applicative.Function do
   @spec lift(any, (... -> any)) :: any
   def lift([value], fun), do: value ~> curry(fun)
   def lift([head|tail], fun), do: Enum.reduce(tail, lift([head], fun), &apply/2)
+
+  @doc ~S"""
+  Sequentially `apply`, and discard the second value of each pair.
+  """
+  @spec seq_first([any]) :: any
+  def seq_first([a,b]), do: lift([a,b], &constant/2)
+
+  @doc ~S"""
+  Sequentially `apply`, and discard the first value of each pair.
+  """
+  @spec seq_second([any]) :: any
+  def seq_second([a,b]), do: lift([a,b], fn x -> constant(x, &id/1) end)
 end
