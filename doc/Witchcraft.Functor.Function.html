@@ -163,8 +163,8 @@ iex&gt; [1,2,3] |&gt; x10.()
 [10,20,30]
 
 iex&gt; x10 = &amp;lift(fn x -&gt; x * 10 end).(&amp;1)
-iex&gt; %Witchcraft.Id{id: 13} |&gt; x10.()
-%Witchcraft.Id{id: 130}
+iex&gt; %Algae.Id{id: 13} |&gt; x10.()
+%Algae.Id{id: 130}
 </code></pre>
 
   </section>

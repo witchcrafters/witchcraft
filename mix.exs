@@ -8,8 +8,8 @@ defmodule Witchcraft.Mixfile do
      description: "Common algebraic structures and functions",
      package: package,
 
-     version: "0.3.0",
-     elixir:  "~> 1.1",
+     version: "0.3.1",
+     elixir:  "~> 1.2",
 
      source_url:   "https://github.com/robot-overlord/witchcraft",
      homepage_url: "https://github.com/robot-overlord/witchcraft",
@@ -30,7 +30,9 @@ defmodule Witchcraft.Mixfile do
   defp deps do
     [{:earmark, "~> 0.1", only: :dev},
      {:ex_doc, "~> 0.10", only: :dev},
-     {:quark, "~> 1.0"}]
+     {:algae, "~> 0.8"},
+     {:quark, "~> 1.0"}
+    ]
   end
 
   defp package do

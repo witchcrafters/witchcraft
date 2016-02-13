@@ -23,7 +23,7 @@ defmodule Witchcraft.Applicative.Property do
   iex> spotcheck_identity []
   true
 
-  iex> spotcheck_identity %Witchcraft.Id{}
+  iex> spotcheck_identity %Algae.Id{}
   true
 
   ```
@@ -88,7 +88,7 @@ defmodule Witchcraft.Applicative.Property do
   iex> spotcheck_functor([1,2,3], &(&1 * 10))
   true
 
-  iex> spotcheck_functor(%Witchcraft.Id{id: 7}, &(&1 * 99))
+  iex> spotcheck_functor(%Algae.Id{id: 7}, &(&1 * 99))
   true
 
   ```

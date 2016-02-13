@@ -41,11 +41,11 @@ defprotocol Witchcraft.Functor do
       iex> [1,2,3] |> lift(&(&1 + 1))
       [2,3,4]
 
-      iex> defimpl Witchcraft.Functor, for: Witchcraft.Id do
-      iex>   def lift(%Witchcraft.Id{id: inner}, func), do: %Witchcraft.Id{id: func.(inner)}
+      iex> defimpl Witchcraft.Functor, for: Algae.Id do
+      iex>   def lift(%Algae.Id{id: inner}, func), do: %Algae.Id{id: func.(inner)}
       iex> end
-      iex> lift(%Witchcraft.Id{id: 1}, &(&1 + 1))
-      %Witchcraft.Id{id: 2}
+      iex> lift(%Algae.Id{id: 1}, &(&1 + 1))
+      %Algae.Id{id: 2}
 
   """
 
@@ -71,16 +71,112 @@ defimpl Witchcraft.Functor, for: List do
   def lift(data, func), do: Enum.map(data, func)
 end
 
-defimpl Witchcraft.Functor, for: Witchcraft.Id do
+defimpl Witchcraft.Functor, for: Algae.Id do
   @doc ~S"""
 
   ```elixir
 
-  iex> lift(%Witchcraft.Id{id: 5}, &(&1 * 101))
-  %Witchcraft.Id{id: 505}
+  iex> lift(%Algae.Id{id: 5}, &(&1 * 101))
+  %Algae.Id{id: 505}
 
   ```
 
   """
-  def lift(%Witchcraft.Id{id: data}, func), do: %Witchcraft.Id{id: func.(data)}
+  def lift(%Algae.Id{id: value}, fun), do: Algae.Id.id Quark.Curry.curry(fun).(value)
+end
+
+defimpl Witchcraft.Functor, for: Algae.Either.Left do
+  def lift(%Algae.Either.Left{left: value}, fun) do
+    Algae.Either.left Quark.Curry.curry(fun).(value)
+  end
+end
+
+defimpl Witchcraft.Functor, for: Algae.Either.Right do
+  def lift(%Algae.Either.Right{right: value}, fun) do
+    Algae.Either.right Quark.Curry.curry(fun).(value)
+  end
+end
+
+defimpl Witchcraft.Functor, for: Algae.Free.Wrap do
+  import Quark.Curry, only: [curry: 1]
+  import Witchcraft.Functor.Operator, only: [~>: 2]
+
+  def lift(%Algae.Free.Wrap{wrap: wrap}, fun) do
+    # TODO Update &lift(&1, curry func) when Witchcraft has lift/1 (in the Applicative branch)
+    %Algae.Free.Wrap{wrap: &lift(&1, curry fun) ~> wrap}
+  end
+end
+
+defimpl Witchcraft.Functor, for: Algae.Maybe.Just do
+  import Quark.Curry, only: [curry: 1]
+
+  def lift(%Algae.Maybe.Just{just: value}, fun) do
+    Algae.Maybe.just curry(fun).(value)
+  end
+end
+
+defimpl Witchcraft.Functor, for: Algae.Maybe.Nothing do
+  def lift(%Algae.Maybe.Nothing{}, _), do: Algae.Maybe.nothing
+end
+
+defimpl Witchcraft.Functor, for: Algae.Reader do
+  def lift(%Algae.Reader{reader: reader, env: env}, fun) do
+    import Quark.Compose, only: [<|>: 2]
+    %Algae.Reader{reader: fun <|> reader, env: env}
+  end
+end
+
+defimpl Witchcraft.Functor, for: Algae.Tree.Leaf do
+  def lift(%Algae.Tree.Leaf{leaf: value}, fun) do
+    Quark.Curry.curry(fun).(value) |> Algae.Tree.leaf
+  end
+end
+
+defimpl Witchcraft.Functor, for: Algae.Tree.Branch do
+  def lift(%Algae.Tree.Branch{left: left, right: right}, fun) do
+    %Algae.Tree.Branch{
+      left: lift(left, Quark.Curry.curry(fun)),
+      right: lift(right, Quark.Curry.curry(fun))
+    }
+  end
+end
+
+# defimpl Witchcraft.Functor, for: Algae.Writer do
+#   def lift(%Algae.Writer{writer: writer, env: env}, fun) do
+#     import Quark.Compose, only: [<|>: 2]
+#     %Algae.Writer{writer: fun <|> writer, env: env}
+#   end
+# end
+
+defimpl Witchcraft.Functor, for: Algae.Tree.Rose do
+  def lift(%Algae.Tree.Rose{rose: rose, tree: []}, fun) do
+    %Algae.Tree.Rose{rose: Quark.Curry.curry(fun).(rose)}
+  end
+
+  def lift(%Algae.Tree.Rose{rose: rose, tree: tree}, fun) do
+    %Algae.Tree.Rose{
+      rose: Quark.Curry.curry(fun).(rose),
+      tree: lift(tree, &(lift(&1, fun)))
+    }
+  end
+end
+
+defimpl Witchcraft.Functor, for: Algae.Tree.Search.Tip do
+  def lift(%Algae.Tree.Search.Tip{}, _), do: Algae.Tree.Search.tip
+end
+
+defimpl Witchcraft.Functor, for: Algae.Tree.Search.Node do
+  import Witchcraft.Functor.Operator, only: [<~: 2]
+
+  def lift(%Algae.Tree.Search.Node{left: left, middle: middle, right: right}, fun) do
+    %Algae.Tree.Search.Node{
+      left: left <~ &lift(&1, fun),
+      middle: middle <~ fun,
+      right: right <~ &lift(&1, fun)
+    }
+  end
+end
+
+defimpl Witchcraft.Functor, for: Algae.Free.Pure do
+  def lift(%Algae.Free.Pure{pure: pure}, fun), do: Quark.Curry.curry(fun).(pure)
 end
