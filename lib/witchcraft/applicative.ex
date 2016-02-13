@@ -110,34 +110,34 @@ defimpl Witchcraft.Applicative, for: List do
   end
 end
 
-defimpl Witchcraft.Applicative, for: Witchcraft.Id do
+defimpl Witchcraft.Applicative, for: Algae.Id do
   import Quark.Curry, only: [curry: 1]
-  alias Witchcraft.Id, as: Id
+  alias Algae.Id, as: Id
 
   @doc ~S"""
 
   ```elixir
 
-  iex> %Witchcraft.Id{} |> wrap(9)
-  %Witchcraft.Id{id: 9}
+  iex> %Algae.Id{} |> wrap(9)
+  %Algae.Id{id: 9}
 
   ```
 
   """
-  def wrap(_, bare), do: %Witchcraft.Id{id: bare}
+  def wrap(_, bare), do: %Algae.Id{id: bare}
 
   @doc ~S"""
   ```elixir
 
   iex> import Kernel, except: [apply: 2]
-  iex> apply(%Witchcraft.Id{id: 42}, %Witchcraft.Id{id: &(&1 + 1)})
-  %Witchcraft.Id{id: 43}
+  iex> apply(%Algae.Id{id: 42}, %Algae.Id{id: &(&1 + 1)})
+  %Algae.Id{id: 43}
 
   iex> import Kernel, except: [apply: 2]
   iex> import Witchcraft.Functor, only: [lift: 2]
-  iex> alias Witchcraft.Id, as: Id
+  iex> alias Algae.Id, as: Id
   iex> apply(%Id{id: 9}, lift(%Id{id: 2}, &(fn x -> x + &1 end)))
-  %Witchcraft.Id{id: 11}
+  %Algae.Id{id: 11}
 
   ```
 

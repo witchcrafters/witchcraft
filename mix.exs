@@ -30,7 +30,9 @@ defmodule Witchcraft.Mixfile do
   defp deps do
     [{:earmark, "~> 0.1", only: :dev},
      {:ex_doc, "~> 0.10", only: :dev},
-     {:quark, "~> 1.0"}]
+     {:algae, "~> 0.8"},
+     {:quark, "~> 1.0"}
+    ]
   end
 
   defp package do

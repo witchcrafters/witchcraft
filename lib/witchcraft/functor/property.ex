@@ -13,8 +13,12 @@ defmodule Witchcraft.Functor.Property do
 
   ```elixir
 
-  iex> alias Witchcraft.Id, as: Id
-  iex> spotcheck_associates_object(%Id{id: 42}, &Quark.id/1, &Id.is_id/1)
+  iex> alias Algae.Id, as: Id
+  iex> defmodule Typecheck do
+  ...>   def is_id(%Id{id: _}), do: true
+  ...>   def is_id(_), do: false
+  ...> end
+  iex> spotcheck_associates_object(%Id{id: 42}, &Quark.id/1, &Typecheck.is_id/1)
   true
 
   ```
@@ -41,7 +45,7 @@ defmodule Witchcraft.Functor.Property do
 
   ```elixir
 
-  iex> spotcheck_preserve_identity(%Witchcraft.Id{id: 7}, &(&1 + 1))
+  iex> spotcheck_preserve_identity(%Algae.Id{id: 7}, &(&1 + 1))
   true
 
   ```
@@ -57,7 +61,7 @@ defmodule Witchcraft.Functor.Property do
 
   ```elixir
 
-  iex> spotcheck_preserve_compositon(%Witchcraft.Id{id: 5}, &(&1 + 1), &(&1 * 10))
+  iex> spotcheck_preserve_compositon(%Algae.Id{id: 5}, &(&1 + 1), &(&1 * 10))
   true
 
   ```
@@ -73,8 +77,12 @@ defmodule Witchcraft.Functor.Property do
 
   ```elixir
 
-  iex> alias Witchcraft.Id, as: Id
-  iex> spotcheck(%Id{id: 42}, &(&1 + 1), &(&1 * 2), &Id.is_id&1)
+  iex> alias Algae.Id, as: Id
+  iex> defmodule Typecheck do
+  ...>   def is_id(%Id{id: _}), do: true
+  ...>   def is_id(_), do: false
+  ...> end
+  iex> spotcheck(%Id{id: 42}, &(&1 + 1), &(&1 * 2), &Typecheck.is_id/1)
   true
 
   ```

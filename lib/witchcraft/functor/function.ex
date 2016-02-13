@@ -17,8 +17,8 @@ defmodule Witchcraft.Functor.Function do
   [10,20,30]
 
   iex> x10 = &lift(fn x -> x * 10 end).(&1)
-  iex> %Witchcraft.Id{id: 13} |> x10.()
-  %Witchcraft.Id{id: 130}
+  iex> %Algae.Id{id: 13} |> x10.()
+  %Algae.Id{id: 130}
 
   ```
 

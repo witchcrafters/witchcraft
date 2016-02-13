@@ -134,3 +134,8 @@ defimpl Witchcraft.Monoid, for: Map do
   def identity(_map), do: %{}
   def append(ma, mb), do: Dict.merge(ma, mb)
 end
+
+defimpl Witchcraft.Monoid, for: Witchcraft.Sad do
+  def identity(%Witchcraft.Sad{sad: _}), do: %Witchcraft.Sad{}
+  def append(%Witchcraft.Sad{sad: a}, %Witchcraft.Sad{sad: b}), do: %Witchcraft.Sad{sad: a / b}
+end

@@ -180,7 +180,7 @@ In other words, lifting <code class="inline">id(a)</code> shoud be the same as t
   <section class="docstring">
     <p>Spotcheck all functor properties</p>
 <pre><code class="elixir">
-iex&gt; alias Witchcraft.Id, as: Id
+iex&gt; alias Algae.Id, as: Id
 iex&gt; spotcheck(%Id{id: 42}, &amp;(&amp;1 + 1), &amp;(&amp;1 * 2), &amp;Id.is_id&amp;1)
 true
 </code></pre>
@@ -212,7 +212,7 @@ true
   <section class="docstring">
     <p>Check that lifting a function into some context returns a member of the target type</p>
 <pre><code class="elixir">
-iex&gt; alias Witchcraft.Id, as: Id
+iex&gt; alias Algae.Id, as: Id
 iex&gt; spotcheck_associates_object(%Id{id: 42}, &amp;Quark.id/1, &amp;Id.is_id/1)
 true
 </code></pre>
@@ -244,7 +244,7 @@ true
   <section class="docstring">
     <p>Check that lifting a composed function is the same as lifting functions in sequence</p>
 <pre><code class="elixir">
-iex&gt; spotcheck_preserve_compositon(%Witchcraft.Id{id: 5}, &amp;(&amp;1 + 1), &amp;(&amp;1 * 10))
+iex&gt; spotcheck_preserve_compositon(%Algae.Id{id: 5}, &amp;(&amp;1 + 1), &amp;(&amp;1 * 10))
 true
 </code></pre>
 
@@ -284,7 +284,7 @@ In other words, lifting <code class="inline">id(a)</code> shoud be the same as t
 
  B ---- id ----&gt; B</code></pre>
 <pre><code class="elixir">
-iex&gt; spotcheck_preserve_identity(%Witchcraft.Id{id: 7}, &amp;(&amp;1 + 1))
+iex&gt; spotcheck_preserve_identity(%Algae.Id{id: 7}, &amp;(&amp;1 + 1))
 true
 </code></pre>
 

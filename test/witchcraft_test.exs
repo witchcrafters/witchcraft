@@ -19,7 +19,7 @@ defmodule WitchcraftTest do
   doctest Witchcraft.Functor, import: true
 
   doctest Witchcraft.Functor.List, import: true
-  doctest Witchcraft.Functor.Witchcraft.Id, import: true
+  doctest Witchcraft.Functor.Algae.Id, import: true
 
   doctest Witchcraft.Functor.Function, import: true
   doctest Witchcraft.Functor.Operator, import: true
@@ -30,7 +30,7 @@ defmodule WitchcraftTest do
   doctest Witchcraft.Applicative, import: true
 
   doctest Witchcraft.Applicative.List, import: true
-  doctest Witchcraft.Applicative.Witchcraft.Id, import: true
+  doctest Witchcraft.Applicative.Algae.Id, import: true
 
   doctest Witchcraft.Applicative.Function, import: true
   doctest Witchcraft.Applicative.Operator, import: true

@@ -115,11 +115,11 @@ the wrong type, or the type <code class="inline">none</code>)</p>
 <pre><code class="iex elixir">iex&gt; [1,2,3] |&gt; lift(&amp;(&amp;1 + 1))
 [2,3,4]
 
-iex&gt; defimpl Witchcraft.Functor, for: Witchcraft.Id do
-iex&gt;   def lift(%Witchcraft.Id{id: inner}, func), do: %Witchcraft.Id{id: func.(inner)}
+iex&gt; defimpl Witchcraft.Functor, for: Algae.Id do
+iex&gt;   def lift(%Algae.Id{id: inner}, func), do: %Algae.Id{id: func.(inner)}
 iex&gt; end
-iex&gt; lift(%Witchcraft.Id{id: 1}, &amp;(&amp;1 + 1))
-%Witchcraft.Id{id: 2}</code></pre>
+iex&gt; lift(%Algae.Id{id: 1}, &amp;(&amp;1 + 1))
+%Algae.Id{id: 2}</code></pre>
 
         </section>
       
