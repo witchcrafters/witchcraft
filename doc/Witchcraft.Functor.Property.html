@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.3">
-    <title>Witchcraft.Functor.Property – Witchcraft v0.3.0</title>
+    <title>Witchcraft.Functor.Property – Witchcraft v0.3.1</title>
     <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -27,7 +27,7 @@
         Witchcraft
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.3.0
+        v0.3.1
       </h2>
     </div>
     
@@ -63,7 +63,7 @@
 
 
       <h1>
-        <small class="visible-xs">Witchcraft v0.3.0</small>
+        <small class="visible-xs">Witchcraft v0.3.1</small>
         Witchcraft.Functor.Property
         
         
@@ -162,7 +162,7 @@ In other words, lifting <code class="inline">id(a)</code> shoud be the same as t
     </a>
     <span class="signature">spotcheck(context, f, g, typecheck)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L84" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L92" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -181,7 +181,11 @@ In other words, lifting <code class="inline">id(a)</code> shoud be the same as t
     <p>Spotcheck all functor properties</p>
 <pre><code class="elixir">
 iex&gt; alias Algae.Id, as: Id
-iex&gt; spotcheck(%Id{id: 42}, &amp;(&amp;1 + 1), &amp;(&amp;1 * 2), &amp;Id.is_id&amp;1)
+iex&gt; defmodule Typecheck do
+...&gt;   def is_id(%Id{id: _}), do: true
+...&gt;   def is_id(_), do: false
+...&gt; end
+iex&gt; spotcheck(%Id{id: 42}, &amp;(&amp;1 + 1), &amp;(&amp;1 * 2), &amp;Typecheck.is_id/1)
 true
 </code></pre>
 
@@ -194,7 +198,7 @@ true
     </a>
     <span class="signature">spotcheck_associates_object(context, func, typecheck)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L24" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L28" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -213,7 +217,11 @@ true
     <p>Check that lifting a function into some context returns a member of the target type</p>
 <pre><code class="elixir">
 iex&gt; alias Algae.Id, as: Id
-iex&gt; spotcheck_associates_object(%Id{id: 42}, &amp;Quark.id/1, &amp;Id.is_id/1)
+iex&gt; defmodule Typecheck do
+...&gt;   def is_id(%Id{id: _}), do: true
+...&gt;   def is_id(_), do: false
+...&gt; end
+iex&gt; spotcheck_associates_object(%Id{id: 42}, &amp;Quark.id/1, &amp;Typecheck.is_id/1)
 true
 </code></pre>
 
@@ -226,7 +234,7 @@ true
     </a>
     <span class="signature">spotcheck_preserve_compositon(context, f, g)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L67" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L71" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -257,7 +265,7 @@ true
     </a>
     <span class="signature">spotcheck_preserve_identity(context, func)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L51" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L55" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
