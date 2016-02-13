@@ -8,7 +8,7 @@ defmodule Witchcraft.Mixfile do
      description: "Common algebraic structures and functions",
      package: package,
 
-     version: "0.3.0",
+     version: "0.3.1",
      elixir:  "~> 1.1",
 
      source_url:   "https://github.com/robot-overlord/witchcraft",
