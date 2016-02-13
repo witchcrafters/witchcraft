@@ -9,7 +9,7 @@ defmodule Witchcraft.Mixfile do
      package: package,
 
      version: "0.3.1",
-     elixir:  "~> 1.1",
+     elixir:  "~> 1.2",
 
      source_url:   "https://github.com/robot-overlord/witchcraft",
      homepage_url: "https://github.com/robot-overlord/witchcraft",
