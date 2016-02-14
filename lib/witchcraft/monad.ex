@@ -49,3 +49,14 @@ defimpl Witchcraft.Monad, for: Algae.Either.Right do
     %Algae.Either.Right{right: value}
   end
 end
+
+# Algae.Free
+# ==========
+
+defimpl Witchcraft.Monad, for: Algae.Free.Shallow do
+  def join(shallow), do: shallow
+end
+
+defimpl Witchcraft.Monad, for: Algae.Free.Deep do
+  def join(deep), do: deep
+end
