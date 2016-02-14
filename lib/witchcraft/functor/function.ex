@@ -38,5 +38,5 @@ defmodule Witchcraft.Functor.Function do
 
   """
   @spec replace(any, any) :: any
-  def replace(functor, const), do: lift(functor, &Quark.constant(const, &1))
+  def replace(functor_data, const), do: lift(functor_data, &Quark.constant(const, &1))
 end
