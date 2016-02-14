@@ -1,5 +1,6 @@
 defmodule Witchcraft do
   @moduledoc ~S"""
+  For convenience, the most common functions and operators are exported at the top-level
   """
 
   # ======

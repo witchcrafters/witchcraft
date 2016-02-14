@@ -4,7 +4,7 @@ defmodule Witchcraft.Applicative.Operator do
 
   import Kernel, except: [apply: 2]
   import Witchcraft.Applicative, only: [apply: 2]
-  import Witchcraft.Applicative.Function, only: [lift: 2]
+  import Witchcraft.Applicative.Function, only: [~>: 2]
 
   @doc ~S"""
   Infix alias for `Witchcraft.Applicative.apply`. If chaining, be sure to wrap
@@ -15,7 +15,6 @@ defmodule Witchcraft.Applicative.Operator do
   iex> [1,2,3] ~>> [&(&1 + 1), &(&1 * 10)]
   [2,3,4,10,20,30]
 
-  # iex> [9, 10] ~>> (Witchcraft.Applicative.Function.lift [1,2,3], &(fn x -> x + &1 end))
   iex> [9, 10] ~>> ([1,2,3] ~> &(fn x -> x * &1 end))
   [9, 10, 18, 20, 27, 30]
 
@@ -44,7 +43,4 @@ defmodule Witchcraft.Applicative.Operator do
   """
   @spec any <<~ any :: any
   def func <<~ value, do: value ~>> func
-
-  defdelegate functor_value ~> bare_function, to: Witchcraft.Functor, as: :lift
-  def bare_function <~ functor_value, do: functor_value ~> bare_function
 end
