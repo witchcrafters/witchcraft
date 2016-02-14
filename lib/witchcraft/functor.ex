@@ -114,6 +114,7 @@ defimpl Witchcraft.Functor, for: Algae.Free.Shallow do
 end
 
 defimpl Witchcraft.Functor, for: Algae.Free.Deep do
+  import Quark, only: [<|>: 2]
   import Quark.Curry, only: [curry: 1]
   import Witchcraft.Functor.Operator, only: [~>: 2]
 

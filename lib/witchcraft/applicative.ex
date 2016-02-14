@@ -160,7 +160,7 @@ defimpl Witchcraft.Applicative, for: Algae.Maybe.Just do
   def wrap(%Algae.Maybe.Just{just: _}, bare), do: %Algae.Maybe.Just{just: bare}
 
   def seq(%Algae.Maybe.Just{just: _}, %Algae.Maybe.Nothing{}), do: %Algae.Maybe.Nothing{}
-  def seq(%Algae.Maybe.Just{just: value}, %Algae.Maybe.Just(just: fun)) do
+  def seq(%Algae.Maybe.Just{just: value}, %Algae.Maybe.Just{just: fun}) do
     %Algae.Maybe.Just{just: curry(fun).(value)}
   end
 end
@@ -178,6 +178,7 @@ end
 
 defimpl Witchcraft.Applicative, for: Algae.Either.Right do
   import Quark.Curry, only: [curry: 1]
+  import Witchcraft.Functor.Operator, only: [~>: 2]
 
   def wrap(%Algae.Either.Right{right: _}, bare), do: %Algae.Either.Right{right: bare}
 
@@ -190,21 +191,27 @@ end
 # ==========
 # Based on Ørjan Johansen's Free Applicative
 
-defimpl Witchraft.Applicative, for: Algae.Free.Shallow do
+defimpl Witchcraft.Applicative, for: Algae.Free.Shallow do
+  import Witchcraft.Functor.Operator, only: [~>: 2]
+
   def wrap(%Algae.Free.Shallow{shallow: _}, bare), do: Algae.Free.shallow(bare)
   def seq(%Algae.Free.Shallow{shallow: shallow}, other), do: other ~> &(&1.(shallow))
 end
 
 defimpl Witchcraft.Applicative, for: Algae.Free.Deep do
+  import Quark, only: [compose: 2]
+  import Witchcraft.Functor.Operator, only: [<~: 2]
+  import Witchcraft.Applicative.Operator, only: [<<~: 2]
+
   def wrap(%Algae.Free.Deep{deep: _, deeper: _}, bare), do: Algae.Free.shallow(bare)
 
   def seq(%Algae.Free.Deep{deep: deep, deeper: deeper}, %Algae.Free.Shallow{shallow: shallow}) do
-    new_deeper = &Quark.compose/2 <~ %Algae.Free.Shallow{shallow: shallow} <<~ deeper
-    %Algae.Free.deep(new_deeper, deep)
+    new_deeper = &compose(&1, &2) <~ %Algae.Free.Shallow{shallow: shallow} <<~ deeper
+    Algae.Free.deep(new_deeper, deep)
   end
 
   def seq(%Algae.Free.Deep{deep: deep1, deeper: deeper1}, %Algae.Free.Deep{deep: deep2, deeper: deeper2}) do
-    new_deeper = &Quark.compose/2 <~ %Algae.Free.Deep{deep: deep2, deeper: deeper2} <<~ deeper1
-    %Algae.Free.deep(new_deeper, deep1)
+    new_deeper = &compose(&1, &2) <~ %Algae.Free.Deep{deep: deep2, deeper: deeper2} <<~ deeper1
+    Algae.Free.deep(new_deeper, deep1)
   end
 end
