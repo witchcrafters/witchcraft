@@ -13,7 +13,9 @@ defmodule Witchcraft.Applicative.Property do
   import Quark.Curry, only: [curry: 1]
 
   import Witchcraft.Applicative, only: [apply: 2, wrap: 2]
-  import Witchcraft.Applicative.Operator, only: [~>: 2, <~: 2, ~>>: 2, <<~: 2]
+  import Witchcraft.Applicative.Operator, only: [~>>: 2, <<~: 2]
+
+  import Witchcraft.Functor.Operator, only: [~>: 2, <~: 2]
 
   @doc ~S"""
   `apply`ing a lifted `id` to some lifted value `v` does not change `v`

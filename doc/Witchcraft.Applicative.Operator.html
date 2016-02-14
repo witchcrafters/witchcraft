@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.3">
-    <title>Witchcraft.Applicative.Operator – Witchcraft v0.3.1</title>
+    <title>Witchcraft.Applicative.Operator – Witchcraft v0.4.0</title>
     <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -27,7 +27,7 @@
         Witchcraft
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.3.1
+        v0.4.0
       </h2>
     </div>
     
@@ -63,7 +63,7 @@
 
 
       <h1>
-        <small class="visible-xs">Witchcraft v0.3.1</small>
+        <small class="visible-xs">Witchcraft v0.4.0</small>
         Witchcraft.Applicative.Operator
         
         
@@ -100,21 +100,6 @@
   </div>
   
     <div class="summary-synopsis"><p>Infix alias for <code class="inline">Witchcraft.Applicative.apply</code>, with arguments reversed</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#%3C~/2">bare_function &lt;~ functor_value</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#~%3E/2">functor_value ~&gt; bare_function</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>See <a href="Witchcraft.Functor.html#lift/2"><code class="inline">Witchcraft.Functor.lift/2</code></a></p>
 </div>
   
 </div>
@@ -179,44 +164,10 @@ partial applications clearer when reading left-to-right.</p>
 iex&gt; [&amp;(&amp;1 + 1), &amp;(&amp;1 * 10)] &lt;&lt;~ [1,2,3]
 [2,3,4,10,20,30]
 
+iex&gt; import Witchcraft.Functor.Operator, only: [&lt;~: 2]
 iex&gt; (&amp;(fn x -&gt; x * &amp;1 end)) &lt;~ [1,2,3] &lt;&lt;~ [9,10,11]
 [9,10,11,18,20,22,27,30,33]
 </code></pre>
-
-  </section>
-</div>
-<div class="detail" id="%3C~/2">
-  <div class="detail-header">
-    <a href="#%3C~/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">bare_function &lt;~ functor_value</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/operator.ex#L49" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="~%3E/2">
-  <div class="detail-header">
-    <a href="#~%3E/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">functor_value ~&gt; bare_function</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/operator.ex#L48" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-  <section class="docstring">
-    <p>See <a href="Witchcraft.Functor.html#lift/2"><code class="inline">Witchcraft.Functor.lift/2</code></a>.</p>
 
   </section>
 </div>
@@ -227,7 +178,7 @@ iex&gt; (&amp;(fn x -&gt; x * &amp;1 end)) &lt;~ [1,2,3] &lt;&lt;~ [9,10,11]
     </a>
     <span class="signature">value ~&gt;&gt; func</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/operator.ex#L26" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/operator.ex#L25" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -249,7 +200,7 @@ each layer in parentheses, as <code class="inline">~&gt;&gt;</code> and <code cl
 iex&gt; [1,2,3] ~&gt;&gt; [&amp;(&amp;1 + 1), &amp;(&amp;1 * 10)]
 [2,3,4,10,20,30]
 
-# iex&gt; [9, 10] ~&gt;&gt; (Witchcraft.Applicative.Function.lift [1,2,3], &amp;(fn x -&gt; x + &amp;1 end))
+iex&gt; import Witchcraft.Functor.Operator, only: [~&gt;: 2]
 iex&gt; [9, 10] ~&gt;&gt; ([1,2,3] ~&gt; &amp;(fn x -&gt; x * &amp;1 end))
 [9, 10, 18, 20, 27, 30]
 </code></pre>

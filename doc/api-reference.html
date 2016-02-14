@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.3">
-    <title>API Reference – Witchcraft v0.3.1</title>
+    <title>API Reference – Witchcraft v0.4.0</title>
     <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -27,7 +27,7 @@
         Witchcraft
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.3.1
+        v0.4.0
       </h2>
     </div>
     
@@ -62,7 +62,7 @@
   <div id="content" class="content-inner">
 
   <h1>
-    <small class="visible-xs">Witchcraft v0.3.1</small>
+    <small class="visible-xs">Witchcraft v0.4.0</small>
     API Reference
   </h1>
 
@@ -81,6 +81,13 @@
       <h1 class="section-heading">Modules</h1>
       <div class="summary">
         <div class="summary-row">
+  <div class="summary-signature"><a href="Witchcraft.html">Witchcraft</a></div>
+  
+    <div class="summary-synopsis"><p>For convenience, the most common functions and operators are exported at the top-level</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="Witchcraft.Applicative.Function.html">Witchcraft.Applicative.Function</a></div>
   
     <div class="summary-synopsis"><p>Function helpers, derivatives and operators for <a href="Witchcraft.Applicative.html"><code class="inline">Witchcraft.Applicative</code></a></p>
@@ -120,6 +127,16 @@ applicative properties. <em>All members</em> of your datatype should adhere to t
 functor properties. <em>All members</em> of your datatype should adhere to these rules.
 They are placed here as a quick way to spotcheck some of your values</p>
 </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Witchcraft.Monad.Function.html">Witchcraft.Monad.Function</a></div>
+  
+    <div class="summary-synopsis"></div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Witchcraft.Monad.Operator.html">Witchcraft.Monad.Operator</a></div>
   
 </div>
 <div class="summary-row">
@@ -168,6 +185,14 @@ of those values</p>
   
     <div class="summary-synopsis"><p>Functors provide a way to apply a function to value(s) a datatype
 (lists, trees, maybes, etc)</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Witchcraft.Monad.html">Witchcraft.Monad</a></div>
+  
+    <div class="summary-synopsis"><p>Because we are following Functor/Applicative/Monad superclassing, <code class="inline">return</code> is <code class="inline">pure</code>,
+so no need to define <code class="inline">return</code>. <code class="inline">bind</code> can be defined in terms of <code class="inline">join</code> and <code class="inline">lift</code></p>
 </div>
   
 </div>

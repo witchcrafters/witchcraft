@@ -1,0 +1,658 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.11.3">
+    <title>Witchcraft – Witchcraft v0.4.0</title>
+    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="modules">
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+  <button class="sidebar-toggle">
+    <i class="icon-menu"></i>
+  </button>
+
+  
+  <a href="api-reference.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        Witchcraft
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.4.0
+      </h2>
+    </div>
+    
+      <img src="assets/logo.png" alt="Witchcraft" class="sidebar-projectImage">
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+      <li><a id="protocols-list" href="#full-list">Protocols</a></li>
+    
+  </ul>
+
+  <ul id="full-list" class="sidebar-fullList"></ul>
+  <div class="sidebar-noResults"></div>
+</section>
+
+<section class="content">
+  <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">Witchcraft v0.4.0</small>
+        Witchcraft
+        
+        
+          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L1" title="View Source" class="view-source" rel="help">
+            <i class="icon-code"></i>
+          </a>
+        
+      </h1>
+
+      
+        <section id="moduledoc" class="docstring">
+          <p>For convenience, the most common functions and operators are exported at the top-level</p>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <i class="icon-link"></i>
+            </a>
+            Summary
+          </h1>
+          
+
+          
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#%3C%3C%3C/2">fun &lt;&lt;&lt; wrapped</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Monad.Operator.html#%253C%253C%253C/2"><code class="inline">Witchcraft.Monad.Operator.&lt;&lt;&lt;/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#%3C%3C~/2">fun &lt;&lt;~ value</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Applicative.Operator.html#%253C%253C~/2"><code class="inline">Witchcraft.Applicative.Operator.&lt;&lt;~/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#%3C%7C%3E/2">a &lt;|&gt; b</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Monoid.Operator.html#%253C%257C%253E/2"><code class="inline">Witchcraft.Monoid.Operator.&lt;|&gt;/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#%3C~/2">func &lt;~ data</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Functor.Operator.html#%253C~/2"><code class="inline">Witchcraft.Functor.Operator.&lt;~/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#%3E%3E%3E/2">wrapped &gt;&gt;&gt; fun</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Monad.Operator.html#%253E%253E%253E/2"><code class="inline">Witchcraft.Monad.Operator.&gt;&gt;&gt;/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#append/2">append(a, b)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Monoid.html#append/2"><code class="inline">Witchcraft.Monoid.append/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#apply/2">apply(wrapped_value, wrapped_function)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Applicative.html#apply/2"><code class="inline">Witchcraft.Applicative.apply/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#bind/2">bind(wrapped, fun)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Monad.Function.html#bind/2"><code class="inline">Witchcraft.Monad.Function.bind/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#identity/1">identity(specemin)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Monoid.html#identity/1"><code class="inline">Witchcraft.Monoid.identity/1</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#join/1">join(deep)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Monad.html#join/1"><code class="inline">Witchcraft.Monad.join/1</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#lift/0">lift()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Functor.Function.html#lift/0"><code class="inline">Witchcraft.Functor.Function.lift/0</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#lift/1">lift(function)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Functor.Function.html#lift/1"><code class="inline">Witchcraft.Functor.Function.lift/1</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#lift/2">lift(data, function)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Functor.html#lift/2"><code class="inline">Witchcraft.Functor.lift/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#replace/2">replace(functor_data, const)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Functor.Function.html#replace/2"><code class="inline">Witchcraft.Functor.Function.replace/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#seq_first/1">seq_first(list)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Applicative.Function.html#seq_first/1"><code class="inline">Witchcraft.Applicative.Function.seq_first/1</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#seq_second/1">seq_second(list)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Applicative.Function.html#seq_second/1"><code class="inline">Witchcraft.Applicative.Function.seq_second/1</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#wrap/2">wrap(specemin, bare)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <code class="inline">Wicthcraft.Applicative.wrap/2</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#~%3E/2">data ~&gt; func</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Functor.Operator.html#~%253E/2"><code class="inline">Witchcraft.Functor.Operator.~&gt;/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#~%3E%3E/2">value ~&gt;&gt; fun</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Witchcraft.Applicative.Operator.html#~%253E%253E/2"><code class="inline">Witchcraft.Applicative.Operator.~&gt;&gt;/2</code></a></p>
+</div>
+  
+</div>
+
+  </div>
+
+
+          
+
+          
+
+        </section>
+      
+
+      
+
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <i class="icon-link"></i>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="%3C%3C%3C/2">
+  <div class="detail-header">
+    <a href="#%3C%3C%3C/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">fun &lt;&lt;&lt; wrapped</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L47" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Monad.Operator.html#%253C%253C%253C/2"><code class="inline">Witchcraft.Monad.Operator.&lt;&lt;&lt;/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="%3C%3C~/2">
+  <div class="detail-header">
+    <a href="#%3C%3C~/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">fun &lt;&lt;~ value</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L33" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Applicative.Operator.html#%253C%253C~/2"><code class="inline">Witchcraft.Applicative.Operator.&lt;&lt;~/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="%3C%7C%3E/2">
+  <div class="detail-header">
+    <a href="#%3C%7C%3E/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">a &lt;|&gt; b</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L12" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Monoid.Operator.html#%253C%257C%253E/2"><code class="inline">Witchcraft.Monoid.Operator.&lt;|&gt;/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="%3C~/2">
+  <div class="detail-header">
+    <a href="#%3C~/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">func &lt;~ data</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L22" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Functor.Operator.html#%253C~/2"><code class="inline">Witchcraft.Functor.Operator.&lt;~/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="%3E%3E%3E/2">
+  <div class="detail-header">
+    <a href="#%3E%3E%3E/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">wrapped &gt;&gt;&gt; fun</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L46" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Monad.Operator.html#%253E%253E%253E/2"><code class="inline">Witchcraft.Monad.Operator.&gt;&gt;&gt;/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="append/2">
+  <div class="detail-header">
+    <a href="#append/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">append(a, b)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L11" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Monoid.html#append/2"><code class="inline">Witchcraft.Monoid.append/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="apply/2">
+  <div class="detail-header">
+    <a href="#apply/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">apply(wrapped_value, wrapped_function)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L31" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Applicative.html#apply/2"><code class="inline">Witchcraft.Applicative.apply/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="bind/2">
+  <div class="detail-header">
+    <a href="#bind/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">bind(wrapped, fun)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L45" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Monad.Function.html#bind/2"><code class="inline">Witchcraft.Monad.Function.bind/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="identity/1">
+  <div class="detail-header">
+    <a href="#identity/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">identity(specemin)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L9" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Monoid.html#identity/1"><code class="inline">Witchcraft.Monoid.identity/1</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="join/1">
+  <div class="detail-header">
+    <a href="#join/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">join(deep)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L43" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Monad.html#join/1"><code class="inline">Witchcraft.Monad.join/1</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="lift/0">
+  <div class="detail-header">
+    <a href="#lift/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">lift()</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L19" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Functor.Function.html#lift/0"><code class="inline">Witchcraft.Functor.Function.lift/0</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="lift/1">
+  <div class="detail-header">
+    <a href="#lift/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">lift(function)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L18" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Functor.Function.html#lift/1"><code class="inline">Witchcraft.Functor.Function.lift/1</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="lift/2">
+  <div class="detail-header">
+    <a href="#lift/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">lift(data, function)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L17" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Functor.html#lift/2"><code class="inline">Witchcraft.Functor.lift/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="replace/2">
+  <div class="detail-header">
+    <a href="#replace/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">replace(functor_data, const)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L24" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Functor.Function.html#replace/2"><code class="inline">Witchcraft.Functor.Function.replace/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="seq_first/1">
+  <div class="detail-header">
+    <a href="#seq_first/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">seq_first(list)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L37" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Applicative.Function.html#seq_first/1"><code class="inline">Witchcraft.Applicative.Function.seq_first/1</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="seq_second/1">
+  <div class="detail-header">
+    <a href="#seq_second/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">seq_second(list)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L38" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Applicative.Function.html#seq_second/1"><code class="inline">Witchcraft.Applicative.Function.seq_second/1</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="wrap/2">
+  <div class="detail-header">
+    <a href="#wrap/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">wrap(specemin, bare)</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L29" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <code class="inline">Wicthcraft.Applicative.wrap/2</code>.</p>
+
+  </section>
+</div>
+<div class="detail" id="~%3E/2">
+  <div class="detail-header">
+    <a href="#~%3E/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">data ~&gt; func</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L21" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Functor.Operator.html#~%253E/2"><code class="inline">Witchcraft.Functor.Operator.~&gt;/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="~%3E%3E/2">
+  <div class="detail-header">
+    <a href="#~%3E%3E/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">value ~&gt;&gt; fun</span>
+      
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft.ex#L32" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>See <a href="Witchcraft.Applicative.Operator.html#~%253E%253E/2"><code class="inline">Witchcraft.Applicative.Operator.~&gt;&gt;/2</code></a>.</p>
+
+  </section>
+</div>
+
+        </section>
+      
+
+      
+
+      
+        <footer class="footer">
+      <p>
+        <span class="line">
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.3),
+        </span>
+        <span class="line">
+          designed by
+          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+      </p>
+      <button class="night-mode-toggle" />
+    </footer>
+  </div>
+</section>
+</div>
+  <script src="dist/app-6d2e071366.js"></script>
+  </body>
+</html>
+

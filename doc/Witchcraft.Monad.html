@@ -5,11 +5,11 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.3">
-    <title>Witchcraft.Functor.Operator – Witchcraft v0.4.0</title>
+    <title>Witchcraft.Monad – Witchcraft v0.4.0</title>
     <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
-  <body data-type="modules">
+  <body data-type="protocols">
 
     <div class="main">
 <button class="sidebar-toggle">
@@ -64,15 +64,23 @@
 
       <h1>
         <small class="visible-xs">Witchcraft v0.4.0</small>
-        Witchcraft.Functor.Operator
+        Witchcraft.Monad
+        
+          <small>protocol</small>
         
         
-          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/operator.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monad.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
       </h1>
 
+      
+        <section id="moduledoc" class="docstring">
+          <p>Because we are following Functor/Applicative/Monad superclassing, <code class="inline">return</code> is <code class="inline">pure</code>,
+so no need to define <code class="inline">return</code>. <code class="inline">bind</code> can be defined in terms of <code class="inline">join</code> and <code class="inline">lift</code>.</p>
+
+        </section>
       
 
       
@@ -84,6 +92,19 @@
             Summary
           </h1>
           
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:t/0">t()</a>
+  </div>
+  
+</div>
+
+  </div>
+
 
           
   <div class="summary-functions summary">
@@ -92,22 +113,10 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#%3C~/2">func &lt;~ args</a>
+    <a href="#join/1">join(deep)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Alias for <code class="inline">lift</code>. As we’ll see with <a href="Witchcraft.Applicative.html"><code class="inline">Witchcraft.Applicative</code></a>,
-this arrow points in the direction of data flow (just like <code class="inline">|&gt;</code>), but we often
-prefer the function on the left side</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#~%3E/2">args ~&gt; func</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Alias for <code class="inline">lift</code> and <code class="inline">&lt;~</code>, but with data flowing to the right</p>
-</div>
+    <div class="summary-synopsis"></div>
   
 </div>
 
@@ -122,6 +131,22 @@ prefer the function on the left side</p>
       
 
       
+        <section id="types" class="types details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <i class="icon-link"></i>
+            </a>
+            Types
+          </h1>
+          <div class="types-list">
+            <div id="t:t/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:t/0">t</a> :: term</code></pre>
+  
+</div>
+
+          </div>
+        </section>
+      
 
       
         <section id="functions" class="details-list">
@@ -131,14 +156,14 @@ prefer the function on the left side</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="%3C~/2">
+          <div class="detail" id="join/1">
   <div class="detail-header">
-    <a href="#%3C~/2" class="detail-link" title="Link to this function">
+    <a href="#join/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">func &lt;~ args</span>
+    <span class="signature">join(deep)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/operator.ex#L18" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monad.ex#L12" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -148,51 +173,13 @@ prefer the function on the left side</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">(any -> any) <~ any :: any</code></pre>
+          <pre><code class="elixir">join(any) :: any</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Alias for <code class="inline">lift</code>. As we’ll see with <a href="Witchcraft.Applicative.html"><code class="inline">Witchcraft.Applicative</code></a>,
-this arrow points in the direction of data flow (just like <code class="inline">|&gt;</code>), but we often
-prefer the function on the left side.</p>
-<pre><code class="elixir">
-iex&gt; (&amp;(&amp;1 * 10)) &lt;~ [1,2,3]
-[10, 20, 30]
-</code></pre>
-
-  </section>
-</div>
-<div class="detail" id="~%3E/2">
-  <div class="detail-header">
-    <a href="#~%3E/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">args ~&gt; func</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/operator.ex#L32" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
     
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">any ~> (any -> any) :: any</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    <p>Alias for <code class="inline">lift</code> and <code class="inline">&lt;~</code>, but with data flowing to the right.</p>
-<pre><code class="elixir">
-iex&gt; [1,2,3] ~&gt; &amp;(&amp;1 * 10)
-[10, 20, 30]
-</code></pre>
-
   </section>
 </div>
 

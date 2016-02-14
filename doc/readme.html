@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.3">
-    <title>Quick Start – Witchcraft v0.3.1</title>
+    <title>Quick Start – Witchcraft v0.4.0</title>
     <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -27,7 +27,7 @@
         Witchcraft
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.3.1
+        v0.4.0
       </h2>
     </div>
     
@@ -63,7 +63,8 @@
 
 
 <p><img src="./logo.png" alt=""/></p>
-<p>Functors, monads, arrows, and categories</p>
+<p><a href="Witchcraft.html"><code class="inline">Witchcraft</code></a> is a library providing common algebraic and categorical abstractions to Elixir.
+(Monoids, functors, monads, arrows, and categories)</p>
 <table>
 <colgroup>
 <col>
@@ -80,10 +81,108 @@
 <td style="text-align: left"><a href="https://circleci.com/gh/robot-overlord/witchcraft/tree/master"><img src="https://circleci.com/gh/robot-overlord/witchcraft/tree/master.svg?style=svg" alt="Circle CI"/></a></td><td style="text-align: left"><img src="https://cloud.githubusercontent.com/assets/1052016/11023213/66d837a4-8627-11e5-9e3b-b295fafb1450.png" alt="built with humanity"/></td><td style="text-align: left"><a href="http://www.robotoverlord.io/witchcraft/extra-readme.html">robotoverlord.io/witchcraft</a></td><td style="text-align: left"><a href="https://hex.pm/packages/witchcraft">Hex</a></td>
 </tr>
 </table>
+<h1>Table of Contents</h1>
+<ul>
+<li><a href="#quick-start">Quick Start</a>
+</li>
+<li><a href="#values">Values</a>
+</li>
+<li><a href="#beginner-friendliness">Beginner Friendliness</a>
+</li>
+<li><p><a href="#consistency">Consistency</a></p>
+<ul>
+<li><a href="#language">Language</a>
+</li>
+<li><a href="#concept">Concept</a>
+</li>
+</ul>
+</li>
+<li><a href="#pedagogy">Pedagogy</a>
+</li>
+<li><a href="#pragmatism">Pragmatism</a>
+</li>
+<li><a href="#compatibility">Compatibility</a>
+</li>
+<li><a href="#testing">Testing</a>
+</li>
+<li><a href="#differences-from-haskell">Differences from Haskell</a>
+</li>
+<li><a href="#naming">Naming</a>
+</li>
+<li><a href="#hierarchy">Hierarchy</a>
+</li>
+</ul>
 <h1>Quick Start</h1>
 <pre><code class="elixir">def deps do
-  [{:witchcraft, &quot;~&gt; 0.3.1&quot;}]
+  [{:witchcraft, &quot;~&gt; 0.4.0&quot;}]
 end</code></pre>
+<h1>Values</h1>
+<h2>Beginner Friendliness</h2>
+<p>As much as possible, keep things friendly. Concrete examples are available in the
+source code, and a Wiki is in the roadmap.</p>
+<h2>Consistency</h2>
+<h3>Language</h3>
+<p>Elixir does a lot of things differently from other functional languages. The idea
+of a data “subject” being piped though functions is conceptually different from
+pure composition of functions that are later applied. <a href="Witchcraft.html"><code class="inline">Witchcraft</code></a> honours the Elixir
+way, and operators point in the direction that data travels.</p>
+<h3>Concept</h3>
+<p>By learning from developments in other languages, we can collapse a lot of ideas into
+single concepts (<code class="inline">liftA === liftM</code>, for instance).</p>
+<h2>Pedagogy</h2>
+<p>You shouldn’t have to learn another language just to understand powerful abstractions!
+By enabling people to use a language that they already know, and is already in the
+same ballpark in terms of values (emphasis on immutability, &amp;c), we can teach and
+learn faster.</p>
+<h2>Pragmatism</h2>
+<p>Convincing a company to use a language like Haskell or PureScript can be challenging.
+Elixir is gaining a huge amount of interest. Many people have been able to introduce
+these concepts into companies using Scala, so we should be able to do the same here.</p>
+<h2>Compatibility</h2>
+<p><a href="Witchcraft.html"><code class="inline">Witchcraft</code></a> works with <a href="https://hex.pm/packages/algae">Algae</a>, providing <a href="Witchcraft.html"><code class="inline">Witchcraft</code></a>
+instances for all <code class="inline">Algae</code> data types. There is nothing stopping you from writing your
+own implementations for other data types.</p>
+<h1>Testing</h1>
+<p>Each structure is provided a set of rules that it must obey. For convenience, <a href="Witchcraft.html"><code class="inline">Witchcraft</code></a>
+includes property tests to ensure that datatypes that you write are easily property testable
+for adherence to their laws. Full compatibility with QuickCheck is coming soon.</p>
+<h1>Differences from <a href="https://www.haskell.org">Haskell</a></h1>
+<h2>Naming</h2>
+<p>Some functions have been renamed for clarity, generality, or style.</p>
+<table>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left">Prelude + Control (Haskell)</th><th style="text-align: left">Witchcraft (Elixir)</th>
+</tr>
+</thead>
+</table>
+<p>| <code class="inline">&lt;&gt;</code>                        | <code class="inline">&lt;|&gt;</code>                 |
+| <code class="inline">fmap</code>                      | <code class="inline">lift</code>                |
+| <code class="inline">liftA</code>                     | <code class="inline">lift</code>                |
+| <code class="inline">liftA2</code>                    | <code class="inline">lift</code>                |
+| <code class="inline">liftA3</code>                    | <code class="inline">lift</code>                |
+| <code class="inline">liftM</code>                     | <code class="inline">lift</code>                |
+| <code class="inline">liftM2</code>                    | <code class="inline">lift</code>                |
+| <code class="inline">liftM3</code>                    | <code class="inline">lift</code>                |
+| <code class="inline">apply</code>                     | <code class="inline">apply</code>               |
+| <code class="inline">pure</code>                      | <code class="inline">wrap</code>                |
+| <code class="inline">return</code>                    | <code class="inline">wrap</code>                |
+| <code class="inline">&lt;$&gt;</code>                       | <code class="inline">&lt;~</code> (reverse <code class="inline">~&gt;</code>)   |
+| <code class="inline">*&gt;</code>                        | <code class="inline">seq_second</code>          |
+| <code class="inline">&lt;*</code>                        | <code class="inline">seq_first</code>           |
+| <code class="inline">&lt;*&gt;</code>                       | <code class="inline">&lt;&lt;~</code> (reverse <code class="inline">~&gt;&gt;</code>) |
+| <code class="inline">&gt;&gt;</code>                        | <code class="inline">seq_first</code>           |
+| <code class="inline">&gt;&gt;=</code>                       | <code class="inline">&gt;&gt;&gt;</code>                 |
+| <code class="inline">=&lt;&lt;</code>                       | <code class="inline">&lt;&lt;&lt;</code>                 |</p>
+<h2>Hierarchy</h2>
+<p>Having a clean slate, we have been able to use a very clean of typeclasses. Strictly,
+all <code class="inline">Applicative</code>s are <code class="inline">Functor</code>s, and all <code class="inline">Monad</code>s are <code class="inline">Applicative</code>s. This grants
+us the ability to reuse functions in their child classes. For example, <code class="inline">pure</code> can
+be used for <code class="inline">return</code>, <code class="inline">liftA*</code> is the same as <code class="inline">liftM*</code>, and so on (see chart above).</p>
 
     <footer class="footer">
       <p>
