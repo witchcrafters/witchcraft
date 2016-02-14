@@ -77,33 +77,33 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Applicative functors provide a method of applying a function contained in a
-data structure to a value of the same type. This allows you to apply and compose
+          <p>Applicative functors provide a method of seqing a function contained in a
+data structure to a value of the same type. This allows you to seq and compose
 functions to values while avoiding repeated manual wrapping and unwrapping
 of those values.</p>
 <h1>Properties</h1>
 <h2>Identity</h2>
-<p><code class="inline">apply</code>ing a lifted <code class="inline">id</code> to some lifted value <code class="inline">v</code> does not change <code class="inline">v</code></p>
-<p><code class="inline">apply(v, wrap(&amp;id(&amp;1))) == v</code></p>
+<p><code class="inline">seq</code>ing a lifted <code class="inline">id</code> to some lifted value <code class="inline">v</code> does not change <code class="inline">v</code></p>
+<p><code class="inline">seq(v, wrap(&amp;id(&amp;1))) == v</code></p>
 <h2>Composition</h2>
-<p><code class="inline">apply</code> composes normally.</p>
-<p><code class="inline">apply((wrap &amp;compose(&amp;1,&amp;2)), (apply(u,(apply(v, w))))) == apply(u,(apply(v, w)))</code></p>
+<p><code class="inline">seq</code> composes normally.</p>
+<p><code class="inline">seq((wrap &amp;compose(&amp;1,&amp;2)), (seq(u,(seq(v, w))))) == seq(u,(seq(v, w)))</code></p>
 <h2>Homomorphism</h2>
-<p><code class="inline">apply</code>ing a <code class="inline">wrap</code>ped function to a <code class="inline">wrap</code>ped value is the same as wrapping the
+<p><code class="inline">seq</code>ing a <code class="inline">wrap</code>ped function to a <code class="inline">wrap</code>ped value is the same as wrapping the
 result of the function on that value.</p>
-<p><code class="inline">apply(wrap x, wrap f) == wrap f(x))</code></p>
+<p><code class="inline">seq(wrap x, wrap f) == wrap f(x))</code></p>
 <h2>Interchange</h2>
-<p>The order does not matter when <code class="inline">apply</code>ing to a <code class="inline">wrap</code>ped value
+<p>The order does not matter when <code class="inline">seq</code>ing to a <code class="inline">wrap</code>ped value
 and a <code class="inline">wrap</code>ped function.</p>
-<p><code class="inline">apply(wrap y, u) == apply(u, wrap &amp;(lift(y, &amp;1))</code></p>
+<p><code class="inline">seq(wrap y, u) == seq(u, wrap &amp;(lift(y, &amp;1))</code></p>
 <h2>Functor</h2>
-<p>Being an applicative <em>functor</em>, <code class="inline">apply</code> behaves as <code class="inline">lift</code> on <code class="inline">wrap</code>ped values</p>
-<p><code class="inline">lift(x, f) == apply(x, (wrap f))</code></p>
+<p>Being an applicative <em>functor</em>, <code class="inline">seq</code> behaves as <code class="inline">lift</code> on <code class="inline">wrap</code>ped values</p>
+<p><code class="inline">lift(x, f) == seq(x, (wrap f))</code></p>
 <h1>Notes</h1>
 <p>Given that Elixir functons are right-associative, you can write clean looking,
 but much more ambiguous versions:</p>
-<p><code class="inline">wrap(y) |&gt; apply(u) == apply(u, wrap(&amp;lift(y, &amp;1)))</code></p>
-<p><code class="inline">lift(x, f) == apply(x, wrap f)</code></p>
+<p><code class="inline">wrap(y) |&gt; seq(u) == seq(u, wrap(&amp;lift(y, &amp;1)))</code></p>
+<p><code class="inline">lift(x, f) == seq(x, wrap f)</code></p>
 <p>However, it is strongly recommended to include the parentheses for clarity.</p>
 
         </section>
@@ -139,10 +139,10 @@ but much more ambiguous versions:</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#apply/2">apply(wrapped_value, wrapped_function)</a>
+    <a href="#seq/2">seq(wrapped_value, wrapped_function)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Sequentially apply lifted function(s) to lifted data</p>
+    <div class="summary-synopsis"><p>Sequentially seq lifted function(s) to lifted data</p>
 </div>
   
 </div>
@@ -193,12 +193,12 @@ or empty value of that type, but not nessesarily)</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="apply/2">
+          <div class="detail" id="seq/2">
   <div class="detail-header">
-    <a href="#apply/2" class="detail-link" title="Link to this function">
+    <a href="#seq/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">apply(wrapped_value, wrapped_function)</span>
+    <span class="signature">seq(wrapped_value, wrapped_function)</span>
       
       <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative.ex#L61" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
@@ -210,13 +210,13 @@ or empty value of that type, but not nessesarily)</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">apply(any, (... -> any)) :: any</code></pre>
+          <pre><code class="elixir">seq(any, (... -> any)) :: any</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Sequentially apply lifted function(s) to lifted data.</p>
+    <p>Sequentially seq lifted function(s) to lifted data.</p>
 
   </section>
 </div>

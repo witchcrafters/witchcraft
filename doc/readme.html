@@ -168,13 +168,13 @@ for adherence to their laws. Full compatibility with QuickCheck is coming soon.<
 | <code class="inline">liftM</code>                     | <code class="inline">lift</code>                |
 | <code class="inline">liftM2</code>                    | <code class="inline">lift</code>                |
 | <code class="inline">liftM3</code>                    | <code class="inline">lift</code>                |
-| <code class="inline">apply</code>                     | <code class="inline">apply</code>               |
+| <code class="inline">apply</code>                     | <code class="inline">seq</code>                 |
+| <code class="inline">&lt;*&gt;</code>                       | <code class="inline">&lt;&lt;~</code> (reverse <code class="inline">~&gt;&gt;</code>) |
+| <code class="inline">*&gt;</code>                        | <code class="inline">seq_second</code>          |
+| <code class="inline">&lt;*</code>                        | <code class="inline">seq_first</code>           |
 | <code class="inline">pure</code>                      | <code class="inline">wrap</code>                |
 | <code class="inline">return</code>                    | <code class="inline">wrap</code>                |
 | <code class="inline">&lt;$&gt;</code>                       | <code class="inline">&lt;~</code> (reverse <code class="inline">~&gt;</code>)   |
-| <code class="inline">*&gt;</code>                        | <code class="inline">seq_second</code>          |
-| <code class="inline">&lt;*</code>                        | <code class="inline">seq_first</code>           |
-| <code class="inline">&lt;*&gt;</code>                       | <code class="inline">&lt;&lt;~</code> (reverse <code class="inline">~&gt;&gt;</code>) |
 | <code class="inline">&gt;&gt;</code>                        | <code class="inline">seq_first</code>           |
 | <code class="inline">&gt;&gt;=</code>                       | <code class="inline">&gt;&gt;&gt;</code>                 |
 | <code class="inline">=&lt;&lt;</code>                       | <code class="inline">&lt;&lt;&lt;</code>                 |</p>

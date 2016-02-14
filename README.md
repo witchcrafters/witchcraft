@@ -81,13 +81,13 @@ Some functions have been renamed for clarity, generality, or style.
 | `liftM`                     | `lift`                |
 | `liftM2`                    | `lift`                |
 | `liftM3`                    | `lift`                |
-| `apply`                     | `apply`               |
+| `apply`                     | `seq`                 |
+| `<*>`                       | `<<~` (reverse `~>>`) |
+| `*>`                        | `seq_second`          |
+| `<*`                        | `seq_first`           |
 | `pure`                      | `wrap`                |
 | `return`                    | `wrap`                |
 | `<$>`                       | `<~` (reverse `~>`)   |
-| `*>`                        | `seq_second`          |
-| `<*`                        | `seq_first`           |
-| `<*>`                       | `<<~` (reverse `~>>`) |
 | `>>`                        | `seq_first`           |
 | `>>=`                       | `>>>`                 |
 | `=<<`                       | `<<<`                 |

@@ -34,7 +34,7 @@ defimpl Witchcraft.Monad, for: Algae.Maybe.Just do
 end
 
 # Algae.Either
-# ===========
+# ============
 
 defimpl Witchcraft.Monad, for: Algae.Either.Left do
   def join(%Algae.Either.Left{left: value}), do: %Algae.Either.Left{left: value}

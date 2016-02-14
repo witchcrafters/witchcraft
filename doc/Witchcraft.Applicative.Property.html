@@ -103,7 +103,7 @@ applicative properties. <em>All members</em> of your datatype should adhere to t
     <a href="#spotcheck_composition/3">spotcheck_composition(value, fun1, fun2)</a>
   </div>
   
-    <div class="summary-synopsis"><p><code class="inline">apply</code> composes normally</p>
+    <div class="summary-synopsis"><p><code class="inline">seq</code> composes normally</p>
 </div>
   
 </div>
@@ -112,7 +112,7 @@ applicative properties. <em>All members</em> of your datatype should adhere to t
     <a href="#spotcheck_functor/2">spotcheck_functor(wrapped_value, fun)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Being an applicative <em>functor</em>, <code class="inline">apply</code> behaves as <code class="inline">lift</code> on <code class="inline">wrap</code>ped values</p>
+    <div class="summary-synopsis"><p>Being an applicative <em>functor</em>, <code class="inline">seq</code> behaves as <code class="inline">lift</code> on <code class="inline">wrap</code>ped values</p>
 </div>
   
 </div>
@@ -121,7 +121,7 @@ applicative properties. <em>All members</em> of your datatype should adhere to t
     <a href="#spotcheck_homomorphism/3">spotcheck_homomorphism(specemin, val, fun)</a>
   </div>
   
-    <div class="summary-synopsis"><p><code class="inline">apply</code>ing a <code class="inline">wrap</code>ped function to a <code class="inline">wrap</code>ped value is the same as wrapping the
+    <div class="summary-synopsis"><p><code class="inline">seq</code>ing a <code class="inline">wrap</code>ped function to a <code class="inline">wrap</code>ped value is the same as wrapping the
 result of the function on that value</p>
 </div>
   
@@ -131,7 +131,7 @@ result of the function on that value</p>
     <a href="#spotcheck_identity/1">spotcheck_identity(value)</a>
   </div>
   
-    <div class="summary-synopsis"><p><code class="inline">apply</code>ing a lifted <code class="inline">id</code> to some lifted value <code class="inline">v</code> does not change <code class="inline">v</code></p>
+    <div class="summary-synopsis"><p><code class="inline">seq</code>ing a lifted <code class="inline">id</code> to some lifted value <code class="inline">v</code> does not change <code class="inline">v</code></p>
 </div>
   
 </div>
@@ -140,7 +140,7 @@ result of the function on that value</p>
     <a href="#spotcheck_interchange/2">spotcheck_interchange(bare_val, wrapped_fun)</a>
   </div>
   
-    <div class="summary-synopsis"><p>The order does not matter when <code class="inline">apply</code>ing to a <code class="inline">wrap</code>ped value
+    <div class="summary-synopsis"><p>The order does not matter when <code class="inline">seq</code>ing to a <code class="inline">wrap</code>ped value
 and a <code class="inline">wrap</code>ped function</p>
 </div>
   
@@ -173,7 +173,7 @@ and a <code class="inline">wrap</code>ped function</p>
     </a>
     <span class="signature">spotcheck_composition(value, fun1, fun2)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/property.ex#L45" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/property.ex#L43" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -189,7 +189,7 @@ and a <code class="inline">wrap</code>ped function</p>
     </div>
   
   <section class="docstring">
-    <p><code class="inline">apply</code> composes normally.</p>
+    <p><code class="inline">seq</code> composes normally.</p>
 <p>iex&gt; spotcheck_composition([1, 2], [&(&1 * 2)], [&(&1 * 10)])
 true</p>
 
@@ -202,7 +202,7 @@ true</p>
     </a>
     <span class="signature">spotcheck_functor(wrapped_value, fun)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/property.ex#L100" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/property.ex#L98" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -218,7 +218,7 @@ true</p>
     </div>
   
   <section class="docstring">
-    <p>Being an applicative <em>functor</em>, <code class="inline">apply</code> behaves as <code class="inline">lift</code> on <code class="inline">wrap</code>ped values</p>
+    <p>Being an applicative <em>functor</em>, <code class="inline">seq</code> behaves as <code class="inline">lift</code> on <code class="inline">wrap</code>ped values</p>
 <pre><code class="elixir">
 iex&gt; spotcheck_functor([1,2,3], &amp;(&amp;1 * 10))
 true
@@ -236,7 +236,7 @@ true
     </a>
     <span class="signature">spotcheck_homomorphism(specemin, val, fun)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/property.ex#L61" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/property.ex#L59" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -252,7 +252,7 @@ true
     </div>
   
   <section class="docstring">
-    <p><code class="inline">apply</code>ing a <code class="inline">wrap</code>ped function to a <code class="inline">wrap</code>ped value is the same as wrapping the
+    <p><code class="inline">seq</code>ing a <code class="inline">wrap</code>ped function to a <code class="inline">wrap</code>ped value is the same as wrapping the
 result of the function on that value.</p>
 <pre><code class="elixir">
 iex&gt; spotcheck_homomorphism([], 1, &amp;(&amp;1 * 10))
@@ -268,7 +268,7 @@ true
     </a>
     <span class="signature">spotcheck_identity(value)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/property.ex#L35" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/property.ex#L33" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -284,7 +284,7 @@ true
     </div>
   
   <section class="docstring">
-    <p><code class="inline">apply</code>ing a lifted <code class="inline">id</code> to some lifted value <code class="inline">v</code> does not change <code class="inline">v</code></p>
+    <p><code class="inline">seq</code>ing a lifted <code class="inline">id</code> to some lifted value <code class="inline">v</code> does not change <code class="inline">v</code></p>
 <pre><code class="elixir">
 iex&gt; spotcheck_identity []
 true
@@ -302,7 +302,7 @@ true
     </a>
     <span class="signature">spotcheck_interchange(bare_val, wrapped_fun)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/property.ex#L79" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/property.ex#L77" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -318,7 +318,7 @@ true
     </div>
   
   <section class="docstring">
-    <p>The order does not matter when <code class="inline">apply</code>ing to a <code class="inline">wrap</code>ped value
+    <p>The order does not matter when <code class="inline">seq</code>ing to a <code class="inline">wrap</code>ped value
 and a <code class="inline">wrap</code>ped function.</p>
 <pre><code class="elixir">
 iex&gt; spotcheck_interchange(1, [&amp;(&amp;1 * 10)])

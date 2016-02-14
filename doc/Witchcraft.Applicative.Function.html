@@ -109,7 +109,7 @@
     <a href="#seq_first/1">seq_first(list)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Sequentially <code class="inline">apply</code>, and discard the second value of each pair</p>
+    <div class="summary-synopsis"><p>Sequentially <code class="inline">seq</code>, and discard the second value of each pair</p>
 </div>
   
 </div>
@@ -118,7 +118,7 @@
     <a href="#seq_second/1">seq_second(list)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Sequentially <code class="inline">apply</code>, and discard the first value of each pair</p>
+    <div class="summary-synopsis"><p>Sequentially <code class="inline">seq</code>, and discard the first value of each pair</p>
 </div>
   
 </div>
@@ -150,7 +150,7 @@
     </a>
     <span class="signature">lift(list, fun)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/function.ex#L32" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/function.ex#L30" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -187,7 +187,7 @@ iex&gt; lift([[1,2], [3,4], [5,6], [7,8]], &amp;(&amp;1 + &amp;2 + &amp;3 + &amp
     </a>
     <span class="signature">seq_first(list)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/function.ex#L39" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/function.ex#L37" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -203,7 +203,7 @@ iex&gt; lift([[1,2], [3,4], [5,6], [7,8]], &amp;(&amp;1 + &amp;2 + &amp;3 + &amp
     </div>
   
   <section class="docstring">
-    <p>Sequentially <code class="inline">apply</code>, and discard the second value of each pair.</p>
+    <p>Sequentially <code class="inline">seq</code>, and discard the second value of each pair.</p>
 
   </section>
 </div>
@@ -214,7 +214,7 @@ iex&gt; lift([[1,2], [3,4], [5,6], [7,8]], &amp;(&amp;1 + &amp;2 + &amp;3 + &amp
     </a>
     <span class="signature">seq_second(list)</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/function.ex#L45" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/function.ex#L43" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -230,7 +230,7 @@ iex&gt; lift([[1,2], [3,4], [5,6], [7,8]], &amp;(&amp;1 + &amp;2 + &amp;3 + &amp
     </div>
   
   <section class="docstring">
-    <p>Sequentially <code class="inline">apply</code>, and discard the first value of each pair.</p>
+    <p>Sequentially <code class="inline">seq</code>, and discard the first value of each pair.</p>
 
   </section>
 </div>

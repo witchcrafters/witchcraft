@@ -2,11 +2,10 @@ defmodule Witchcraft.Applicative.Operator do
   @moduledoc ~S"""
   """
 
-  import Kernel, except: [apply: 2]
-  import Witchcraft.Applicative, only: [apply: 2]
+  import Witchcraft.Applicative, only: [seq: 2]
 
   @doc ~S"""
-  Infix alias for `Witchcraft.Applicative.apply`. If chaining, be sure to wrap
+  Infix alias for `Witchcraft.Applicative.seq`. If chaining, be sure to wrap
   each layer in parentheses, as `~>>` and `~>` are left associative.
 
   ```elixir
@@ -22,10 +21,10 @@ defmodule Witchcraft.Applicative.Operator do
 
   """
   @spec any ~>> any :: any
-  def value ~>> func, do: apply(value, func)
+  def value ~>> func, do: seq(value, func)
 
   @doc ~S"""
-  Infix alias for `Witchcraft.Applicative.apply`, with arguments reversed.
+  Infix alias for `Witchcraft.Applicative.seq`, with arguments reversed.
 
   This version is preferred, as it makes chaining arguments along wrapped
   partial applications clearer when reading left-to-right.

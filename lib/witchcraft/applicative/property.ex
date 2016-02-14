@@ -7,18 +7,16 @@ defmodule Witchcraft.Applicative.Property do
   They are placed here as a quick way to spotcheck some of your values.
   """
 
-  import Kernel, except: [apply: 2]
-
   import Quark, only: [compose: 2, id: 1]
   import Quark.Curry, only: [curry: 1]
 
-  import Witchcraft.Applicative, only: [apply: 2, wrap: 2]
+  import Witchcraft.Applicative, only: [seq: 2, wrap: 2]
   import Witchcraft.Applicative.Operator, only: [~>>: 2, <<~: 2]
 
   import Witchcraft.Functor.Operator, only: [~>: 2, <~: 2]
 
   @doc ~S"""
-  `apply`ing a lifted `id` to some lifted value `v` does not change `v`
+  `seq`ing a lifted `id` to some lifted value `v` does not change `v`
 
   ```elixir
 
@@ -35,7 +33,7 @@ defmodule Witchcraft.Applicative.Property do
   def spotcheck_identity(value), do: (value ~>> wrap(value, &id/1)) == value
 
   @doc ~S"""
-  `apply` composes normally.
+  `seq` composes normally.
 
   iex> spotcheck_composition([1, 2], [&(&1 * 2)], [&(&1 * 10)])
   true
@@ -47,7 +45,7 @@ defmodule Witchcraft.Applicative.Property do
   end
 
   @doc ~S"""
-  `apply`ing a `wrap`ped function to a `wrap`ped value is the same as wrapping the
+  `seq`ing a `wrap`ped function to a `wrap`ped value is the same as wrapping the
   result of the function on that value.
 
   ```elixir
@@ -64,7 +62,7 @@ defmodule Witchcraft.Applicative.Property do
   end
 
   @doc ~S"""
-  The order does not matter when `apply`ing to a `wrap`ped value
+  The order does not matter when `seq`ing to a `wrap`ped value
   and a `wrap`ped function.
 
   ```elixir
@@ -83,7 +81,7 @@ defmodule Witchcraft.Applicative.Property do
 
   @doc ~S"""
 
-  Being an applicative _functor_, `apply` behaves as `lift` on `wrap`ped values
+  Being an applicative _functor_, `seq` behaves as `lift` on `wrap`ped values
 
   ```elixir
 

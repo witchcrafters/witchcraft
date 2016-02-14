@@ -99,7 +99,7 @@
     <a href="#%3C%3C~/2">func &lt;&lt;~ value</a>
   </div>
   
-    <div class="summary-synopsis"><p>Infix alias for <code class="inline">Witchcraft.Applicative.apply</code>, with arguments reversed</p>
+    <div class="summary-synopsis"><p>Infix alias for <code class="inline">Witchcraft.Applicative.seq</code>, with arguments reversed</p>
 </div>
   
 </div>
@@ -108,7 +108,7 @@
     <a href="#~%3E%3E/2">value ~&gt;&gt; func</a>
   </div>
   
-    <div class="summary-synopsis"><p>Infix alias for <code class="inline">Witchcraft.Applicative.apply</code>. If chaining, be sure to wrap
+    <div class="summary-synopsis"><p>Infix alias for <code class="inline">Witchcraft.Applicative.seq</code>. If chaining, be sure to wrap
 each layer in parentheses, as <code class="inline">~&gt;&gt;</code> and <code class="inline">~&gt;</code> are left associative</p>
 </div>
   
@@ -141,7 +141,7 @@ each layer in parentheses, as <code class="inline">~&gt;&gt;</code> and <code cl
     </a>
     <span class="signature">func &lt;&lt;~ value</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/operator.ex#L46" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/operator.ex#L45" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -157,7 +157,7 @@ each layer in parentheses, as <code class="inline">~&gt;&gt;</code> and <code cl
     </div>
   
   <section class="docstring">
-    <p>Infix alias for <code class="inline">Witchcraft.Applicative.apply</code>, with arguments reversed.</p>
+    <p>Infix alias for <code class="inline">Witchcraft.Applicative.seq</code>, with arguments reversed.</p>
 <p>This version is preferred, as it makes chaining arguments along wrapped
 partial applications clearer when reading left-to-right.</p>
 <pre><code class="elixir">
@@ -178,7 +178,7 @@ iex&gt; (&amp;(fn x -&gt; x * &amp;1 end)) &lt;~ [1,2,3] &lt;&lt;~ [9,10,11]
     </a>
     <span class="signature">value ~&gt;&gt; func</span>
       
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/operator.ex#L25" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/applicative/operator.ex#L24" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -194,7 +194,7 @@ iex&gt; (&amp;(fn x -&gt; x * &amp;1 end)) &lt;~ [1,2,3] &lt;&lt;~ [9,10,11]
     </div>
   
   <section class="docstring">
-    <p>Infix alias for <code class="inline">Witchcraft.Applicative.apply</code>. If chaining, be sure to wrap
+    <p>Infix alias for <code class="inline">Witchcraft.Applicative.seq</code>. If chaining, be sure to wrap
 each layer in parentheses, as <code class="inline">~&gt;&gt;</code> and <code class="inline">~&gt;</code> are left associative.</p>
 <pre><code class="elixir">
 iex&gt; [1,2,3] ~&gt;&gt; [&amp;(&amp;1 + 1), &amp;(&amp;1 * 10)]
