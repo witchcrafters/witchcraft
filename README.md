@@ -1,6 +1,7 @@
 ![](./logo.png)
 
-Functors, monads, arrows, and categories
+`Witchcraft` is a library providing common algebraic and categorical abstractions to Elixir.
+(Monoids, functors, monads, arrows, and categories)
 
 | Build Status | Maintainer Message | Documentation | Hosted Package |
 |--------------|--------------------|---------------|----------------|
@@ -8,7 +9,6 @@ Functors, monads, arrows, and categories
 
 # Table of Contents
 - [Quick Start](#quick-start)
-- [About](#about)
 - [Values](#values)
   - [Beginner Friendliness](#beginner-friendliness)
   - [Consistency](#consistency)
@@ -29,9 +29,6 @@ def deps do
   [{:witchcraft, "~> 0.4.0"}]
 end
 ```
-
-# About
-`Witchcraft` is a library providing common algebraic and categorical abstractions to Elixir.
 
 # Values
 ## Beginner Friendliness
