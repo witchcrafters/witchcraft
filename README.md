@@ -26,7 +26,7 @@
 
 ```
 def deps do
-  [{:witchcraft, "~> 0.4.0"}]
+  [{:witchcraft, "~> 0.4.1"}]
 end
 ```
 
