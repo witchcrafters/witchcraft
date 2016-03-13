@@ -2,11 +2,34 @@ defmodule Witchcraft.Functor.Property do
   @moduledoc ~S"""
   Check samples of your functor to confirm that your data adheres to the
   functor properties. *All members* of your datatype should adhere to these rules.
-  They are placed here as a quick way to spotcheck some of your values.
+  They are placed here as a quick way to check some of your values.
   """
 
   import Quark, only: [compose: 1, id: 1]
   import Witchcraft.Functor, only: [lift: 2]
+
+  @doc ~S"""
+  Check all functor properties
+
+  ```elixir
+
+  iex> alias Algae.Id, as: Id
+  iex> defmodule Typecheck do
+  ...>   def is_id(%Id{id: _}), do: true
+  ...>   def is_id(_), do: false
+  ...> end
+  iex> check(%Id{id: 42}, &(&1 + 1), &(&1 * 2), &Typecheck.is_id/1)
+  true
+
+  ```
+
+  """
+  @spec functor(any, (any -> any), (any -> any), (any -> boolean)) :: boolean
+  def functor(context, f, g, typecheck) do
+    associates_object(context, f, typecheck)
+      and preserve_identity(context, f)
+      and preserve_compositon(context, f, g)
+  end
 
   @doc ~S"""
   Check that lifting a function into some context returns a member of the target type
@@ -18,14 +41,14 @@ defmodule Witchcraft.Functor.Property do
   ...>   def is_id(%Id{id: _}), do: true
   ...>   def is_id(_), do: false
   ...> end
-  iex> spotcheck_associates_object(%Id{id: 42}, &Quark.id/1, &Typecheck.is_id/1)
+  iex> associates_object(%Id{id: 42}, &Quark.id/1, &Typecheck.is_id/1)
   true
 
   ```
 
   """
-  @spec spotcheck_associates_object(any, (any -> any), (any -> boolean)) :: boolean
-  def spotcheck_associates_object(context, func, typecheck) do
+  @spec associates_object(any, (any -> any), (any -> boolean)) :: boolean
+  def associates_object(context, func, typecheck) do
     lift(context, func) |> typecheck.()
   end
 
@@ -45,14 +68,14 @@ defmodule Witchcraft.Functor.Property do
 
   ```elixir
 
-  iex> spotcheck_preserve_identity(%Algae.Id{id: 7}, &(&1 + 1))
+  iex> preserve_identity(%Algae.Id{id: 7}, &(&1 + 1))
   true
 
   ```
 
   """
-  @spec spotcheck_preserve_identity(any, (any -> any)) :: boolean
-  def spotcheck_preserve_identity(context, func) do
+  @spec preserve_identity(any, (any -> any)) :: boolean
+  def preserve_identity(context, func) do
     lift(id(context), func) == id(lift(context, func))
   end
 
@@ -61,37 +84,14 @@ defmodule Witchcraft.Functor.Property do
 
   ```elixir
 
-  iex> spotcheck_preserve_compositon(%Algae.Id{id: 5}, &(&1 + 1), &(&1 * 10))
+  iex> preserve_compositon(%Algae.Id{id: 5}, &(&1 + 1), &(&1 * 10))
   true
 
   ```
 
   """
-  @spec spotcheck_preserve_compositon(any, (any -> any), (any -> any)) :: boolean
-  def spotcheck_preserve_compositon(context, f, g) do
+  @spec preserve_compositon(any, (any -> any), (any -> any)) :: boolean
+  def preserve_compositon(context, f, g) do
     lift(lift(context, f), g) == lift(context, compose([g, f]))
-  end
-
-  @doc ~S"""
-  Spotcheck all functor properties
-
-  ```elixir
-
-  iex> alias Algae.Id, as: Id
-  iex> defmodule Typecheck do
-  ...>   def is_id(%Id{id: _}), do: true
-  ...>   def is_id(_), do: false
-  ...> end
-  iex> spotcheck(%Id{id: 42}, &(&1 + 1), &(&1 * 2), &Typecheck.is_id/1)
-  true
-
-  ```
-
-  """
-  @spec spotcheck(any, (any -> any), (any -> any), (any -> boolean)) :: boolean
-  def spotcheck(context, f, g, typecheck) do
-    spotcheck_associates_object(context, f, typecheck)
-      and spotcheck_preserve_identity(context, f)
-      and spotcheck_preserve_compositon(context, f, g)
   end
 end
