@@ -1,8 +1,7 @@
 defmodule Witchcraft.Applicative.Property do
   @moduledoc ~S"""
   Check samples of your applicative functor to confirm that your data adheres to the
-  applicative properties. *All members* of your datatype should adhere to these rules,
-  *plus* implement `Witchcraft.Functor`.
+  applicative properties. *All members* of your datatype should adhere to these rules.
 
   They are placed here as a quick way to spotcheck some of your values.
   """
@@ -15,32 +14,55 @@ defmodule Witchcraft.Applicative.Property do
 
   import Witchcraft.Functor.Operator, only: [~>: 2, <~: 2]
 
+  defdelegate functor(context, f, g, typecheck), to: Witchcraft.Functor.Property
+
   @doc ~S"""
-  `seq`ing a lifted `id` to some lifted value `v` does not change `v`
+  Check all applicative properties
 
   ```elixir
 
-  iex> spotcheck_identity []
-  true
-
-  iex> spotcheck_identity %Algae.Id{}
+  iex> appliative()
   true
 
   ```
 
   """
-  @spec spotcheck_identity(any) :: boolean
-  def spotcheck_identity(value), do: (value ~>> wrap(value, &id/1)) == value
+  @spec
+  def applicative(context, f, g, typecheck) do
+    functor(context, f, g, typecheck)
+      and identity(value)
+      and composition(value, f, g)
+      and homomorphism(specemin, val, fun)
+      and interchange(bare_val, wrapped_fun)
+      and simple_lift(wrapped_value, fun)
+  end
+
+  @doc ~S"""
+  `seq`ing a lifted `id` to some lifted value `v` does not change `v`
+
+  ```elixir
+
+  iex> identity []
+  true
+
+  iex> identity %Algae.Id{}
+  true
+
+  ```
+
+  """
+  @spec identity(any) :: boolean
+  def identity(value), do: (value ~>> wrap(value, &id/1)) == value
 
   @doc ~S"""
   `seq` composes normally.
 
-  iex> spotcheck_composition([1, 2], [&(&1 * 2)], [&(&1 * 10)])
+  iex> composition([1, 2], [&(&1 * 2)], [&(&1 * 10)])
   true
 
   """
-  @spec spotcheck_composition(any, any, any) :: boolean
-  def spotcheck_composition(value, fun1, fun2) do
+  @spec composition(any, any, any) :: boolean
+  def composition(value, fun1, fun2) do
     wrap(value, &compose/2) <<~ fun1 <<~ fun2 <<~ value == fun1 <<~ (fun2 <<~ value)
   end
 
@@ -50,13 +72,13 @@ defmodule Witchcraft.Applicative.Property do
 
   ```elixir
 
-  iex> spotcheck_homomorphism([], 1, &(&1 * 10))
+  iex> homomorphism([], 1, &(&1 * 10))
   true
 
   ```
   """
-  @spec spotcheck_homomorphism(any, any, fun) :: boolean
-  def spotcheck_homomorphism(specemin, val, fun) do
+  @spec homomorphism(any, any, fun) :: boolean
+  def homomorphism(specemin, val, fun) do
     curried = curry(fun)
     wrap(specemin, val) ~>> wrap(specemin, curried) == wrap(specemin, curried.(val))
   end
@@ -67,14 +89,14 @@ defmodule Witchcraft.Applicative.Property do
 
   ```elixir
 
-  iex> spotcheck_interchange(1, [&(&1 * 10)])
+  iex> interchange(1, [&(&1 * 10)])
   true
 
   ```
 
   """
-  @spec spotcheck_interchange(any, any) :: boolean
-  def spotcheck_interchange(bare_val, wrapped_fun) do
+  @spec interchange(any, any) :: boolean
+  def interchange(bare_val, wrapped_fun) do
     wrap(wrapped_fun, bare_val) ~>> wrapped_fun
       == wrapped_fun ~>> wrap(wrapped_fun, &(bare_val |> curry(&1).()))
   end
@@ -85,17 +107,17 @@ defmodule Witchcraft.Applicative.Property do
 
   ```elixir
 
-  iex> spotcheck_functor([1,2,3], &(&1 * 10))
+  iex> simple_lift([1,2,3], &(&1 * 10))
   true
 
-  iex> spotcheck_functor(%Algae.Id{id: 7}, &(&1 * 99))
+  iex> simple_lift(%Algae.Id{id: 7}, &(&1 * 99))
   true
 
   ```
 
   """
-  @spec spotcheck_functor(any, fun) :: boolean
-  def spotcheck_functor(wrapped_value, fun) do
+  @spec simple_lift(any, fun) :: boolean
+  def simple_lift(wrapped_value, fun) do
     wrapped_value ~> fun == wrapped_value ~>> wrap(wrapped_value, fun)
   end
 end
