@@ -1,12 +1,24 @@
 defprotocol Witchcraft.Monad do
   @moduledoc ~S"""
-  Because we are following Functor/Applicative/Monad superclassing, `return` is `pure`,
-  so no need to define `return`. `bind` can be defined in terms of `join` and `lift`.
+  Because we are following the `Functor -> Applicative -> Monad` hierarchy,
+  `return` is already defined as `pure`. `bind` can be defined in terms of `join`
+  and `lift`, so we only need to define `join` for monads.
   """
 
   @fallback_to_any true
 
   @doc ~S"""
+  `join` takes a recursively nested data structure, and joins the two outermost
+  levels together to result in one level. This may be seen as a "flattening"
+  operation for most datatypes.
+
+  ```iex
+
+  iex> Witchcraft.Monad.join([[[1,2,3]]])
+  [[1,2,3]]
+
+  ```
+
   """
   @spec join(any) :: any
   def join(deep)
