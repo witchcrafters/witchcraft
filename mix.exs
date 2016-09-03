@@ -7,7 +7,7 @@ defmodule Witchcraft.Mixfile do
       name: "Witchcraft",
       description: "Common algebraic structures and functions",
 
-      version: "0.4.2",
+      version: "0.5.0",
       elixir:  "~> 1.3",
 
       package: [
