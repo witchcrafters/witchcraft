@@ -17,26 +17,26 @@ defprotocol Witchcraft.Functor do
   [`Applicative`](http://www.robotoverlord.io/witchcraft/Witchcraft.Applicative.Functions.html)'s
   `lift2`, `lift3`, and so on.
 
-  # Properties
-  ## Identity
+  ## Properties
+  ### Identity
   Mapping the identity function over the object returns the same object
   ex. `lift([1,2,3], id) == [1,2,3]`
 
-  ## Distributive
+  ### Distributive
   `lift(data, (f |> g)) == data |> lift(f) |> lift(g)`
 
-  ## Associates all objects
+  ### Associates all objects
   Mapping a function onto an object returns a value.
   ie: does not throw an error, returns a value of the target type (not of
   the wrong type, or the type `none`)
 
-  # Notes:
+  ## Notes:
   - The argument order convention is reversed from most other lanaguges
   - Most (if not all) implimentations of `lift` should be
     expressable in terms of [`Enum.reduce/3`](http://elixir-lang.org/docs/v1.0/elixir/Enum.html#reduce/3)
   - Falls back to [`Enum.map/2`](http://elixir-lang.org/docs/v1.0/elixir/Enum.html#map/2)
 
-  # Examples
+  ## Examples
 
       iex> [1,2,3] |> lift(&(&1 + 1))
       [2,3,4]
@@ -59,34 +59,14 @@ end
 
 defimpl Witchcraft.Functor, for: List do
   @doc ~S"""
-
-  ```elixir
-
-  iex> lift([1,2,3], &(&1 + 1))
-  [2,3,4]
-
-  ```
-
+      iex> lift([1,2,3], &(&1 + 1))
+      [2,3,4]
   """
   def lift(data, func), do: Enum.map(data, func)
 end
 
 # Algae.Id
 # ========
-
-defimpl Witchcraft.Functor, for: Algae.Id do
-  @doc ~S"""
-
-  ```elixir
-
-  iex> lift(%Algae.Id{id: 5}, &(&1 * 101))
-  %Algae.Id{id: 505}
-
-  ```
-
-  """
-  def lift(%Algae.Id{id: value}, fun), do: Algae.Id.id Quark.Curry.curry(fun).(value)
-end
 
 # Algae.Either
 # ============

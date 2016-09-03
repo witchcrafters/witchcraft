@@ -108,42 +108,6 @@ defimpl Witchcraft.Applicative, for: List do
   end
 end
 
-# Algae.Id
-# ========
-
-defimpl Witchcraft.Applicative, for: Algae.Id do
-  import Quark.Curry, only: [curry: 1]
-  alias Algae.Id, as: Id
-
-  @doc ~S"""
-
-  ```elixir
-
-  iex> %Algae.Id{} |> wrap(9)
-  %Algae.Id{id: 9}
-
-  ```
-
-  """
-  def wrap(_, bare), do: %Algae.Id{id: bare}
-
-  @doc ~S"""
-  ```elixir
-
-  iex> seq(%Algae.Id{id: 42}, %Algae.Id{id: &(&1 + 1)})
-  %Algae.Id{id: 43}
-
-  iex> import Witchcraft.Functor, only: [lift: 2]
-  iex> alias Algae.Id, as: Id
-  iex> seq(%Id{id: 9}, lift(%Id{id: 2}, &(fn x -> x + &1 end)))
-  %Algae.Id{id: 11}
-
-  ```
-
-  """
-  def seq(%Id{id: value}, %Id{id: fun}), do: %Id{id: curry(fun).(value)}
-end
-
 # Algae.Maybe
 # ===========
 

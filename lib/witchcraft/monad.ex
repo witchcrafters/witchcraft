@@ -24,13 +24,6 @@ defprotocol Witchcraft.Monad do
   def join(deep)
 end
 
-# Algae.Id
-# ===========
-
-defimpl Witchcraft.Monad, for: Algae.Id do
-  def join(%Algae.Id{id: %Algae.Id{id: value}}), do: %Algae.Id{id: value}
-end
-
 # Algae.Maybe
 # ===========
 

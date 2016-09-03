@@ -13,17 +13,13 @@ defprotocol Witchcraft.Monoid do
   - Unique element (`id`, sometimes called the 'zero' of the set)
   - Behaves as an identity with `op`
 
-  ```
+      identity = 0
+      op = &(&1 + &2) # Integer addition
+      append(34, identity) == 34
 
-  identity = 0
-  op = &(&1 + &2) # Integer addition
-  append(34, identity) == 34
-
-  identity = 1
-  append = &(&1 * &2) # Integer multiplication
-  append(42, identity) == 42
-
-  ```
+      identity = 1
+      append = &(&1 * &2) # Integer multiplication
+      append(42, identity) == 42
 
   ## Counter-Example
   Integer division is not a monoid.
@@ -45,26 +41,14 @@ end
 
 defimpl Witchcraft.Monoid, for: Integer do
   @doc ~S"""
-
-  ```elixir
-
-  iex> identity(99) == identity(-9)
-  true
-
-  ```
-
+      iex> identity(99) == identity(-9)
+      true
   """
   def identity(_integer), do: 0
 
   @doc ~S"""
-
-  ```elixir
-
-  iex> 1 |> append(4) |> append(2) |> append(10)
-  17
-
-  ```
-
+      iex> 1 |> append(4) |> append(2) |> append(10)
+      17
   """
   @spec append(integer, integer) :: integer
   def append(a, b), do: a + b
@@ -72,55 +56,31 @@ end
 
 defimpl Witchcraft.Monoid, for: Float do
   @doc ~S"""
-
-  ```elixir
-
-  iex> identity(98.5) == identity(-8.5)
-  true
-
-  ```
-
+      iex> identity(98.5) == identity(-8.5)
+      true
   """
   def identity(_integer), do: 0.0
 
   @doc ~S"""
-
-  ```elixir
-
-  iex> 1.0 |> append(4.0) |> append(2.0) |> append(10.1)
-  17.1
-
-  ```
-
+      iex> 1.0 |> append(4.0) |> append(2.0) |> append(10.1)
+      17.1
   """
   def append(a, b), do: a + b
 end
 
 defimpl Witchcraft.Monoid, for: BitString do
   @doc ~S"""
-
-  ```elixir
-
-  iex> append(identity("welp"), "o hai")
-  "o hai"
-
-  ```
-
+      iex> "welp" |> identity |> append("o hai")
+      "o hai"
   """
   def identity(_), do: ""
 
   @doc ~S"""
+      iex> append("o hai", identity("welp"))
+      "o hai"
 
-  ```elixir
-
-  iex> append("o hai", identity("welp"))
-  "o hai"
-
-  iex> identity("") |> append(identity("")) == identity("")
-  true
-
-  ```
-
+      iex> identity("") |> append(identity("")) == identity("")
+      true
   """
   def append(a, b), do: a <> b
 end
