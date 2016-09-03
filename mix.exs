@@ -13,11 +13,11 @@ defmodule Witchcraft.Mixfile do
       package: [
         maintainers: ["Brooklyn Zelenka"],
         licenses:    ["MIT"],
-        links:       %{"GitHub" => "https://github.com/expede/quark"}
+        links:       %{"GitHub" => "https://github.com/expede/witchcraft"}
       ],
 
-      source_url:   "https://github.com/expede/quark",
-      homepage_url: "https://github.com/expede/quark",
+      source_url:   "https://github.com/expede/witchcraft",
+      homepage_url: "https://github.com/expede/witchcraft",
 
       aliases: ["quality": ["test", "credo --strict"]],
 
@@ -31,7 +31,7 @@ defmodule Witchcraft.Mixfile do
         {:inch_ex,  "~> 0.5",  only: [:dev, :docs, :test]},
 
         {:algae, "~> 0.9"},
-        {:quark, "~> 1.0"}
+        {:witchcraft, "~> 1.0"}
       ],
 
       docs: [
