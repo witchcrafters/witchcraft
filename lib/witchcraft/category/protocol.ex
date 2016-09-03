@@ -1,4 +1,4 @@
-defprotocol Witchcraft.Category do
+defprotocol Witchcraft.Category.Protocol do
   @moduledoc ~S"""
   `Category` proves a way to generalize over the concept of computation.
 
@@ -26,6 +26,8 @@ defprotocol Witchcraft.Category do
 end
 
 defimpl Witchcraft.Category, for: Any do
+  # TODO: if has behaviour, use that instead
+
   defdelegate identity(a), to: Quark
   defdelegate compose(a, b), to: Quark
 end

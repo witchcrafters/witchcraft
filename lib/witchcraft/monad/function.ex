@@ -16,19 +16,33 @@ defmodule Witchcraft.Monad.Function do
   dependency on the earlier computations. This allows for parameter bindings from
   anonymous functions to be propagated through a series of logical steps (hence "bind").
 
-  ```elixir
+      iex> bind([1], fn x -> [x+1] end)
+      [2]
 
-  iex> bind([1], fn x -> [x+1] end)
-  [2]
+      iex> bind(
+      ...>   bind(
+      ...>     bind(
+      ...>       [1],
+      ...>       fn x -> 1 + x end
+      ...>     ),
+      ...>     fn y -> 10 * y end
+      ...>   ),
+      ...>   fn z -> 100 - z end
+      ...> )
 
-  iex> bind(bind(bind([1], fn x -> 1 + x end), fn y -> 10 * y end), fn z -> 100 - z end)
+  More classic style allowing for variable sharing
+  (easier with the `>>>` operator in `Witchcraft.Monad.Operator`)
 
-  # More classic style allowing for variable sharing
-  # (easier with the `>>>` operator in `Witchcraft.Monad.Operator`)
-  iex> bind([1,2,3], fn x -> bind([x+1], fn y -> x * y end) end)
-  [10,40,90]
-
-  ```
+      iex> bind(
+      ...>   [1,2,3],
+      ...>   fn x ->
+      ...>     bind(
+      ...>       [x+1],
+      ...>       fn y -> x * y end
+      ...>     )
+      ...>   end
+      ...> )
+      [10,40,90]
 
   """
   @spec bind(any, fun) :: any

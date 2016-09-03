@@ -49,6 +49,12 @@ defmodule Witchcraft.Functor do
 
   """
 
+  defmacro __using__(_) do
+    quote do
+      import unquote(__MODULE__)
+    end
+  end
+
   defdelegate lift(data, fun), to: Witchcraft.Functor.Protocol
   defdelegate lift(fun),        to: Witchcraft.Functor.Function
   defdelegate lift(),           to: Witchcraft.Functor.Function

@@ -1,4 +1,4 @@
-defprotocol Witchcraft.Arrow do
+defprotocol Witchcraft.Arrow.Protocol do
   @moduledoc ~S"""
   """
 

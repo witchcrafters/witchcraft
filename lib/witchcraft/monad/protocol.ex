@@ -1,4 +1,4 @@
-defprotocol Witchcraft.Monad do
+defprotocol Witchcraft.Monad.Protocol do
   @moduledoc ~S"""
   Because we are following the `Functor -> Applicative -> Monad` hierarchy,
   `return` is already defined as `pure`. `bind` can be defined in terms of `join`
@@ -12,12 +12,8 @@ defprotocol Witchcraft.Monad do
   levels together to result in one level. This may be seen as a "flattening"
   operation for most datatypes.
 
-  ```iex
-
-  iex> Witchcraft.Monad.join([[[1,2,3]]])
-  [[1,2,3]]
-
-  ```
+      iex> Witchcraft.Monad.join([[[1,2,3]]])
+      [[1,2,3]]
 
   """
   @spec join(any) :: any

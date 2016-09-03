@@ -44,6 +44,13 @@ defmodule Witchcraft.Applicative do
 
   """
 
+  defmacro __using__(_) do
+    quote do
+      import unquote(__MODULE__)
+      use Witchcraft.Functor
+    end
+  end
+
   defdelegate wrap(bare), to: Witchcraft.Applicative.Wrap
 
   defdelegate wrap(specemin, bare), to: Witchcraft.Applicative.Protocol
