@@ -30,13 +30,13 @@ defmodule Witchcraft.Mixfile do
 
         {:inch_ex,  "~> 0.5",  only: [:dev, :docs, :test]},
 
-        {:algae, "~> 0.9"},
-        {:witchcraft, "~> 1.0"}
+        {:quark, "~> 2.1"}
       ],
 
       docs: [
+        extras: ["README.md"],
         logo: "./brand/logo.png",
-        extras: ["README.md"]
+        main: "readme"
       ]
     ]
   end
