@@ -21,12 +21,10 @@ defmodule Witchcraft.Functor.Operator do
   @doc ~S"""
   Alias for `lift` and `<~`, but with data flowing to the right.
 
-  ```elixir
+  ## Examples
 
-  iex> [1,2,3] ~> &(&1 * 10)
-  [10, 20, 30]
-
-  ```
+      iex> [1,2,3] ~> &(&1 * 10)
+      [10, 20, 30]
 
   """
   @spec any ~> (any -> any) :: any
