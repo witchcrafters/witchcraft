@@ -1,4 +1,6 @@
 defmodule Witchcraft.Functor.Operator do
+  @moduledoc "Operator aliases for `Witchcraft.Operator`"
+
   import Witchcraft.Functor.Protocol
 
   @doc ~S"""

@@ -7,12 +7,16 @@ defmodule Witchcraft.Functor do
   the lifted function. The simplest way to handle this is to have only one
   type in the data/collection.
 
+  ## Terminology
   The term `lift` is used rather than the more common `map`.
+
   First, this makes clear that the use is to lift functions into containers.
+
   Second, if you want mapping behaviour on collections, check out
   [`Enum.map`](http://elixir-lang.org/docs/v1.1/elixir/Enum.html#map/2).
   In fact, the default implimentation *is* `Enum.map`, so you can use this with the
   build-in datatypes.
+
   Third, the naming becomes more consistent with
   [`Applicative`](http://www.robotoverlord.io/witchcraft/Witchcraft.Applicative.Functions.html)'s
   `lift2`, `lift3`, and so on.
@@ -33,8 +37,10 @@ defmodule Witchcraft.Functor do
   ## Notes:
   - The argument order convention is reversed from most other lanaguges
   - Most (if not all) implimentations of `lift` should be
-    expressable in terms of [`Enum.reduce/3`](http://elixir-lang.org/docs/v1.0/elixir/Enum.html#reduce/3)
-  - Falls back to [`Enum.map/2`](http://elixir-lang.org/docs/v1.0/elixir/Enum.html#map/2)
+    expressible in terms of
+    [`Enum.reduce/3`](http://elixir-lang.org/docs/v1.0/elixir/Enum.html#reduce/3)
+  - Falls back to
+    [`Enum.map/2`](http://elixir-lang.org/docs/v1.0/elixir/Enum.html#map/2)
 
   ## Examples
 

@@ -41,5 +41,5 @@ defmodule Witchcraft.Monad.Function do
 
   """
   @spec bind(any, fun) :: any
-  def bind(data, binder), do: lift(data, binder) |> join
+  def bind(data, binder), do: data |> lift(binder) |> join
 end

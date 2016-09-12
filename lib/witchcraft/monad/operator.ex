@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monad.Operator do
+  @moduledoc "Operator aliases for `Witchcraft.Monad`"
+
   @doc ~S"""
   Operator alias for `bind`
 

@@ -13,7 +13,7 @@ defmodule Witchcraft.Functor.Property do
   """
   @spec spotcheck_associates_object(any, (any -> any), (any -> boolean)) :: boolean
   def spotcheck_associates_object(context, func, typecheck) do
-    lift(context, func) |> typecheck.()
+   context |> lift(func) |> typecheck.()
   end
 
   @doc ~S"""

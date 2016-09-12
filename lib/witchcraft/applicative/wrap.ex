@@ -1,4 +1,4 @@
 defmodule Witchcraft.Applicative.Wrap do
-  # NOTE: check if you can fold this into the protocol
+  @moduledoc "Define a wrapping function to lift a value into your struct"
   @callback wrap(any) :: any
 end

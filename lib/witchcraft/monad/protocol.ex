@@ -1,9 +1,5 @@
 defprotocol Witchcraft.Monad.Protocol do
-  @moduledoc ~S"""
-  Because we are following the `Functor -> Applicative -> Monad` hierarchy,
-  `return` is already defined as `pure`. `bind` can be defined in terms of `join`
-  and `lift`, so we only need to define `join` for monads.
-  """
+  @moduledoc "The bases for `Witchcraft.Monad`"
 
   @doc ~S"""
   `join` takes a recursively nested data structure, and joins the two outermost

@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monoid.Operator do
+  @moduledoc "Operator aliases for `Witchcraft.Monoid`"
+
   import Witchcraft.Monoid, only: [append: 2]
   import Kernel, except: [<>: 2]
 

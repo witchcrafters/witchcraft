@@ -1,4 +1,5 @@
 defmodule Witchcraft.Monad.Property do
+  @moduledoc "Properties to help ensure that your `defimpl` is sane"
 
   use Witchcraft.Monad
 

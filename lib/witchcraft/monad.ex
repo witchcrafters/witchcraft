@@ -1,4 +1,9 @@
 defmodule Witchcraft.Monad do
+  @moduledoc ~S"""
+  Because we are following the `Functor -> Applicative -> Monad` hierarchy,
+  `return` is already defined as `pure`. `bind` can be defined in terms of `join`
+  and `lift`, so we only need to define `join` for monads.
+  """
 
   defmacro __using__(_) do
     quote do

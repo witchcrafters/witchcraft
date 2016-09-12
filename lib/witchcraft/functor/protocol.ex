@@ -1,7 +1,12 @@
 defprotocol Witchcraft.Functor.Protocol do
+  @moduledoc ~S"""
+  The basis of `Witchcraft.Functor`
+  """
 
   @doc """
-  Apply a function to every element in some collection, tree, or other structure.
+  Apply a function to every element in some collection, tree,
+  or other structure.
+
   The collection will retain its structure (list, tree, and so on).
   """
   @spec lift(any, (any -> any)) :: any
