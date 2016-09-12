@@ -5,14 +5,14 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.13.1">
-    <title>Witchcraft.Applicative.Operator – Witchcraft v0.5.0</title>
+    <title>Witchcraft.Monad.Protocol – Witchcraft v0.5.0</title>
     <link rel="stylesheet" href="dist/app-7e84850c37.css" />
     
-      <link rel="canonical" href="https://hexdocs.pm/witchcraft/Witchcraft.Applicative.Operator.html" />
+      <link rel="canonical" href="https://hexdocs.pm/witchcraft/Witchcraft.Monad.Protocol.html" />
     
     <script src="dist/sidebar_items.js"></script>
   </head>
-  <body data-type="modules">
+  <body data-type="protocols">
     <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
     <div class="main">
@@ -66,10 +66,12 @@
 
       <h1>
         <small class="visible-xs">Witchcraft v0.5.0</small>
-        Witchcraft.Applicative.Operator
+        Witchcraft.Monad.Protocol
+        
+          <small>protocol</small>
         
         
-          <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/applicative/operator.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monad/protocol.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -77,7 +79,8 @@
 
       
         <section id="moduledoc">
-          
+          <p>The bases for <a href="Witchcraft.Monad.html"><code class="inline">Witchcraft.Monad</code></a></p>
+
         </section>
       
 
@@ -90,6 +93,19 @@
             Summary
           </h1>
           
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:t/0">t()</a>
+  </div>
+  
+</div>
+
+  </div>
+
 
           
   <div class="summary-functions summary">
@@ -98,20 +114,12 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#%3C%3C~/2">func &lt;&lt;~ value</a>
+    <a href="#join/1">join(deep)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Infix alias for <code class="inline">Witchcraft.Applicative.seq</code>, with arguments reversed</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#~%3E%3E/2">value ~&gt;&gt; func</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Infix alias for <code class="inline">Witchcraft.Applicative.seq</code>. If chaining, be sure to wrap
-each layer in parentheses, as <code class="inline">~&gt;&gt;</code> and <code class="inline">~&gt;</code> are left associative</p>
+    <div class="summary-synopsis"><p><code class="inline">join</code> takes a recursively nested data structure, and joins the two outermost
+levels together to result in one level. This may be seen as a “flattening”
+operation for most datatypes</p>
 </div>
   
 </div>
@@ -127,6 +135,22 @@ each layer in parentheses, as <code class="inline">~&gt;&gt;</code> and <code cl
       
 
       
+        <section id="types" class="types details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <i class="icon-link"></i>
+            </a>
+            Types
+          </h1>
+          <div class="types-list">
+            <div id="t:t/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:t/0">t</a> :: term</code></pre>
+  
+</div>
+
+          </div>
+        </section>
+      
 
       
         <section id="functions" class="details-list">
@@ -136,14 +160,14 @@ each layer in parentheses, as <code class="inline">~&gt;&gt;</code> and <code cl
             </a>
             Functions
           </h1>
-          <div class="detail" id="%3C%3C~/2">
+          <div class="detail" id="join/1">
   <div class="detail-header">
-    <a href="#%3C%3C~/2" class="detail-link" title="Link to this function">
+    <a href="#join/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">func &lt;&lt;~ value</span>
+    <span class="signature">join(deep)</span>
     
-      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/applicative/operator.ex#L41" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monad/protocol.ex#L16" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -154,66 +178,22 @@ each layer in parentheses, as <code class="inline">~&gt;&gt;</code> and <code cl
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">any <<~ any :: any</code></pre>
+          <pre><code class="elixir">join(any) :: any</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Infix alias for <code class="inline">Witchcraft.Applicative.seq</code>, with arguments reversed.</p>
-<p>This version is preferred, as it makes chaining arguments along wrapped
-partial applications clearer when reading left-to-right.</p>
-<h2 id="%3C%3C~/2-examples" class="section-heading">
-  <a href="#%3C%3C~/2-examples" class="hover-link"><i class="icon-link"></i></a>
+    <p><code class="inline">join</code> takes a recursively nested data structure, and joins the two outermost
+levels together to result in one level. This may be seen as a “flattening”
+operation for most datatypes.</p>
+<h2 id="join/1-examples" class="section-heading">
+  <a href="#join/1-examples" class="hover-link"><i class="icon-link"></i></a>
   Examples
 </h2>
 
-<pre><code class="iex elixir">iex&gt; [&amp;(&amp;1 + 1), &amp;(&amp;1 * 10)] &lt;&lt;~ [1,2,3]
-[2,3,4,10,20,30]
-
-iex&gt; import Witchcraft.Functor.Operator, only: [&lt;~: 2]
-iex&gt; (&amp;(fn x -&gt; x * &amp;1 end)) &lt;~ [1,2,3] &lt;&lt;~ [9,10,11]
-[9,10,11,18,20,22,27,30,33]</code></pre>
-
-  </section>
-</div>
-<div class="detail" id="~%3E%3E/2">
-  <div class="detail-header">
-    <a href="#~%3E%3E/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">value ~&gt;&gt; func</span>
-    
-      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/applicative/operator.ex#L22" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">any ~>> any :: any</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    <p>Infix alias for <code class="inline">Witchcraft.Applicative.seq</code>. If chaining, be sure to wrap
-each layer in parentheses, as <code class="inline">~&gt;&gt;</code> and <code class="inline">~&gt;</code> are left associative.</p>
-<h2 id="~%3E%3E/2-examples" class="section-heading">
-  <a href="#~%3E%3E/2-examples" class="hover-link"><i class="icon-link"></i></a>
-  Examples
-</h2>
-
-<pre><code class="iex elixir">iex&gt; [1,2,3] ~&gt;&gt; [&amp;(&amp;1 + 1), &amp;(&amp;1 * 10)]
-[2,3,4,10,20,30]
-
-iex&gt; import Witchcraft.Functor.Operator, only: [~&gt;: 2]
-iex&gt; [9, 10] ~&gt;&gt; ([1,2,3] ~&gt; &amp;(fn x -&gt; x * &amp;1 end))
-[9, 10, 18, 20, 27, 30]</code></pre>
+<pre><code class="iex elixir">iex&gt;  join [[[1,2,3]]]
+[[1,2,3]]</code></pre>
 
   </section>
 </div>

@@ -4,30 +4,31 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.11.3">
-    <title>Witchcraft.Functor.Property – Witchcraft v0.4.2</title>
-    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    <meta name="generator" content="ExDoc v0.13.1">
+    <title>Witchcraft.Functor.Property – Witchcraft v0.5.0</title>
+    <link rel="stylesheet" href="dist/app-7e84850c37.css" />
+    
+      <link rel="canonical" href="https://hexdocs.pm/witchcraft/Witchcraft.Functor.Property.html" />
+    
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
     <div class="main">
 <button class="sidebar-toggle">
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
-  <a href="api-reference.html" class="sidebar-projectLink">
+  <a href="readme.html" class="sidebar-projectLink">
     <div class="sidebar-projectDetails">
       <h1 class="sidebar-projectName">
         Witchcraft
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.4.2
+        v0.5.0
       </h2>
     </div>
     
@@ -59,22 +60,23 @@
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
 
       <h1>
-        <small class="visible-xs">Witchcraft v0.4.2</small>
+        <small class="visible-xs">Witchcraft v0.5.0</small>
         Witchcraft.Functor.Property
         
         
-          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
       </h1>
 
       
-        <section id="moduledoc" class="docstring">
+        <section id="moduledoc">
           <p>Check samples of your functor to confirm that your data adheres to the
 functor properties. <em>All members</em> of your datatype should adhere to these rules.
 They are placed here as a quick way to spotcheck some of your values.</p>
@@ -161,10 +163,11 @@ In other words, lifting <code class="inline">id(a)</code> shoud be the same as t
       <i class="icon-link"></i>
     </a>
     <span class="signature">spotcheck(context, f, g, typecheck)</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L92" class="view-source" rel="help" title="View Source">
+    
+      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L50" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
+    
     
   </div>
   
@@ -179,15 +182,6 @@ In other words, lifting <code class="inline">id(a)</code> shoud be the same as t
   
   <section class="docstring">
     <p>Spotcheck all functor properties</p>
-<pre><code class="elixir">
-iex&gt; alias Algae.Id, as: Id
-iex&gt; defmodule Typecheck do
-...&gt;   def is_id(%Id{id: _}), do: true
-...&gt;   def is_id(_), do: false
-...&gt; end
-iex&gt; spotcheck(%Id{id: 42}, &amp;(&amp;1 + 1), &amp;(&amp;1 * 2), &amp;Typecheck.is_id/1)
-true
-</code></pre>
 
   </section>
 </div>
@@ -197,10 +191,11 @@ true
       <i class="icon-link"></i>
     </a>
     <span class="signature">spotcheck_associates_object(context, func, typecheck)</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L28" class="view-source" rel="help" title="View Source">
+    
+      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L15" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
+    
     
   </div>
   
@@ -215,15 +210,6 @@ true
   
   <section class="docstring">
     <p>Check that lifting a function into some context returns a member of the target type</p>
-<pre><code class="elixir">
-iex&gt; alias Algae.Id, as: Id
-iex&gt; defmodule Typecheck do
-...&gt;   def is_id(%Id{id: _}), do: true
-...&gt;   def is_id(_), do: false
-...&gt; end
-iex&gt; spotcheck_associates_object(%Id{id: 42}, &amp;Quark.id/1, &amp;Typecheck.is_id/1)
-true
-</code></pre>
 
   </section>
 </div>
@@ -233,10 +219,11 @@ true
       <i class="icon-link"></i>
     </a>
     <span class="signature">spotcheck_preserve_compositon(context, f, g)</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L71" class="view-source" rel="help" title="View Source">
+    
+      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L42" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
+    
     
   </div>
   
@@ -251,10 +238,6 @@ true
   
   <section class="docstring">
     <p>Check that lifting a composed function is the same as lifting functions in sequence</p>
-<pre><code class="elixir">
-iex&gt; spotcheck_preserve_compositon(%Algae.Id{id: 5}, &amp;(&amp;1 + 1), &amp;(&amp;1 * 10))
-true
-</code></pre>
 
   </section>
 </div>
@@ -264,10 +247,11 @@ true
       <i class="icon-link"></i>
     </a>
     <span class="signature">spotcheck_preserve_identity(context, func)</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L55" class="view-source" rel="help" title="View Source">
+    
+      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/functor/property.ex#L34" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
+    
     
   </div>
   
@@ -291,10 +275,6 @@ In other words, lifting <code class="inline">id(a)</code> shoud be the same as t
  v               v
 
  B ---- id ----&gt; B</code></pre>
-<pre><code class="elixir">
-iex&gt; spotcheck_preserve_identity(%Algae.Id{id: 7}, &amp;(&amp;1 + 1))
-true
-</code></pre>
 
   </section>
 </div>
@@ -305,23 +285,24 @@ true
       
 
       
-        <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.3),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.13.1),
           </span>
-      </p>
-      <button class="night-mode-toggle" />
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-6d2e071366.js"></script>
+  <script src="dist/app-95540a96e6.js"></script>
   </body>
 </html>
 

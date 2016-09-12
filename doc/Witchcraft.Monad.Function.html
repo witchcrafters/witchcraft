@@ -4,30 +4,31 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.11.3">
-    <title>Witchcraft.Monad.Function – Witchcraft v0.4.2</title>
-    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    <meta name="generator" content="ExDoc v0.13.1">
+    <title>Witchcraft.Monad.Function – Witchcraft v0.5.0</title>
+    <link rel="stylesheet" href="dist/app-7e84850c37.css" />
+    
+      <link rel="canonical" href="https://hexdocs.pm/witchcraft/Witchcraft.Monad.Function.html" />
+    
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
     <div class="main">
 <button class="sidebar-toggle">
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
-  <a href="api-reference.html" class="sidebar-projectLink">
+  <a href="readme.html" class="sidebar-projectLink">
     <div class="sidebar-projectDetails">
       <h1 class="sidebar-projectName">
         Witchcraft
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.4.2
+        v0.5.0
       </h2>
     </div>
     
@@ -59,23 +60,25 @@
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
 
       <h1>
-        <small class="visible-xs">Witchcraft v0.4.2</small>
+        <small class="visible-xs">Witchcraft v0.5.0</small>
         Witchcraft.Monad.Function
         
         
-          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monad/function.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monad/function.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
       </h1>
 
       
-        <section id="moduledoc" class="docstring">
-          
+        <section id="moduledoc">
+          <p>Function helpers, derivatives and operators for <a href="Witchcraft.Monad.html"><code class="inline">Witchcraft.Monad</code></a></p>
+
         </section>
       
 
@@ -96,10 +99,12 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#bind/2">bind(data, fun)</a>
+    <a href="#bind/2">bind(data, binder)</a>
   </div>
   
-    <div class="summary-synopsis"></div>
+    <div class="summary-synopsis"><p>Operate on data wrapped inside of a monadic struct. Conceptually (though not actually)
+it unwraps the data, applies the function, and wraps the data up again</p>
+</div>
   
 </div>
 
@@ -128,11 +133,12 @@
     <a href="#bind/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">bind(data, fun)</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/monad/function.ex#L11" class="view-source" rel="help" title="View Source">
+    <span class="signature">bind(data, binder)</span>
+    
+      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monad/function.ex#L44" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
+    
     
   </div>
   
@@ -146,7 +152,34 @@
     </div>
   
   <section class="docstring">
-    
+    <p>Operate on data wrapped inside of a monadic struct. Conceptually (though not actually)
+it unwraps the data, applies the function, and wraps the data up again.</p>
+<p>Note that when several <code class="inline">bind</code>s are chained, the later calls will have a strict data
+dependency on the earlier computations. This allows for parameter bindings from
+anonymous functions to be propagated through a series of logical steps (hence “bind”).</p>
+<pre><code class="iex elixir">iex&gt; bind([1], fn x -&gt; [x+1] end)
+[2]
+
+iex&gt; bind(
+...&gt;   bind(
+...&gt;     bind(
+...&gt;       [1],
+...&gt;       fn x -&gt; [1 + x] end
+...&gt;     ),
+...&gt;     fn y -&gt; [10 * y] end
+...&gt;   ),
+...&gt;   fn z -&gt; [100 - z] end
+...&gt; )
+[80]</code></pre>
+<p>More classic style allowing for variable sharing
+(easier with the <code class="inline">&gt;&gt;&gt;</code> operator in <a href="Witchcraft.Monad.Operator.html)"><code class="inline">Witchcraft.Monad.Operator</code></a></p>
+<pre><code class="iex elixir">iex&gt; bind([1,2,3], fn x -&gt;
+...&gt;   bind([x + 1], fn y -&gt;
+...&gt;     [x * y]
+...&gt;   end)
+...&gt; end)
+[2, 6, 12]</code></pre>
+
   </section>
 </div>
 
@@ -156,23 +189,24 @@
       
 
       
-        <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.3),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.13.1),
           </span>
-      </p>
-      <button class="night-mode-toggle" />
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-6d2e071366.js"></script>
+  <script src="dist/app-95540a96e6.js"></script>
   </body>
 </html>
 

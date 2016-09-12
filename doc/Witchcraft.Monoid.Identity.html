@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.13.1">
-    <title>Witchcraft.Monoid.Operator – Witchcraft v0.5.0</title>
+    <title>Witchcraft.Monoid.Identity – Witchcraft v0.5.0</title>
     <link rel="stylesheet" href="dist/app-7e84850c37.css" />
     
-      <link rel="canonical" href="https://hexdocs.pm/witchcraft/Witchcraft.Monoid.Operator.html" />
+      <link rel="canonical" href="https://hexdocs.pm/witchcraft/Witchcraft.Monoid.Identity.html" />
     
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -66,10 +66,12 @@
 
       <h1>
         <small class="visible-xs">Witchcraft v0.5.0</small>
-        Witchcraft.Monoid.Operator
+        Witchcraft.Monoid.Identity
+        
+          <small>behaviour</small>
         
         
-          <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monoid/operator.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monoid/identity.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -77,7 +79,7 @@
 
       
         <section id="moduledoc">
-          <p>Operator aliases for <a href="Witchcraft.Monoid.html"><code class="inline">Witchcraft.Monoid</code></a></p>
+          <p>Get the identity without providing a sample value</p>
 
         </section>
       
@@ -93,26 +95,23 @@
           
 
           
-  <div class="summary-functions summary">
+
+          
+
+          
+  <div class="summary-callbacks summary">
     <h2>
-      <a href="#functions">Functions</a>
+      <a href="#callbacks">Callbacks</a>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#%3C%3E/2">a &lt;&gt; b</a>
+    <a href="#c:identity/0">identity()</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Infix variant of <code class="inline">Monoid.append</code></p>
-</div>
   
 </div>
 
   </div>
 
-
-          
-
-          
 
         </section>
       
@@ -120,21 +119,25 @@
       
 
       
-        <section id="functions" class="details-list">
+
+      
+
+      
+        <section id="callbacks" class="details-list">
           <h1 class="section-heading">
-            <a class="hover-link" href="#functions">
+            <a class="hover-link" href="#callbacks">
               <i class="icon-link"></i>
             </a>
-            Functions
+            Callbacks
           </h1>
-          <div class="detail" id="%3C%3E/2">
+          <div class="detail" id="c:identity/0">
   <div class="detail-header">
-    <a href="#%3C%3E/2" class="detail-link" title="Link to this function">
+    <a href="#c:identity/0" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">a &lt;&gt; b</span>
+    <span class="signature">identity()</span>
     
-      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monoid/operator.ex#L30" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monoid/identity.ex#L3" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -145,42 +148,17 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">any <> any :: any</code></pre>
+          <pre><code class="elixir">identity :: any</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Infix variant of <code class="inline">Monoid.append</code></p>
-<h2 id="%3C%3E/2-examples" class="section-heading">
-  <a href="#%3C%3E/2-examples" class="hover-link"><i class="icon-link"></i></a>
-  Examples
-</h2>
-
-<pre><code class="iex elixir">iex&gt; use Witchcraft.Monoid
-...&gt; 1 |&gt; append(4) |&gt; append(2) |&gt; append(10)
-17
-
-iex&gt; import Kernel, except: [&lt;&gt;: 2]
-...&gt; 1 &lt;&gt; 4 &lt;&gt; 2 &lt;&gt; 10
-17
-
-iex&gt; use Witchcraft.Monoid
-...&gt; 1 |&gt; append(4) |&gt; append(2) |&gt; append(10)
-17
-
-iex&gt; import Kernel, except: [&lt;&gt;: 2]
-...&gt; [42, 43] &lt;&gt; [44] &lt;&gt; [45, 46] &lt;&gt; [47]
-[42, 43, 44, 45, 46, 47]</code></pre>
-
+    
   </section>
 </div>
 
         </section>
-      
-
-      
-
       
           <footer class="footer">
         <p>

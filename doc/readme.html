@@ -4,30 +4,31 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.11.3">
-    <title>Quick Start – Witchcraft v0.4.2</title>
-    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    <meta name="generator" content="ExDoc v0.13.1">
+    <title>Quick Start – Witchcraft v0.5.0</title>
+    <link rel="stylesheet" href="dist/app-7e84850c37.css" />
+    
+      <link rel="canonical" href="https://hexdocs.pm/witchcraft/readme.html" />
+    
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="extras">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
 <div class="main">
 <button class="sidebar-toggle">
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
-  <a href="api-reference.html" class="sidebar-projectLink">
+  <a href="readme.html" class="sidebar-projectLink">
     <div class="sidebar-projectDetails">
       <h1 class="sidebar-projectName">
         Witchcraft
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.4.2
+        v0.5.0
       </h2>
     </div>
     
@@ -59,28 +60,14 @@
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
 
-<p><img src="./logo.png" alt=""/></p>
+<p><img src="./brand/logo.png" alt=""/></p>
 <p><a href="Witchcraft.html"><code class="inline">Witchcraft</code></a> is a library providing common algebraic and categorical abstractions to Elixir.
 (Monoids, functors, monads, arrows, and categories)</p>
-<table>
-<colgroup>
-<col>
-<col>
-<col>
-<col>
-</colgroup>
-<thead>
-<tr>
-<th style="text-align: left">Build Status</th><th style="text-align: left">Maintainer Message</th><th style="text-align: left">Documentation</th><th style="text-align: left">Hosted Package</th>
-</tr>
-</thead>
-<tr>
-<td style="text-align: left"><a href="https://circleci.com/gh/robot-overlord/witchcraft/tree/master"><img src="https://circleci.com/gh/robot-overlord/witchcraft/tree/master.svg?style=svg" alt="Circle CI"/></a></td><td style="text-align: left"><img src="https://cloud.githubusercontent.com/assets/1052016/11023213/66d837a4-8627-11e5-9e3b-b295fafb1450.png" alt="built with humanity"/></td><td style="text-align: left"><a href="http://www.robotoverlord.io/witchcraft/extra-readme.html">robotoverlord.io/witchcraft</a></td><td style="text-align: left"><a href="https://hex.pm/packages/witchcraft">Hex</a></td>
-</tr>
-</table>
+<p><a href="https://travis-ci.org/expede/witchcraft"><img src="https://travis-ci.org/expede/witchcraft.svg?branch=master" alt="Build Status"/></a> <a href="http://inch-ci.org/github/expede/witchcraft"><img src="http://inch-ci.org/github/expede/witchcraft.svg?branch=master" alt="Inline docs"/></a> <a href="https://beta.hexfaktor.org/github/expede/witchcraft"><img src="https://beta.hexfaktor.org/badge/all/github/expede/witchcraft.svg" alt="Deps Status"/></a> <a href="https://hex.pm/packages/witchcraft"><img src="https://img.shields.io/hexpm/v/witchcraft.svg?style=flat" alt="hex.pm version"/></a> <a href="http://hexdocs.pm/witchcraft/"><img src="https://img.shields.io/badge/api-docs-yellow.svg?style=flat" alt="API Docs"/></a> <a href="https://github.com/expede/witchcraft/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000" alt="license"/></a></p>
 <h1>Table of Contents</h1>
 <ul>
 <li><a href="#quick-start">Quick Start</a>
@@ -117,10 +104,18 @@
   [{:witchcraft, &quot;~&gt; 0.4.2&quot;}]
 end</code></pre>
 <h1>Values</h1>
-<h2>Beginner Friendliness</h2>
+<h2 id="beginner-friendliness" class="section-heading">
+  <a href="#beginner-friendliness" class="hover-link"><i class="icon-link"></i></a>
+  Beginner Friendliness
+</h2>
+
 <p>As much as possible, keep things friendly. Concrete examples are available in the
 source code, and a Wiki is in the roadmap.</p>
-<h2>Consistency</h2>
+<h2 id="consistency" class="section-heading">
+  <a href="#consistency" class="hover-link"><i class="icon-link"></i></a>
+  Consistency
+</h2>
+
 <h3>Language</h3>
 <p>Elixir does a lot of things differently from other functional languages. The idea
 of a data “subject” being piped though functions is conceptually different from
@@ -129,16 +124,28 @@ way, and operators point in the direction that data travels.</p>
 <h3>Concept</h3>
 <p>By learning from developments in other languages, we can collapse a lot of ideas into
 single concepts (<code class="inline">liftA === liftM</code>, for instance).</p>
-<h2>Pedagogy</h2>
+<h2 id="pedagogy" class="section-heading">
+  <a href="#pedagogy" class="hover-link"><i class="icon-link"></i></a>
+  Pedagogy
+</h2>
+
 <p>You shouldn’t have to learn another language just to understand powerful abstractions!
 By enabling people to use a language that they already know, and is already in the
 same ballpark in terms of values (emphasis on immutability, &amp;c), we can teach and
 learn faster.</p>
-<h2>Pragmatism</h2>
+<h2 id="pragmatism" class="section-heading">
+  <a href="#pragmatism" class="hover-link"><i class="icon-link"></i></a>
+  Pragmatism
+</h2>
+
 <p>Convincing a company to use a language like Haskell or PureScript can be challenging.
 Elixir is gaining a huge amount of interest. Many people have been able to introduce
 these concepts into companies using Scala, so we should be able to do the same here.</p>
-<h2>Compatibility</h2>
+<h2 id="compatibility" class="section-heading">
+  <a href="#compatibility" class="hover-link"><i class="icon-link"></i></a>
+  Compatibility
+</h2>
+
 <p><a href="Witchcraft.html"><code class="inline">Witchcraft</code></a> works with <a href="https://hex.pm/packages/algae">Algae</a>, providing <a href="Witchcraft.html"><code class="inline">Witchcraft</code></a>
 instances for all <code class="inline">Algae</code> data types. There is nothing stopping you from writing your
 own implementations for other data types.</p>
@@ -147,7 +154,11 @@ own implementations for other data types.</p>
 includes property tests to ensure that datatypes that you write are easily property testable
 for adherence to their laws. Full compatibility with QuickCheck is coming soon.</p>
 <h1>Differences from <a href="https://www.haskell.org">Haskell</a></h1>
-<h2>Naming</h2>
+<h2 id="naming" class="section-heading">
+  <a href="#naming" class="hover-link"><i class="icon-link"></i></a>
+  Naming
+</h2>
+
 <p>Some functions have been renamed for clarity, generality, or style.</p>
 <table>
 <colgroup>
@@ -178,29 +189,34 @@ for adherence to their laws. Full compatibility with QuickCheck is coming soon.<
 | <code class="inline">&gt;&gt;</code>                        | <code class="inline">seq_first</code>           |
 | <code class="inline">&gt;&gt;=</code>                       | <code class="inline">&gt;&gt;&gt;</code>                 |
 | <code class="inline">=&lt;&lt;</code>                       | <code class="inline">&lt;&lt;&lt;</code>                 |</p>
-<h2>Hierarchy</h2>
+<h2 id="hierarchy" class="section-heading">
+  <a href="#hierarchy" class="hover-link"><i class="icon-link"></i></a>
+  Hierarchy
+</h2>
+
 <p>Having a clean slate, we have been able to use a very clean of typeclasses. Strictly,
 all <code class="inline">Applicative</code>s are <code class="inline">Functor</code>s, and all <code class="inline">Monad</code>s are <code class="inline">Applicative</code>s. This grants
 us the ability to reuse functions in their child classes. For example, <code class="inline">pure</code> can
 be used for <code class="inline">return</code>, <code class="inline">liftA*</code> is the same as <code class="inline">liftM*</code>, and so on (see chart above).</p>
 
-    <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.3),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.13.1),
           </span>
-      </p>
-      <button class="night-mode-toggle" />
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-6d2e071366.js"></script>
+  <script src="dist/app-95540a96e6.js"></script>
   </body>
 </html>
 

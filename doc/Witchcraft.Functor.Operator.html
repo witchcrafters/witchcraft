@@ -4,30 +4,31 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.11.3">
-    <title>Witchcraft.Functor.Operator – Witchcraft v0.4.2</title>
-    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    <meta name="generator" content="ExDoc v0.13.1">
+    <title>Witchcraft.Functor.Operator – Witchcraft v0.5.0</title>
+    <link rel="stylesheet" href="dist/app-7e84850c37.css" />
+    
+      <link rel="canonical" href="https://hexdocs.pm/witchcraft/Witchcraft.Functor.Operator.html" />
+    
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
     <div class="main">
 <button class="sidebar-toggle">
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
-  <a href="api-reference.html" class="sidebar-projectLink">
+  <a href="readme.html" class="sidebar-projectLink">
     <div class="sidebar-projectDetails">
       <h1 class="sidebar-projectName">
         Witchcraft
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.4.2
+        v0.5.0
       </h2>
     </div>
     
@@ -59,20 +60,26 @@
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
 
       <h1>
-        <small class="visible-xs">Witchcraft v0.4.2</small>
+        <small class="visible-xs">Witchcraft v0.5.0</small>
         Witchcraft.Functor.Operator
         
         
-          <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/operator.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/functor/operator.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
       </h1>
 
+      
+        <section id="moduledoc">
+          <p>Operator aliases for <code class="inline">Witchcraft.Operator</code></p>
+
+        </section>
       
 
       
@@ -137,10 +144,11 @@ prefer the function on the left side</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">func &lt;~ args</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/operator.ex#L18" class="view-source" rel="help" title="View Source">
+    
+      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/functor/operator.ex#L19" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
+    
     
   </div>
   
@@ -157,10 +165,14 @@ prefer the function on the left side</p>
     <p>Alias for <code class="inline">lift</code>. As we’ll see with <a href="Witchcraft.Applicative.html"><code class="inline">Witchcraft.Applicative</code></a>,
 this arrow points in the direction of data flow (just like <code class="inline">|&gt;</code>), but we often
 prefer the function on the left side.</p>
-<pre><code class="elixir">
-iex&gt; (&amp;(&amp;1 * 10)) &lt;~ [1,2,3]
-[10, 20, 30]
-</code></pre>
+<h2 id="%3C~/2-examples" class="section-heading">
+  <a href="#%3C~/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; times10 = fn x -&gt; x * 10 end
+...&gt; times10 &lt;~ [1,2,3]
+[10, 20, 30]</code></pre>
 
   </section>
 </div>
@@ -170,10 +182,11 @@ iex&gt; (&amp;(&amp;1 * 10)) &lt;~ [1,2,3]
       <i class="icon-link"></i>
     </a>
     <span class="signature">args ~&gt; func</span>
-      
-      <a href="https://github.com/robot-overlord/witchcraft/blob/master/lib/witchcraft/functor/operator.ex#L32" class="view-source" rel="help" title="View Source">
+    
+      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/functor/operator.ex#L31" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
+    
     
   </div>
   
@@ -188,10 +201,13 @@ iex&gt; (&amp;(&amp;1 * 10)) &lt;~ [1,2,3]
   
   <section class="docstring">
     <p>Alias for <code class="inline">lift</code> and <code class="inline">&lt;~</code>, but with data flowing to the right.</p>
-<pre><code class="elixir">
-iex&gt; [1,2,3] ~&gt; &amp;(&amp;1 * 10)
-[10, 20, 30]
-</code></pre>
+<h2 id="~%3E/2-examples" class="section-heading">
+  <a href="#~%3E/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; [1,2,3] ~&gt; &amp;(&amp;1 * 10)
+[10, 20, 30]</code></pre>
 
   </section>
 </div>
@@ -202,23 +218,24 @@ iex&gt; [1,2,3] ~&gt; &amp;(&amp;1 * 10)
       
 
       
-        <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.3),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.13.1),
           </span>
-      </p>
-      <button class="night-mode-toggle" />
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-6d2e071366.js"></script>
+  <script src="dist/app-95540a96e6.js"></script>
   </body>
 </html>
 

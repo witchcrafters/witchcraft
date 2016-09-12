@@ -5,14 +5,14 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.13.1">
-    <title>Witchcraft.Monoid.Property – Witchcraft v0.5.0</title>
+    <title>Witchcraft.Monoid.Protocol – Witchcraft v0.5.0</title>
     <link rel="stylesheet" href="dist/app-7e84850c37.css" />
     
-      <link rel="canonical" href="https://hexdocs.pm/witchcraft/Witchcraft.Monoid.Property.html" />
+      <link rel="canonical" href="https://hexdocs.pm/witchcraft/Witchcraft.Monoid.Protocol.html" />
     
     <script src="dist/sidebar_items.js"></script>
   </head>
-  <body data-type="modules">
+  <body data-type="protocols">
     <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
     <div class="main">
@@ -66,10 +66,12 @@
 
       <h1>
         <small class="visible-xs">Witchcraft v0.5.0</small>
-        Witchcraft.Monoid.Property
+        Witchcraft.Monoid.Protocol
+        
+          <small>protocol</small>
         
         
-          <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monoid/property.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monoid/protocol.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -77,9 +79,10 @@
 
       
         <section id="moduledoc">
-          <p>Check samples of your monoid to confirm that your data adheres to the
-monoidal properties. <em>All members</em> of your datatype should adhere to these rules.
-They are placed here as a quick way to spotcheck some of your values.</p>
+          <p>TODO WRITE STUFF</p>
+<h1>Notes</h1>
+<p>You can of course abuse this protocol to define a fake ‘monoid’ that behaves differently.
+For the protocol to operate as intended, you need to respect the above properties.</p>
 
         </section>
       
@@ -93,6 +96,19 @@ They are placed here as a quick way to spotcheck some of your values.</p>
             Summary
           </h1>
           
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:t/0">t()</a>
+  </div>
+  
+</div>
+
+  </div>
+
 
           
   <div class="summary-functions summary">
@@ -101,29 +117,19 @@ They are placed here as a quick way to spotcheck some of your values.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#spotcheck/3">spotcheck(a, b, c)</a>
+    <a href="#append/2">append(a, b)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Spotcheck all monoid properties</p>
+    <div class="summary-synopsis"><p>Combine two members of the monoid, and return another member</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#spotcheck_associativity/3">spotcheck_associativity(member1, member2, member3)</a>
+    <a href="#identity/1">identity(a)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Check that <code class="inline">Monoid.append</code> is <a href="https://en.wikipedia.org/wiki/Associative_property">associative</a>
-(ie: brackets don’t matter)</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#spotcheck_identity/1">spotcheck_identity(member)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Check that some member of your monoid combines with the identity to return itself</p>
+    <div class="summary-synopsis"><p>Get the identity (‘zero’) element of the monoid by passing in any element of the set</p>
 </div>
   
 </div>
@@ -139,6 +145,22 @@ They are placed here as a quick way to spotcheck some of your values.</p>
       
 
       
+        <section id="types" class="types details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <i class="icon-link"></i>
+            </a>
+            Types
+          </h1>
+          <div class="types-list">
+            <div id="t:t/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:t/0">t</a> :: term</code></pre>
+  
+</div>
+
+          </div>
+        </section>
+      
 
       
         <section id="functions" class="details-list">
@@ -148,14 +170,14 @@ They are placed here as a quick way to spotcheck some of your values.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="spotcheck/3">
+          <div class="detail" id="append/2">
   <div class="detail-header">
-    <a href="#spotcheck/3" class="detail-link" title="Link to this function">
+    <a href="#append/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">spotcheck(a, b, c)</span>
+    <span class="signature">append(a, b)</span>
     
-      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monoid/property.ex#L41" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monoid/protocol.ex#L16" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -166,26 +188,24 @@ They are placed here as a quick way to spotcheck some of your values.</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">spotcheck(any, any, any) :: boolean</code></pre>
+          <pre><code class="elixir">append(any, any) :: any</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Spotcheck all monoid properties</p>
-<pre><code class="iex elixir">iex&gt; spotcheck(1,2,3)
-true</code></pre>
+    <p>Combine two members of the monoid, and return another member</p>
 
   </section>
 </div>
-<div class="detail" id="spotcheck_associativity/3">
+<div class="detail" id="identity/1">
   <div class="detail-header">
-    <a href="#spotcheck_associativity/3" class="detail-link" title="Link to this function">
+    <a href="#identity/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">spotcheck_associativity(member1, member2, member3)</span>
+    <span class="signature">identity(a)</span>
     
-      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monoid/property.ex#L29" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monoid/protocol.ex#L12" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -196,46 +216,13 @@ true</code></pre>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">spotcheck_associativity(any, any, any) :: boolean</code></pre>
+          <pre><code class="elixir">identity(any) :: any</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Check that <code class="inline">Monoid.append</code> is <a href="https://en.wikipedia.org/wiki/Associative_property">associative</a>
-(ie: brackets don’t matter)</p>
-<pre><code class="iex elixir">iex&gt; spotcheck_associativity(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
-true</code></pre>
-
-  </section>
-</div>
-<div class="detail" id="spotcheck_identity/1">
-  <div class="detail-header">
-    <a href="#spotcheck_identity/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">spotcheck_identity(member)</span>
-    
-      <a href="https://github.com/expede/witchcraft/blob/master/lib/witchcraft/monoid/property.ex#L18" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">spotcheck_identity(any) :: boolean</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    <p>Check that some member of your monoid combines with the identity to return itself</p>
-<pre><code class="iex elixir">iex&gt; spotcheck_identity(&quot;well formed&quot;)
-true</code></pre>
+    <p>Get the identity (‘zero’) element of the monoid by passing in any element of the set</p>
 
   </section>
 </div>
