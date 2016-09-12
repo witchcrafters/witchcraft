@@ -41,12 +41,6 @@ defmodule Witchcraft.Functor do
       iex> [1,2,3] |> lift(&(&1 + 1))
       [2,3,4]
 
-      iex> defimpl Witchcraft.Functor, for: Algae.Id do
-      iex>   def lift(%Algae.Id{id: inner}, func), do: %Algae.Id{id: func.(inner)}
-      iex> end
-      iex> lift(%Algae.Id{id: 1}, &(&1 + 1))
-      %Algae.Id{id: 2}
-
   """
 
   defmacro __using__(_) do
@@ -56,11 +50,11 @@ defmodule Witchcraft.Functor do
   end
 
   defdelegate lift(data, fun), to: Witchcraft.Functor.Protocol
-  defdelegate lift(fun),        to: Witchcraft.Functor.Function
-  defdelegate lift(),           to: Witchcraft.Functor.Function
+  defdelegate lift(fun),       to: Witchcraft.Functor.Function
+  defdelegate lift(),          to: Witchcraft.Functor.Function
 
   defdelegate replace(data, const), to: Witchcraft.Functor.Function
 
-  defdelegate data ~> func, to: Witcraft.Functor.Operator
-  defdelegate func <~ data, to: Witcraft.Functor.Operator
+  defdelegate data ~> func, to: Witchcraft.Functor.Operator
+  defdelegate func <~ data, to: Witchcraft.Functor.Operator
 end

@@ -1,7 +1,5 @@
 defmodule Witchcraft do
-  @moduledoc ~S"""
-  Convenient `use` macro
-  """
+  @moduledoc "Convenient top-level `use`"
 
   defmacro __using__(_) do
     quote do
@@ -10,9 +8,6 @@ defmodule Witchcraft do
       use Witchcraft.Functor
       use Witchcraft.Applicative
       use Witchcraft.Monad
-
-      use Witchcraft.Category
-      use Witchcraft.Arrow
     end
   end
 end

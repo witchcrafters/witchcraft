@@ -16,63 +16,76 @@ defprotocol Witchcraft.Monoid.Protocol do
   def append(a, b)
 end
 
-defimpl Witchcraft.Monoid, for: Integer do
+defimpl Witchcraft.Monoid.Protocol, for: Integer do
   @doc ~S"""
+  ## Examples
+
       iex> identity(99) == identity(-9)
       true
+
   """
   def identity(_integer), do: 0
 
   @doc ~S"""
+  ## Examples
+
       iex> 1 |> append(4) |> append(2) |> append(10)
       17
+
   """
   @spec append(integer, integer) :: integer
   def append(a, b), do: a + b
 end
 
-defimpl Witchcraft.Monoid, for: Float do
+defimpl Witchcraft.Monoid.Protocol, for: Float do
   @doc ~S"""
+  ## Examples
+
       iex> identity(98.5) == identity(-8.5)
       true
+
   """
   def identity(_integer), do: 0.0
 
   @doc ~S"""
+  ## Examples
+
       iex> 1.0 |> append(4.0) |> append(2.0) |> append(10.1)
       17.1
+
   """
   def append(a, b), do: a + b
 end
 
-defimpl Witchcraft.Monoid, for: BitString do
+defimpl Witchcraft.Monoid.Protocol, for: BitString do
   @doc ~S"""
+  ## Examples
+
       iex> "welp" |> identity |> append("o hai")
       "o hai"
+
   """
   def identity(_), do: ""
 
   @doc ~S"""
+  ## Examples
+
       iex> append("o hai", identity("welp"))
       "o hai"
 
       iex> identity("") |> append(identity("")) == identity("")
       true
+
   """
   def append(a, b), do: a <> b
 end
 
-defimpl Witchcraft.Monoid, for: List do
+defimpl Witchcraft.Monoid.Protocol, for: List do
   def identity(_list), do: []
   def append(as, bs), do: as ++ bs
 end
 
-defimpl Witchcraft.Monoid, for: Map do
+defimpl Witchcraft.Monoid.Protocol, for: Map do
   def identity(_map), do: %{}
   def append(ma, mb), do: Dict.merge(ma, mb)
-end
-
-defimpl Witchcraft.Monoid, for: Witchcraft.Sad do
-  def identity(%Witchcraft.Sad{sad: _}), do: %Witchcraft.Sad{}
-  def append(%Witchcraft.Sad{sad: a}, %Witchcraft.Sad{sad: b}), do: %Witchcraft.Sad{sad: a / b}
 end

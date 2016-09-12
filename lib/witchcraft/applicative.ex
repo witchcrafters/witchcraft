@@ -47,18 +47,23 @@ defmodule Witchcraft.Applicative do
   defmacro __using__(_) do
     quote do
       import unquote(__MODULE__)
+      require Witchcraft.Applicative.Function
       use Witchcraft.Functor
     end
   end
 
   defdelegate wrap(bare), to: Witchcraft.Applicative.Wrap
 
-  defdelegate wrap(specemin, bare), to: Witchcraft.Applicative.Protocol
-  defdelegate seq(any, fun),        to: Witchcraft.Applicative.Protocol
+  defdelegate wrap(specemin, bare),  to: Witchcraft.Applicative.Protocol
+  defdelegate seq(applicative, fun), to: Witchcraft.Applicative.Protocol
 
-  defdelegate lift(value, fun),   to: Witchcraft.Applicative.Function
-  defdelegate seq_first([a, b]),  to: Witchcraft.Applicative.Function
-  defdelegate seq_second([a, b]), to: Witchcraft.Applicative.Function
+  defdelegate rewrap(specemin), to: Witchcraft.Applicative.Function
+  defdelegate lift(val_1, val_2, fun), to: Witchcraft.Applicative.Function
+  defdelegate lift(val_1, val_2, val_3, fun), to: Witchcraft.Applicative.Function
+  defdelegate lift(val_1, val_2, val_3, val_4, fun), to: Witchcraft.Applicative.Function
+
+  defdelegate seq_first(first, second),  to: Witchcraft.Applicative.Function
+  defdelegate seq_second(first, second), to: Witchcraft.Applicative.Function
 
   defdelegate data ~>> func, to: Witchcraft.Applicative.Operator
   defdelegate func <<~ data, to: Witchcraft.Applicative.Operator

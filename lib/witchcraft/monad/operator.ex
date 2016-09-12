@@ -1,11 +1,18 @@
 defmodule Witchcraft.Monad.Operator do
   @doc ~S"""
-  Operator Alias for `bind`
+  Operator alias for `bind`
 
-      iex> [1,2,3] >>> &(wrap(&1 * 1))
+  ## Examples
+
+      iex> use Witchcraft.Applicative
+      ...> [1,2,3] >>> fn x -> [x * 10] end
       [10, 20, 30]
 
-      iex> [1,2,3] >>> fn x -> [x+1] >>> fn y -> [y*x, y*10, x-1] end end
+      iex> [1,2,3] >>> fn x ->
+      ...>   [x+1] >>> fn y ->
+      ...>     [y*x, y*10, x-1]
+      ...>   end
+      ...> end
       [2,20,0,6,30,1,12,40,2]
 
   """
@@ -15,7 +22,10 @@ defmodule Witchcraft.Monad.Operator do
   @doc ~S"""
   Operator alias for `bind`, with arguments reversed
 
-      iex> &(wrap(&1 * 1)) <<< [1,2,3]
+  ## Examples
+
+      iex> use Witchcraft.Applicative
+      ...> fn x -> [x * 10] end <<< [1,2,3]
       [10, 20, 30]
 
   """

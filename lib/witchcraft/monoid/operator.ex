@@ -7,22 +7,20 @@ defmodule Witchcraft.Monoid.Operator do
 
   ## Examples
 
-      iex> import Witchcraft.Monoid
-      ...> defimpl Witchcraft.Monoid, for: Integer do
-      ...>   def identity(_), do: 0
-      ...>   def append(a, b), do: a + b
-      ...> end
-      iex> 1 |> append(4) |> append(2) |> append(10)
+      iex> use Witchcraft.Monoid
+      ...> 1 |> append(4) |> append(2) |> append(10)
       17
 
-      iex> 1 <> 4 <> 2 <> 10
+      iex> import Kernel, except: [<>: 2]
+      ...> 1 <> 4 <> 2 <> 10
       17
 
-      iex> import Witchcraft.Monoid
-      iex> 1 |> append(4) |> append(2) |> append(10)
+      iex> use Witchcraft.Monoid
+      ...> 1 |> append(4) |> append(2) |> append(10)
       17
 
-      iex> [42, 43] <> [44] <> [45, 46] <> [47]
+      iex> import Kernel, except: [<>: 2]
+      ...> [42, 43] <> [44] <> [45, 46] <> [47]
       [42, 43, 44, 45, 46, 47]
 
   """
