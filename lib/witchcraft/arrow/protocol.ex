@@ -6,7 +6,7 @@ defprotocol Witchcraft.Arrow.Protocol do
 
   @doc ~S"""
   """
-  @spec arrow((... -> any)) -> (any -> any)
+  @spec arrow(fun) :: fun
   def arrow(fun)
 
   @doc ~S"""
