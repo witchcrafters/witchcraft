@@ -1,17 +1,18 @@
 defmodule Witchcraft.Functor.Operator do
-  import Witchcraft.Functor, only: [lift: 2]
+  @moduledoc "Operator aliases for `Witchcraft.Operator`"
+
+  import Witchcraft.Functor.Protocol
 
   @doc ~S"""
   Alias for `lift`. As we'll see with `Witchcraft.Applicative`,
   this arrow points in the direction of data flow (just like `|>`), but we often
   prefer the function on the left side.
 
-  ```elixir
+  ## Examples
 
-  iex> (&(&1 * 10)) <~ [1,2,3]
-  [10, 20, 30]
-
-  ```
+      iex> times10 = fn x -> x * 10 end
+      ...> times10 <~ [1,2,3]
+      [10, 20, 30]
 
   """
   @spec (any -> any) <~ any :: any
@@ -20,12 +21,10 @@ defmodule Witchcraft.Functor.Operator do
   @doc ~S"""
   Alias for `lift` and `<~`, but with data flowing to the right.
 
-  ```elixir
+  ## Examples
 
-  iex> [1,2,3] ~> &(&1 * 10)
-  [10, 20, 30]
-
-  ```
+      iex> [1,2,3] ~> &(&1 * 10)
+      [10, 20, 30]
 
   """
   @spec any ~> (any -> any) :: any

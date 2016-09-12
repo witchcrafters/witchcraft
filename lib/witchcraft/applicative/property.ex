@@ -7,26 +7,16 @@ defmodule Witchcraft.Applicative.Property do
   They are placed here as a quick way to spotcheck some of your values.
   """
 
-  import Quark, only: [compose: 2, id: 1]
-  import Quark.Curry, only: [curry: 1]
-
-  import Witchcraft.Applicative, only: [seq: 2, wrap: 2]
-  import Witchcraft.Applicative.Operator, only: [~>>: 2, <<~: 2]
-
-  import Witchcraft.Functor.Operator, only: [~>: 2, <~: 2]
+  use Quark
+  use Witchcraft.Applicative
 
   @doc ~S"""
   `seq`ing a lifted `id` to some lifted value `v` does not change `v`
 
-  ```elixir
+  ## Examples
 
-  iex> spotcheck_identity []
-  true
-
-  iex> spotcheck_identity %Algae.Id{}
-  true
-
-  ```
+      iex> spotcheck_identity []
+      true
 
   """
   @spec spotcheck_identity(any) :: boolean
@@ -35,8 +25,10 @@ defmodule Witchcraft.Applicative.Property do
   @doc ~S"""
   `seq` composes normally.
 
-  iex> spotcheck_composition([1, 2], [&(&1 * 2)], [&(&1 * 10)])
-  true
+  ## Examples
+
+      iex> spotcheck_composition([1, 2], [&(&1 * 2)], [&(&1 * 10)])
+      true
 
   """
   @spec spotcheck_composition(any, any, any) :: boolean
@@ -48,12 +40,11 @@ defmodule Witchcraft.Applicative.Property do
   `seq`ing a `wrap`ped function to a `wrap`ped value is the same as wrapping the
   result of the function on that value.
 
-  ```elixir
+  ## Examples
 
-  iex> spotcheck_homomorphism([], 1, &(&1 * 10))
-  true
+      iex> spotcheck_homomorphism([], 1, &(&1 * 10))
+      true
 
-  ```
   """
   @spec spotcheck_homomorphism(any, any, fun) :: boolean
   def spotcheck_homomorphism(specemin, val, fun) do
@@ -65,12 +56,10 @@ defmodule Witchcraft.Applicative.Property do
   The order does not matter when `seq`ing to a `wrap`ped value
   and a `wrap`ped function.
 
-  ```elixir
+  ## Examples
 
-  iex> spotcheck_interchange(1, [&(&1 * 10)])
-  true
-
-  ```
+      iex> spotcheck_interchange(1, [&(&1 * 10)])
+      true
 
   """
   @spec spotcheck_interchange(any, any) :: boolean
@@ -83,15 +72,10 @@ defmodule Witchcraft.Applicative.Property do
 
   Being an applicative _functor_, `seq` behaves as `lift` on `wrap`ped values
 
-  ```elixir
+  ## Examples
 
-  iex> spotcheck_functor([1,2,3], &(&1 * 10))
-  true
-
-  iex> spotcheck_functor(%Algae.Id{id: 7}, &(&1 * 99))
-  true
-
-  ```
+      iex> spotcheck_functor([1,2,3], &(&1 * 10))
+      true
 
   """
   @spec spotcheck_functor(any, fun) :: boolean

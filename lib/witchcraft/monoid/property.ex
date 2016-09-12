@@ -5,61 +5,36 @@ defmodule Witchcraft.Monoid.Property do
   They are placed here as a quick way to spotcheck some of your values.
   """
 
-  import Witchcraft.Monoid
-  import Witchcraft.Monoid.Operator, only: [<|>: 2]
+  use Witchcraft.Monoid
 
   @doc ~S"""
   Check that some member of your monoid combines with the identity to return itself
 
-  ```elixir
-
-  iex> spotcheck_identity("well formed")
-  true
-
-  # Float under division
-  iex> spotcheck_identity(%Witchcraft.Sad{})
-  false
-
-  ```
+      iex> spotcheck_identity("well formed")
+      true
 
   """
   @spec spotcheck_identity(any) :: boolean
-  def spotcheck_identity(member), do: (identity(member) <|> member) == member
+  def spotcheck_identity(member), do: (identity(member) <> member) == member
 
   @doc ~S"""
   Check that `Monoid.append` is [associative](https://en.wikipedia.org/wiki/Associative_property)
   (ie: brackets don't matter)
 
-  ```elixir
-
-  iex> spotcheck_associativity("a", "b", "c")
-  true
-
-  # Float under division
-  iex> spotcheck_associativity(%Witchcraft.Sad{sad: -9.1}, %Witchcraft.Sad{sad: 42.0}, %Witchcraft.Sad{sad: 88.8})
-  false
-
-  ```
+      iex> spotcheck_associativity("a", "b", "c")
+      true
 
   """
   @spec spotcheck_associativity(any, any, any) :: boolean
   def spotcheck_associativity(member1, member2, member3) do
-    (member1 <|> (member2 <|> member3)) == ((member1 <|> member2) <|> member3)
+    (member1 <> (member2 <> member3)) == ((member1 <> member2) <> member3)
   end
 
   @doc """
   Spotcheck all monoid properties
 
-  ```elixir
-
-  iex> spotcheck(1,2,3)
-  true
-
-  # Float under division
-  iex> spotcheck(%Witchcraft.Sad{sad: -9.1}, %Witchcraft.Sad{sad: 42.0}, %Witchcraft.Sad{sad: 88.8})
-  false
-
-  ```
+      iex> spotcheck(1,2,3)
+      true
 
   """
   @spec spotcheck(any, any, any) :: boolean

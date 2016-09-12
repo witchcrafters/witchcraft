@@ -1,62 +1,22 @@
-defprotocol Witchcraft.Monad do
+defmodule Witchcraft.Monad do
   @moduledoc ~S"""
-  Because we are following Functor/Applicative/Monad superclassing, `return` is `pure`,
-  so no need to define `return`. `bind` can be defined in terms of `join` and `lift`.
+  Because we are following the `Functor -> Applicative -> Monad` hierarchy,
+  `return` is already defined as `pure`. `bind` can be defined in terms of `join`
+  and `lift`, so we only need to define `join` for monads.
   """
 
-  @fallback_to_any true
-
-  @doc ~S"""
-  """
-  @spec join(any) :: any
-  def join(deep)
-end
-
-# Algae.Id
-# ===========
-
-defimpl Witchcraft.Monad, for: Algae.Id do
-  def join(%Algae.Id{id: %Algae.Id{id: value}}), do: %Algae.Id{id: value}
-end
-
-# Algae.Maybe
-# ===========
-
-defimpl Witchcraft.Monad, for: Algae.Maybe.Nothing do
-  def join(%Algae.Maybe.Nothing{}), do: %Algae.Maybe.Nothing{}
-end
-
-defimpl Witchcraft.Monad, for: Algae.Maybe.Just do
-  def join(%Algae.Maybe.Just{just: %Algae.Maybe.Nothing{}}), do: %Algae.Maybe.Nothing{}
-  def join(%Algae.Maybe.Just{just: %Algae.Maybe.Just{just: value}}) do
-    %Algae.Maybe.Just{just: value}
-  end
-end
-
-# Algae.Either
-# ============
-
-defimpl Witchcraft.Monad, for: Algae.Either.Left do
-  def join(%Algae.Either.Left{left: value}), do: %Algae.Either.Left{left: value}
-end
-
-defimpl Witchcraft.Monad, for: Algae.Either.Right do
-  def join(%Algae.Either.Right{right: %Algae.Either.Left{left: value}}) do
-    %Algae.Either.Left{left: value}
+  defmacro __using__(_) do
+    quote do
+      import unquote(__MODULE__)
+      use Witchcraft.Applicative
+    end
   end
 
-  def join(%Algae.Either.Right{right: %Algae.Either.Right{right: value}}) do
-    %Algae.Either.Right{right: value}
-  end
-end
+  defdelegate join(deep), to: Witchcraft.Monad.Protocol
 
-# Algae.Free
-# ==========
+  defdelegate bind(data, binder), to: Witchcraft.Monad.Function
+  defdelegate compose(fun_one, fun_two), to: Witchcraft.Monad.Function
 
-defimpl Witchcraft.Monad, for: Algae.Free.Shallow do
-  def join(shallow), do: shallow
-end
-
-defimpl Witchcraft.Monad, for: Algae.Free.Deep do
-  def join(deep), do: deep
+  defdelegate wrapped >>> fun, to: Witchcraft.Monad.Operator
+  defdelegate fun <<< wrapped, to: Witchcraft.Monad.Operator
 end
