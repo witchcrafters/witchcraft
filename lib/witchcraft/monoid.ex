@@ -1,47 +1,43 @@
-defmodule Witchcraft.Monoid do
-  @moduledoc ~S"""
-  Monoids are a set of elements, and a binary combining operation (`op`) that
-  returns another member of the set.
+import TypeClass
 
-  # Properties
+defclass Witchcraft.Monoid do
+  extend Witchcraft.Semigroup
 
-  ## Associativity
-
-  1. Given a binary joining operation `•`,
-  2. and all `a`, `b`, and `c` of the set,
-  3. then: `a • (b • c) == (a • b) • c`
-
-  ## Identity element
-
-  * Unique element (`id`, sometimes called the 'zero' of the set)
-  * Behaves as an identity with `op`
-
-      identity = 0
-      op = &(&1 + &2) # Integer addition
-      append(34, identity) == 34
-
-      identity = 1
-      append = &(&1 * &2) # Integer multiplication
-      append(42, identity) == 42
-
-  ## Counter-Example
-
-  Integer division is not a monoid.
-  Because you cannot divide by zero, the property does not hold
-  for all values in the set.
-  """
-
-  import Kernel, except: [<>: 2]
-
-  defmacro __using__(_) do
-    quote do
-      import Kernel, except: [<>: 2]
-      import unquote(__MODULE__)
-    end
+  where do
+    def empty(sample)
   end
 
-  defdelegate identity(a), to: Witchcraft.Monoid.Protocol
-  defdelegate append(a, b), to: Witchcraft.Monoid.Protocol
+  defdelegate zero(sample), to: Proto, as: :empty
 
-  defdelegate a <> b, to: Witchcraft.Monoid.Operator
+  properties do
+    def left_identity(data) do
+      a = generate(data)
+      Semigroup.concat(Monoid.empty(a), a) == a
+    end
+
+    def right_identity(data) do
+      a = generate(data)
+      Semigroup.concat(a, Monoid.empty(a)) == a
+    end
+  end
+end
+
+definst Witchcraft.Monoid, for: Tuple do
+  def empty(_), do: {}
+end
+
+definst Witchctaft.Monoid, for: BitString do
+  def empty(_), do: ""
+end
+
+definst Witchcraft.Monoid, for: Integer do
+  def empty(_), do: 0
+end
+
+definst Witchcraft.Monoid, for: List do
+  def empty(_), do: []
+end
+
+definst Witchcraft.Monoid, for: Map do
+  def empty(_), do: %{}
 end

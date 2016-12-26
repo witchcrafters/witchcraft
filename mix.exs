@@ -30,7 +30,9 @@ defmodule Witchcraft.Mixfile do
 
         {:inch_ex,  "~> 0.5",  only: [:dev, :docs, :test]},
 
-        {:quark, "~> 2.1"}
+        {:operator,   "~> 0.2"},
+        {:quark,      "~> 2.1"},
+        {:type_class, "~> 1.0.0-alpha"}
       ],
 
       docs: [
