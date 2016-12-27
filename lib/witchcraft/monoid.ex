@@ -22,22 +22,30 @@ defclass Witchcraft.Monoid do
   end
 end
 
-definst Witchcraft.Monoid, for: Tuple do
-  def empty(_), do: {}
-end
+# definst Witchcraft.Monoid, for: Tuple do
+#   def empty(_), do: {}
+# end
 
-definst Witchctaft.Monoid, for: BitString do
-  def empty(_), do: ""
-end
+# definst Witchctaft.Monoid, for: BitString do
+#   def empty(_), do: ""
+# end
 
-definst Witchcraft.Monoid, for: Integer do
-  def empty(_), do: 0
-end
+# definst Witchcraft.Monoid, for: Integer do
+#   def empty(_), do: 0
+# end
 
-definst Witchcraft.Monoid, for: List do
-  def empty(_), do: []
-end
+# definst Witchcraft.Setoid, for: List do
+#   def equal?(a, b), do: a == b
+# end
 
-definst Witchcraft.Monoid, for: Map do
-  def empty(_), do: %{}
-end
+# definst Witchcraft.Semigroup, for: List do
+#   def concat(a, b), do: a ++ b
+# end
+
+# definst Witchcraft.Monoid, for: List do
+#   def empty(_), do: []
+# end
+
+# definst Witchcraft.Monoid, for: Map do
+#   def empty(_), do: %{}
+# end

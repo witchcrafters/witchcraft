@@ -1,12 +1,13 @@
 import TypeClass
 
 defclass Witchcraft.Semigroup do
-  use Operator
+  extend Witchcraft.Setoid
 
   where do
-    @operator :<|>
     def concat(a, b)
   end
+
+  defdelegate a <|> b, to: Proto, as: :concat
 
   properties do
     def associative(data) do

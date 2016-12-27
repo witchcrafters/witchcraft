@@ -28,11 +28,12 @@ defmodule Witchcraft.Mixfile do
         {:earmark,  "~> 1.0",  only: :dev},
         {:ex_doc,   "~> 0.13", only: :dev},
 
-        {:inch_ex,  "~> 0.5",  only: [:dev, :docs, :test]},
+        {:inch_ex, "~> 0.5",  only: [:dev, :docs, :test]},
 
         {:operator,   "~> 0.2"},
         {:quark,      "~> 2.1"},
-        {:type_class, "~> 1.0.0-alpha"}
+        {:type_class, github: "expede/type_class", branch: "master"}
+        # {:type_class, "~> 1.0.0-alpha"}
       ],
 
       docs: [

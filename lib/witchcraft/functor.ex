@@ -1,6 +1,8 @@
 import TypeClass
 
 defclass Witchcraft.Functor do
+  extend Witchcraft.Setoid
+
   where do
     def lift(wrapped, fun)
   end
@@ -21,7 +23,7 @@ defclass Witchcraft.Functor do
       f = fn x -> data == x end
       g = fn x -> data != x end
 
-      x = wrapped |> Functor.lift(fn z -> z |> g |> f end)
+      x = wrapped |> Functor.lift(fn z -> z |> g.() |> f.() end)
       y = wrapped |> Functor.lift(g) |> Functor.lift(f)
 
       x == y

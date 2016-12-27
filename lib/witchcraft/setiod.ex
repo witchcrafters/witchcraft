@@ -11,7 +11,6 @@ defclass Witchcraft.Setoid do
       a |> Setoid.equal?(a)
     end
 
-    a.equals(b) === b.equals(a) (symmetry)
     def symmetry(data) do
       a = generate(data)
       b = generate(data)
@@ -20,11 +19,13 @@ defclass Witchcraft.Setoid do
     end
 
     def transitivity(data) do
-      a = generate(data)
-      b = generate(data)
-      c = generate(data)
+      a = b = c = generate(data)
 
-      Setoid.equal?(a, b) && Setoid.equal?(b, c) && Setoid.equal?(a, c)
+      Setoid.equal?(a, b) and Setoid.equal?(b, c) and Setoid.equal?(a, c)
     end
   end
+end
+
+definst Witchcraft.Setoid, for: List do
+  def equal?(a, b), do: a == b
 end
