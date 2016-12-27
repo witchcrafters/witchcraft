@@ -32,8 +32,7 @@ defmodule Witchcraft.Mixfile do
 
         {:operator,   "~> 0.2"},
         {:quark,      "~> 2.1"},
-        {:type_class, github: "expede/type_class", branch: "trying"}
-        # {:type_class, "~> 1.0.0-alpha"}
+        {:type_class, "~> 1.0.0-alpha3"}
       ],
 
       docs: [
