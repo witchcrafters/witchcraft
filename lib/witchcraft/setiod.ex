@@ -26,6 +26,22 @@ defclass Witchcraft.Setoid do
   end
 end
 
+definst Witchcraft.Setoid, for: Integer do
+  def equal?(a, b), do: a == b
+end
+
+definst Witchcraft.Setoid, for: BitString do
+  def equal?(a, b), do: a == b
+end
+
+definst Witchcraft.Setoid, for: Tuple do
+  def equal?(a, b), do: a == b
+end
+
 definst Witchcraft.Setoid, for: List do
+  def equal?(a, b), do: a == b
+end
+
+definst Witchcraft.Setoid, for: Map do
   def equal?(a, b), do: a == b
 end
