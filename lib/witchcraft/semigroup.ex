@@ -66,7 +66,7 @@ defclass Witchcraft.Semigroup do
     def concat(a, b)
   end
 
-  defdelegate a <> b, to: :concat
+  defalias a <> b, as: :concat
 
   @doc ~S"""
   Repeat the contents of a semigroup a certain number of times

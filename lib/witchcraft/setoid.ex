@@ -25,7 +25,7 @@ defclass Witchcraft.Setoid do
     def equal?(a, b)
   end
 
-  defdelegate a == b, to: :equal?
+  defalias a == b, [as: :equal?]
 
   properties do
     def reflexivity(data) do
