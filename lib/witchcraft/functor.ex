@@ -23,12 +23,6 @@ defclass Witchcraft.Functor do
       x = wrapped |> Functor.lift(fn x -> x |> g.() |> f.() end)
       y = wrapped |> Functor.lift(g) |> Functor.lift(f)
 
-      if x !=y do
-        IO.puts("==> #{inspect x}")
-        IO.puts("==> #{inspect y}")
-        IO.puts(">>> #{inspect (y == x)}")
-      end
-
       x == y
     end
   end
