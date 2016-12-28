@@ -5,7 +5,8 @@ defclass Witchcraft.Functor do
     def lift(wrapped, fun)
   end
 
-  defdelegate map(wrapped, fun), to: Proto, as: :lift
+  defalias map(wrapped, fun), as: :lift
+  defalias fmap(wrapped, fun), as: :lift
 
   properties do
     def identity(data) do
