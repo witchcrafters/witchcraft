@@ -39,6 +39,11 @@ definst Witchcraft.Monoid, for: Integer do
   def empty(_), do: 0
 end
 
+definst Witchcraft.Monoid, for: Float do
+  def empty(_), do: 0.0
+end
+
+
 definst Witchcraft.Monoid, for: BitString do
   def empty(_), do: ""
 end
