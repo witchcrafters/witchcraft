@@ -15,11 +15,12 @@ defclass Witchcraft.Functor do
 
     def composition(data) do
       wrapped = generate(data)
+      IO.puts (inspect wrapped )
 
-      f = fn x -> data == x end
-      g = fn x -> data != x end
+      f = fn x -> inspect(wrapped == x) end
+      g = fn x -> inspect(wrapped != x) end
 
-      x = wrapped |> Functor.lift(fn z -> z |> g.() |> f.() end)
+      x = wrapped |> Functor.lift(fn x -> x |> g.() |> f.() end)
       y = wrapped |> Functor.lift(g) |> Functor.lift(f)
 
       x == y
@@ -31,14 +32,14 @@ definst Witchcraft.Functor, for: List do
   def lift(list, fun), do: list |> Enum.map(fun)
 end
 
-definst Witchcraft.Functor, for: BitString do
-  def lift(string, fun) do
-    string
-    |> String.to_charlist
-    |> Witchcraft.Functor.lift(fun)
-    |> String.from_list
-  end
-end
+# definst Witchcraft.Functor, for: BitString do
+#   def lift(string, fun) do
+#     string
+#     |> String.to_charlist
+#     |> Witchcraft.Functor.lift(fun)
+#     |> List.to_string
+#   end
+# end
 
 definst Witchcraft.Functor, for: Tuple do
   def lift(tuple, fun) do

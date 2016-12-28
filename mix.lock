@@ -9,4 +9,4 @@
   "operator": {:hex, :operator, "0.2.0", "b613bdb520a20dbc016d921d444fd2ef2212136be9385d6dca448a2a38d0577f", [:mix], []},
   "poison": {:hex, :poison, "3.0.0", "625ebd64d33ae2e65201c2c14d6c85c27cc8b68f2d0dd37828fde9c6920dd131", [:mix], []},
   "quark": {:hex, :quark, "2.2.0", "56c231db44aea238e383472be3f909d4904a013c622631faafe97b001af146f1", [], []},
-  "type_class": {:hex, :type_class, "1.0.0-alpha3", "da3662a8f5ddf0715dbe52e2f2aa5e331e68b7debc8260ca5ad8e2e169ce4369", [:mix], []}}
+  "type_class": {:git, "https://github.com/expede/type_class.git", "3bd4faae901b550da4ef880027ec8520c5b81b2a", [branch: "better_ast"]}}

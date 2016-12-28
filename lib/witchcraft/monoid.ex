@@ -1,6 +1,19 @@
 import TypeClass
 
 defclass Witchcraft.Monoid do
+  @moduledoc ~S"""
+  Monoid extends the semigroup with the concept of an "empty" or "zero" element.
+
+  ## Examples
+
+      iex> empty(10)
+      0
+
+      iex> empty [1, 2, 3, 4, 5]
+      []
+
+  """
+
   extend Witchcraft.Semigroup, alias: true
 
   where do

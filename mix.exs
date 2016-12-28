@@ -5,9 +5,9 @@ defmodule Witchcraft.Mixfile do
     [
       app:  :witchcraft,
       name: "Witchcraft",
-      description: "Common algebraic structures and functions",
+      description: "Common algebras (monoids, functors, monads, &c)",
 
-      version: "0.5.0",
+      version: "0.6.0",
       elixir:  "~> 1.3",
 
       package: [
@@ -32,7 +32,7 @@ defmodule Witchcraft.Mixfile do
 
         {:operator,   "~> 0.2"},
         {:quark,      "~> 2.1"},
-        {:type_class, "~> 1.0.0-alpha3"}
+        {:type_class, github: "expede/type_class", branch: "better_ast"}
       ],
 
       docs: [
