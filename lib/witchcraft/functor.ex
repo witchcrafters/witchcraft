@@ -1,12 +1,22 @@
 import TypeClass
 
 defclass Witchcraft.Functor do
+  @moduledoc ~S"""
+
+  """
+
   where do
+    @doc ~S"""
+
+    """
     def lift(wrapped, fun)
   end
 
   defalias map(wrapped, fun), as: :lift
   defalias fmap(wrapped, fun), as: :lift
+
+  defalias data ~> fun, as: :lift
+  def fun <~ data, do: data ~> fun
 
   properties do
     def identity(data) do
