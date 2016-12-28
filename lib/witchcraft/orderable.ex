@@ -2,7 +2,6 @@ import TypeClass
 
 defclass Witchcraft.Orderable do
   extend Witchcraft.Setoid
-  extend Witchcraft.Monoid
 
   where do
     def compare(a, b)
@@ -65,7 +64,7 @@ definst Witchcraft.Orderable, for: List do
   alias Witchcraft.Orderable.Order
 
   def compare([], []), do: Order.equal
-  def compare(a, []),  do: Order.greater
+  def compare(_a, []), do: Order.greater
   def compare([], b) when is_list(b), do: Order.lesser
   def compare(a, b)  when is_list(b) do
     case compare(a, b) do

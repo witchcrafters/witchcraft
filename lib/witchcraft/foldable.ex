@@ -138,7 +138,7 @@ defclass Witchcraft.Foldable do
 
   @spec min(Foldable.t, by: ((any, any) -> Order.t)) :: any | Maybe.t
   def min(foldable, by: comparitor) do
-    foldr(foldable_comparable, fn(focus, acc) ->
+    foldr(foldable, fn(focus, acc) ->
       case comparitor.(focus, acc) do
         %Order.Greater{} -> focus
         _ -> acc
@@ -186,8 +186,8 @@ defclass Witchcraft.Foldable do
   # Map a function over all the elements of a container and concatenate the resulting lists.
   def concat_map(foldable, a_to_list_b) do
     foldable
+    |> foldr(fn(inner_focus, acc) -> a_to_list_b.(inner_focus) <> acc end)
     |> concat
-    |> foldr(focus, fn(inner_focus, acc) -> a_to_list_b.(inner_focus) <> acc end)
   end
 
   # all? returns the conjunction of a container of Bools. For the result to be True, the container must be finite; False, however, results from a False value finitely far from the left end.
@@ -196,7 +196,7 @@ defclass Witchcraft.Foldable do
 
   @spec all?(Foldable.t, (any -> boolean)) :: boolean
   def all?(foldable, predicate) do
-    foldr(foldable_bools, true, fn(focus, acc) -> predicate.(focus) and acc end)
+    foldr(foldable, true, fn(focus, acc) -> predicate.(focus) and acc end)
   end
 
   # or :: Foldable t => t Bool -> Bool Source #
@@ -206,7 +206,7 @@ defclass Witchcraft.Foldable do
 
   @spec any?(Foldable.t, (any -> boolean)) :: boolean
   def any?(foldable, predicate) do
-    foldr(foldable_bools, false, fn(focus, acc) -> predicate.(focus) or acc end)
+    foldr(foldable, false, fn(focus, acc) -> predicate.(focus) or acc end)
   end
 
   # People are working on Foldable properties

@@ -37,22 +37,37 @@ defmodule Witchcraft.Orderable.Order do
   end
 end
 
-definst Witchcraft.Setoid, for: Witchcraft.Data.Order.Greater do
-  def equal?(_greater, comparee) do
-    comparee == %Witchcraft.Orderable.Order.Greater{}
-  end
+defimpl TypeClass.Property.Generator, for: Witchcraft.Orderable.Order.Greater do
+  alias Witchcraft.Orderable.Order
+  def generate(_), do: Order.greater
 end
 
-definst Witchcraft.Setoid, for: Witchcraft.Data.Order.Lesser do
-  def equal?(_lesser, comparee) do
-    comparee == %Witchcraft.Orderable.Order.Lesser{}
-  end
+defimpl TypeClass.Property.Generator, for: Witchcraft.Orderable.Order.Lesser do
+  alias Witchcraft.Orderable.Order
+  def generate(_), do: Order.lesser
 end
 
-definst Witchcraft.Setoid, for: Witchcraft.Data.Order.Equal do
-  def equal?(_equal, comparee) do
-    comparee == %Witchcraft.Orderable.Order.Equal{}
-  end
+defimpl TypeClass.Property.Generator, for: Witchcraft.Orderable.Order.Equal do
+  alias Witchcraft.Orderable.Order
+  def generate(_), do: Order.equal
+end
+
+definst Witchcraft.Setoid, for: Witchcraft.Orderable.Order.Greater do
+  alias Witchcraft.Orderable.Order
+  def equal?(_greater, %Order.Greater{}), do: true
+  def equal?(_greater, _other), do: false
+end
+
+definst Witchcraft.Setoid, for: Witchcraft.Orderable.Order.Lesser do
+  alias Witchcraft.Orderable.Order
+  def equal?(_lesser, %Order.Lesser{}), do: true
+  def equal?(_lesser, _other), do: false
+end
+
+definst Witchcraft.Setoid, for: Witchcraft.Orderable.Order.Equal do
+  alias Witchcraft.Orderable.Order
+  def equal?(_equal, %Order.Equal{}), do: true
+  def equal?(_equal, _other), do: false
 end
 
 definst Witchcraft.Orderable, for: Witchcraft.Orderable.Order.Greater do
