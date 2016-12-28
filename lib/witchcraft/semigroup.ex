@@ -2,9 +2,9 @@ import TypeClass
 
 defclass Witchcraft.Semigroup do
   @moduledoc ~S"""
-  A semigroup is a structure describing data that can be concatenated with others of its type.
-  That is to say that concatenating two lists returns a list, concatenating two
-  maps returns a map, concatenating two integers returns an integer, and so on.
+  A semigroup is a structure describing data that can be appendenated with others of its type.
+  That is to say that appending another list returns a list, appending one map
+  to another returns a map, and appending two integers returns an integer, and so on.
 
   These can be chained together an arbitrary number of times. For example:
 
@@ -29,18 +29,18 @@ defclass Witchcraft.Semigroup do
 
   where do
     @doc ~S"""
-    `concat`enate two data of the same type. Can be chained an arbitrary number of times.
+    `append`enate two data of the same type. Can be chained an arbitrary number of times.
     These can be chained together an arbitrary number of times. For example:
 
-        iex> 1 |> concat(2) |> concat(3)
+        iex> 1 |> append(2) |> append(3)
         6
 
         iex> [1, 2, 3]
-        ...> |> concat([4, 5, 6])
-        ...> |> concat([7, 8, 9])
+        ...> |> append([4, 5, 6])
+        ...> |> append([7, 8, 9])
         [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-        iex> "foo" |> concat(" ") |> concat("bar")
+        iex> "foo" |> append(" ") |> append("bar")
         "foo bar"
 
     ## Operator
@@ -63,10 +63,27 @@ defclass Witchcraft.Semigroup do
     now available on more datatypes.
 
     """
-    def concat(a, b)
+    def append(a, b)
   end
 
-  defalias a <> b, as: :concat
+  defalias a <> b, as: :append
+
+  @doc ~S"""
+  Flatten a list of homogeneous semigroups to a single container
+
+  ## Example
+
+      iex> concat [[1, 2, 3], [4, 5, 6]]
+      [1, 2, 3, 4, 5, 6]
+
+      iex> concat [%{a: 1, b: 2}, %{c: 3. d: 4}, %{e: 5, f: 6}]
+      %{a: 1, b: 2, c: 3: d: 4, e: 5, f: 6}
+
+  """
+  @spec concat([Semigroup.t]) :: Semigroup.t
+  def concat(list_xs) when is_list(list_xs) do
+    Witchcraft.Foldable.fold(list_xs, &Semigroup.append/2)
+  end
 
   @doc ~S"""
   Repeat the contents of a semigroup a certain number of times
@@ -81,7 +98,7 @@ defclass Witchcraft.Semigroup do
   def repeat(to_repeat, times: times) do
     Stream.repeatedly(fn _ -> to_repeat end)
     |> Stream.take(times)
-    |> Enum.reduce(&Semigroup.concat/2)
+    |> Enum.reduce(&Semigroup.append/2)
   end
 
   properties do
@@ -90,8 +107,8 @@ defclass Witchcraft.Semigroup do
       b = generate(data)
       c = generate(data)
 
-      left  = a |> Semigroup.concat(b) |> Semigroup.concat(c)
-      right = Semigroup.concat(a, Semigroup.concat(b, c))
+      left  = a |> Semigroup.append(b) |> Semigroup.append(c)
+      right = Semigroup.append(a, Semigroup.append(b, c))
 
       if is_float(left) and is_float(right) do
         # This is a special case!
@@ -108,21 +125,21 @@ defclass Witchcraft.Semigroup do
 end
 
 definst Witchcraft.Semigroup, for: Integer do
-  def concat(a, b) when is_integer(b), do: a + b
+  def append(a, b) when is_integer(b), do: a + b
 end
 
 definst Witchcraft.Semigroup, for: Float do
-  def concat(a, b) when is_float(b), do: a + b
+  def append(a, b) when is_float(b), do: a + b
 end
 
 definst Witchcraft.Semigroup, for: BitString do
-  def concat(a, b) when is_bitstring(b), do: Kernel.<>(a, b)
+  def append(a, b) when is_bitstring(b), do: Kernel.<>(a, b)
 end
 
 definst Witchcraft.Semigroup, for: List do
-  def concat(a, b) when is_list(b), do: a ++ b
+  def append(a, b) when is_list(b), do: a ++ b
 end
 
 definst Witchcraft.Semigroup, for: Map do
-  def concat(a, b) when is_map(b), do: Map.merge(a, b)
+  def append(a, b) when is_map(b), do: Map.merge(a, b)
 end

@@ -2,7 +2,8 @@ import TypeClass
 
 defclass Witchcraft.Functor do
   @moduledoc ~S"""
-  Functors ______ class is used for types that can be mapped over.
+  Functors are datatypes that allow the application of functions to their interior values.
+  Always returns data in the same structure (same size, leaves, &c)
 
   Please note that bitstrings are not functors, as they fail the
   functor composition constraint. They change the structure of the underlying data,
@@ -24,10 +25,10 @@ defclass Witchcraft.Functor do
         %{a: 10, b: 20}
 
         iex> lift(%{a: 2, b: [1, 2, 3]}, fn
-        ...>   {key, int} when is_integer(int) -> {key, int * 100}
-        ...>   {:b, value} -> {:z, inspect(value)}
+        ...>   int when is_integer(int) -> int * 100
+        ...>   value -> inspect(value)
         ...> end)
-        %{a: 200, z: "[1, 2, 3]"}
+        %{a: 200, b: "[1, 2, 3]"}
 
     """
     def lift(wrapped, fun)
@@ -54,7 +55,7 @@ defclass Witchcraft.Functor do
 
   ## Examples
 
-      iex> fn x -> x + 5 end <~ [1,2,3]
+      iex> (fn x -> x + 5 end) <~ [1,2,3]
       [6, 7, 8]
 
   """
