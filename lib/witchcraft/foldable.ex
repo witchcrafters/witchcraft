@@ -17,6 +17,8 @@ defclass Witchcraft.Foldable do
   alias Witchcraft.Orderable
   alias Witchcraft.Orderable.Order
 
+  import Kernel, except: [length: 1, max: 2, min: 2]
+
   use Exceptional
   use Quark
 
@@ -24,7 +26,7 @@ defclass Witchcraft.Foldable do
 
   defmacro __using__(_) do
     quote do
-      import Kernel, except: [length: 1]
+      import Kernel, except: [length: 1, max: 2, min: 2]
       import unquote(__MODULE__)
     end
   end
@@ -47,7 +49,7 @@ defclass Witchcraft.Foldable do
         15
 
     """
-    @spec foldr(Foldable.t, any, ((any, any) -> any))
+    @spec foldr(Foldable.t, any, ((any, any) -> any)) :: any
     def foldr(foldable, seed, reducer)
   end
 
@@ -62,7 +64,7 @@ defclass Witchcraft.Foldable do
   @spec fold_map(Foldable.t, fun) :: any
   def fold_map(foldable, fun) do
     import Witchcraft.Monoid
-    foldable |> foldr(empty(wrapped), fn x, acc -> f.(x) <> acc end)
+    foldable |> foldr(empty(foldable), fn(x, acc) -> fun.(x) <> acc end)
   end
 
   @spec fold(Foldable.t) :: any
@@ -81,12 +83,9 @@ defclass Witchcraft.Foldable do
 
   #     foldl f z = foldl f z . toList
   def foldl(foldable, seed, reducer) do
-    build_reflow =
-      fn(seed_focus, acc) ->
-        fn focus -> seed_focus.(reducer.(focus, acc)) end
-      end
-
-    foldr(foldable, &Quark.id/1, inner_reducer)
+    foldr(foldable, &Quark.id/1, fn(seed_focus, acc) ->
+      fn focus -> seed_focus.(reducer.(focus, acc)) end
+    end)
   end
 
   # foldl1 :: (a -> a -> a) -> t a -> a Source #
@@ -100,14 +99,14 @@ defclass Witchcraft.Foldable do
 
   # toList :: t a -> [a] Source #
   # List of elements of a structure, from left to right.
-  @spec to_list(Foldable.t)
+  @spec to_list(Foldable.t) :: [any]
   def to_list(foldable), do: foldr(foldable, [], fn(x, acc) -> [x | acc] end)
 
   @spec empty?(Foldable.t) :: boolean
   def empty?(foldable), do: foldr(foldable, true, fn(_focus, _acc) -> false end)
 
   # Returns the size/length of a finite structure as an Int. The default implementation is optimized for structures that are similar to cons-lists, because there is no general way to do better.
-  @spec length(foldable) :: non_neg_integer
+  @spec length(Foldable.t) :: non_neg_integer
   def length(list) when is_list(list), do: Kernel.length(list)
   def length(foldable), do: foldr(foldable, 0, fn(_, acc) -> 1 + acc end)
 
@@ -120,7 +119,7 @@ defclass Witchcraft.Foldable do
 
   @spec max(Foldable.t, by: ((any, any) -> Order.t)) :: Maybe.t
   def max(foldable, by: comparator) do
-    foldr(foldable_comparable, fn(focus, acc) ->
+    foldr(foldable, fn(focus, acc) ->
       case comparator.(focus, acc) do
         %Order.Greater{} -> focus
         _ -> acc
@@ -147,7 +146,11 @@ defclass Witchcraft.Foldable do
     end)
   end
 
+  def min(foldable), do: min(foldable, by: &Orderable.compare/2)
+
   def min!(foldable, by: comparator), do: foldable |> min(by: comparator) |> ensure!
+
+  def min!(foldable), do: foldable |> min |> ensure!
 
   @spec random(Foldable.t) :: any | Foldable.EmptyError.t
   def random(foldable) do
@@ -161,7 +164,7 @@ defclass Witchcraft.Foldable do
   end
 
   @spec sum(Foldable.t) :: number
-  def sum(foldable) do: foldr(foldable, 0, &+/2)
+  def sum(foldable), do: foldr(foldable, 0, &+/2)
 
   @spec product(Foldable.t) :: number
   def product(foldable), do: foldr(foldable, 0, &*/2)

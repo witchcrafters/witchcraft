@@ -17,6 +17,8 @@ defclass Witchcraft.Monoid do
   alias Witchcraft.Monoid
   extend Witchcraft.Semigroup, alias: true
 
+  @type t :: any
+
   where do
     @doc ~S"""
     An "emptied out" or "starting position" of the passed data
@@ -41,12 +43,12 @@ defclass Witchcraft.Monoid do
   properties do
     def left_identity(data) do
       a = generate(data)
-      Semigroup.concat(Monoid.empty(a), a) == a
+      Semigroup.append(Monoid.empty(a), a) == a
     end
 
     def right_identity(data) do
       a = generate(data)
-      Semigroup.concat(a, Monoid.empty(a)) == a
+      Semigroup.append(a, Monoid.empty(a)) == a
     end
   end
 end

@@ -1,3 +1,5 @@
+import TypeClass
+
 defmodule Witchcraft.Orderable.Order do
   @type t :: Equal.t | Greater.t | Less.t
 

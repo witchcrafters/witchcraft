@@ -30,9 +30,10 @@ defmodule Witchcraft.Mixfile do
 
         {:inch_ex, "~> 0.5",  only: [:dev, :docs, :test]},
 
-        {:algae,      "~> 0.12"}
-        {:operator,   "~> 0.2"},
-        {:quark,      "~> 2.1"},
+        {:algae,       "~> 0.12"},
+        {:exceptional, "~> 2.0"},
+        {:operator,    "~> 0.2"},
+        {:quark,       "~> 2.1"},
         {:type_class, github: "expede/type_class"}
       ],
 
