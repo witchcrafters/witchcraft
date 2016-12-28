@@ -14,6 +14,7 @@ defclass Witchcraft.Monoid do
 
   """
 
+  alias Witchcraft.Monoid
   extend Witchcraft.Semigroup, alias: true
 
   where do
@@ -33,6 +34,9 @@ defclass Witchcraft.Monoid do
   end
 
   defdelegate zero(sample), to: Proto, as: :empty
+
+  @spec empty?(Monoid.t) :: boolean
+  def empty?(monoid), do: empty(monoid) == monoid
 
   properties do
     def left_identity(data) do

@@ -2,19 +2,72 @@ import TypeClass
 
 defclass Witchcraft.Foldable do
   @moduledoc ~S"""
+  Data that can be folded over to change its structure by altering or combining elements
+
+  ## Examples
+
+      iex> sum = fn nums -> foldr(sums, 0, &+/2) end
+      ...> sum.([1, 2, 3])
+      6
+      ...> sum.([4, 5, 6])
+      15
+
   """
 
+  alias Witchcraft.Orderable
+  alias Witchcraft.Orderable.Order
+
+  use Exceptional
+  use Quark
+
+  @type t :: any
+
+  defmacro __using__(_) do
+    quote do
+      import Kernel, except: [length: 1]
+      import unquote(__MODULE__)
+    end
+  end
+
   where do
-    @doc "reducer must be a binary function"
+    @doc ~S"""
+    Right-associative fold over a structure to alter the structure and/or reduce
+    it to a single summary value. The right-association makes it possible to
+    cease computation on infinite streams of data.
+
+    The reducer must be a binary function, with the second argument being the
+    accumulated value thus far.
+
+    ## Examples
+
+        iex> sum = fn nums -> foldr(sums, 0, &+/2) end
+        ...> sum.([1, 2, 3])
+        6
+        ...> sum.([4, 5, 6])
+        15
+
+    """
+    @spec foldr(Foldable.t, any, ((any, any) -> any))
     def foldr(foldable, seed, reducer)
   end
 
-  def fold() do
-    # fold :: Monoid m => t m -> m Source #
-    # Combine the elements of a structure using a monoid.
+  # foldr1 in Haskell
+  @spec foldr(Foldable.t, fun) :: any
+  def foldr(foldable, reducer) do
+    foldable
+    |> to_list
+    |> foldr(reducer)
   end
 
-  def foldl() do
+  @spec fold_map(Foldable.t, fun) :: any
+  def fold_map(foldable, fun) do
+    import Witchcraft.Monoid
+    foldable |> foldr(empty(wrapped), fn x, acc -> f.(x) <> acc end)
+  end
+
+  @spec fold(Foldable.t) :: any
+  def fold(foldable), do: foldable |> fold_map(&Quark.id/1)
+
   #   Left-associative fold of a structure.
 
   #   In the case of lists, foldl, when applied to a binary operator, a starting value (typically the left-identity of the operator), and a list, reduces the list using the binary operator, from left to right:
@@ -27,122 +80,132 @@ defclass Witchcraft.Foldable do
   #   For a general Foldable structure this should be semantically identical to,
 
   #     foldl f z = foldl f z . toList
+  def foldl(foldable, seed, reducer) do
+    build_reflow =
+      fn(seed_focus, acc) ->
+        fn focus -> seed_focus.(reducer.(focus, acc)) end
+      end
+
+    foldr(foldable, &Quark.id/1, inner_reducer)
   end
 
-  def foldr/2 do
-    # foldr1 :: (a -> a -> a) -> t a -> a Source #
-
-    # A variant of foldr that has no base case, and thus may only be applied to non-empty structures.
-
-    # foldr1 f = foldr1 f . toList
+  # foldl1 :: (a -> a -> a) -> t a -> a Source #
+  # A variant of foldl that has no base case, and thus may only be applied to non-empty structures.
+  # foldl1 f = foldl1 f . toList
+  def foldl(foldable, reducer) do
+    foldable
+    |> to_list
+    |> foldl(reducer)
   end
 
-  def foldl/2 do
-    # foldl1 :: (a -> a -> a) -> t a -> a Source #
+  # toList :: t a -> [a] Source #
+  # List of elements of a structure, from left to right.
+  @spec to_list(Foldable.t)
+  def to_list(foldable), do: foldr(foldable, [], fn(x, acc) -> [x | acc] end)
 
-    # A variant of foldl that has no base case, and thus may only be applied to non-empty structures.
+  @spec empty?(Foldable.t) :: boolean
+  def empty?(foldable), do: foldr(foldable, true, fn(_focus, _acc) -> false end)
 
-    # foldl1 f = foldl1 f . toList
+  # Returns the size/length of a finite structure as an Int. The default implementation is optimized for structures that are similar to cons-lists, because there is no general way to do better.
+  @spec length(foldable) :: non_neg_integer
+  def length(list) when is_list(list), do: Kernel.length(list)
+  def length(foldable), do: foldr(foldable, 0, fn(_, acc) -> 1 + acc end)
+
+  defalias count(foldable), as: :length
+  defalias size(foldable),  as: :length
+
+  def elem(foldable, target) do
+    foldr(foldable, false, fn(focus, acc) -> acc or (focus == target) end)
   end
 
-  def to_list() do
-    toList :: t a -> [a] Source #
-
-    List of elements of a structure, from left to right.
+  @spec max(Foldable.t, by: ((any, any) -> Order.t)) :: Maybe.t
+  def max(foldable, by: comparator) do
+    foldr(foldable_comparable, fn(focus, acc) ->
+      case comparator.(focus, acc) do
+        %Order.Greater{} -> focus
+        _ -> acc
+      end
+    end)
   end
 
-  def empty?() do
-    # null :: t a -> Bool Source #
+  @spec max(Foldable.t) :: any
+  def max(foldable_comparable), do: max(foldable_comparable, by: &Orderable.compare/2)
 
-    # Test whether the structure is empty. The default implementation is optimized for structures that are similar to cons-lists, because there is no general way to do better.
+  def max!(foldable, by: comparator), do: foldable |> max(by: comparator) |> ensure!
+
+  def max!(foldable), do: foldable |> max |> ensure!
+
+  # The largest element of a non-empty structure.
+
+  @spec min(Foldable.t, by: ((any, any) -> Order.t)) :: any | Maybe.t
+  def min(foldable, by: comparitor) do
+    foldr(foldable_comparable, fn(focus, acc) ->
+      case comparitor.(focus, acc) do
+        %Order.Greater{} -> focus
+        _ -> acc
+      end
+    end)
   end
 
-  def length do
-    length :: t a -> Int Source #
+  def min!(foldable, by: comparator), do: foldable |> min(by: comparator) |> ensure!
 
-    Returns the size/length of a finite structure as an Int. The default implementation is optimized for structures that are similar to cons-lists, because there is no general way to do better.
+  @spec random(Foldable.t) :: any | Foldable.EmptyError.t
+  def random(foldable) do
+    foldable
+    |> to_list
+    |> safe(Enum.random).()
+    |> case do
+         %Enum.EmptyError{} -> Foldable.EmptyError.new(foldable)
+         value -> value
+       end
   end
 
-  def elem do
-    elem :: Eq a => a -> t a -> Bool infix 4 Source #
+  @spec sum(Foldable.t) :: number
+  def sum(foldable) do: foldr(foldable, 0, &+/2)
 
-      Does the element occur in the structure?
+  @spec product(Foldable.t) :: number
+  def product(foldable), do: foldr(foldable, 0, &*/2)
+
+  # Map each element of the structure to a monoid, and combine the results.
+  @spec fold_map(Foldable.t, fun) :: any
+  def fold_map(foldable_monoid, fun) do
+    import Witchcraft.Monoid
+    foldr(foldable_monoid, empty(foldable_monoid), fn(focus, acc) ->
+      fun.(focus) <> acc
+    end)
   end
 
-  def max do
-    maximum :: forall a. Ord a => t a -> a Source #
+  # The concatenation of all the elements of a container of lists.
+  # Must be a monoid
+  def concat(contained_lists), do: foldr(contained_lists, &Witchcraft.Monoid.concat/2)
 
-    The largest element of a non-empty structure.
+  # concatMap :: Foldable t => (a -> [b]) -> t a -> [b] Source #
+  # Map a function over all the elements of a container and concatenate the resulting lists.
+  def concat_map(foldable, a_to_list_b) do
+    foldable
+    |> concat
+    |> foldr(focus, fn(inner_focus, acc) -> a_to_list_b.(inner_focus) <> acc end)
   end
 
-  def min do
-    maximum :: forall a. Ord a => t a -> a Source #
+  # all? returns the conjunction of a container of Bools. For the result to be True, the container must be finite; False, however, results from a False value finitely far from the left end.
+  @spec all?(Foldable.t) :: boolean
+  def all?(foldable_bools), do: foldr(foldable_bools, true, &and/2)
 
-    The largest element of a non-empty structure.
+  @spec all?(Foldable.t, (any -> boolean)) :: boolean
+  def all?(foldable, predicate) do
+    foldr(foldable_bools, true, fn(focus, acc) -> predicate.(focus) and acc end)
   end
 
-  def random do
-    maximum :: forall a. Ord a => t a -> a Source #
+  # or :: Foldable t => t Bool -> Bool Source #
+  # or returns the disjunction of a container of Bools. For the result to be False, the container must be finite; True, however, results from a True value finitely far from the left end.
+  @spec any?(Foldable.t) :: boolean
+  def any?(foldable_bools), do: foldr(foldable_bools, false, &or/2)
 
-    The largest element of a non-empty structure.
+  @spec any?(Foldable.t, (any -> boolean)) :: boolean
+  def any?(foldable, predicate) do
+    foldr(foldable_bools, false, fn(focus, acc) -> predicate.(focus) or acc end)
   end
 
-  def sum do
-    sum :: Num a => t a -> a Source #
-
-    The sum function computes the sum of the numbers of a structure.
-  end
-
-  def product do
-    product :: Num a => t a -> a Source #
-
-    The product function computes the product of the numbers of a structure.
-  end
-
-  def fold_map() do
-    # foldMap :: Monoid m => (a -> m) -> t a -> m Source #
-
-    # Map each element of the structure to a monoid, and combine the results.
-  end
-# concat :: Foldable t => t [a] -> [a] Source #
-
-# The concatenation of all the elements of a container of lists.
-
-# concatMap :: Foldable t => (a -> [b]) -> t a -> [b] Source #
-
-# Map a function over all the elements of a container and concatenate the resulting lists.
-
-# and :: Foldable t => t Bool -> Bool Source #
-
-# and returns the conjunction of a container of Bools. For the result to be True, the container must be finite; False, however, results from a False value finitely far from the left end.
-
-# or :: Foldable t => t Bool -> Bool Source #
-
-# or returns the disjunction of a container of Bools. For the result to be False, the container must be finite; True, however, results from a True value finitely far from the left end.
-
-# any :: Foldable t => (a -> Bool) -> t a -> Bool Source #
-
-# Determines whether any element of the structure satisfies the predicate.
-
-# all :: Foldable t => (a -> Bool) -> t a -> Bool Source #
-
-# Determines whether all elements of the structure satisfy the predicate.
-
-# maximumBy :: Foldable t => (a -> a -> Ordering) -> t a -> a Source #
-
-# The largest element of a non-empty structure with respect to the given comparison function.
-
-# minimumBy :: Foldable t => (a -> a -> Ordering) -> t a -> a Source #
-
-    # notElem :: (Foldable t, Eq a) => a -> t a -> Bool infix 4 Source #
-
-    #   notElem is the negation of elem.
-
-    #   find :: Foldable t => (a -> Bool) -> t a -> Maybe a Source #
-
-    #     The find function takes a predicate and a structure and returns the leftmost element of the structure matching the predicate, or Nothing if there is no such element.
-
-# The least element of a non-empty structure with respect to the given comparison function.
   # People are working on Foldable properties
   # The best answer so far is abstract and strongly typed
   # Ex. https://mail.haskell.org/pipermail/libraries/2015-February/024943.html
