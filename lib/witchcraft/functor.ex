@@ -15,7 +15,6 @@ defclass Witchcraft.Functor do
 
     def composition(data) do
       wrapped = generate(data)
-      IO.puts (inspect wrapped )
 
       f = fn x -> inspect(wrapped == x) end
       g = fn x -> inspect(wrapped != x) end
@@ -23,23 +22,20 @@ defclass Witchcraft.Functor do
       x = wrapped |> Functor.lift(fn x -> x |> g.() |> f.() end)
       y = wrapped |> Functor.lift(g) |> Functor.lift(f)
 
+      if x !=y do
+        IO.puts("==> #{inspect x}")
+        IO.puts("==> #{inspect y}")
+        IO.puts(">>> #{inspect (y == x)}")
+      end
+
       x == y
     end
   end
 end
 
 definst Witchcraft.Functor, for: List do
-  def lift(list, fun), do: list |> Enum.map(fun)
+  def lift(list, fun), do: Enum.map(list, fun)
 end
-
-# definst Witchcraft.Functor, for: BitString do
-#   def lift(string, fun) do
-#     string
-#     |> String.to_charlist
-#     |> Witchcraft.Functor.lift(fun)
-#     |> List.to_string
-#   end
-# end
 
 definst Witchcraft.Functor, for: Tuple do
   def lift(tuple, fun) do
@@ -51,5 +47,10 @@ definst Witchcraft.Functor, for: Tuple do
 end
 
 definst Witchcraft.Functor, for: Map do
-  def lift(map, fun), do: map |> Map.to_list |> Enum.into(%{})
+  def lift(map, fun) do
+    map
+    |> Map.to_list
+    |> Witchcraft.Functor.lift(fn {key, value} -> {key, fun.(value)} end)
+    |> Enum.into(%{})
+  end
 end

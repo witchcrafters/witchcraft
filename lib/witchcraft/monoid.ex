@@ -17,6 +17,18 @@ defclass Witchcraft.Monoid do
   extend Witchcraft.Semigroup, alias: true
 
   where do
+    @doc ~S"""
+    An "emptied out" or "starting position" of the passed data
+
+    ## Example
+
+        iex> empty(10)
+        0
+
+        iex> empty [1, 2, 3, 4, 5]
+        []
+
+    """
     def empty(sample)
   end
 
