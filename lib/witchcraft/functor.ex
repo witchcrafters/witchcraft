@@ -2,11 +2,32 @@ import TypeClass
 
 defclass Witchcraft.Functor do
   @moduledoc ~S"""
+  Functors ______ class is used for types that can be mapped over.
 
+  Please note that bitstrings are not functors, as they fail the
+  functor composition constraint. They change the structure of the underlying data,
+  and thus composed lifting does not equal lifing a composed function. If you
+  need to map over a bitstring, convert it to and from a charlist.
   """
 
   where do
     @doc ~S"""
+    `lift` a function into one layer of a data wrapper. Often called `map`
+    there is in fact there is a `map` alias.
+
+    ## Examples
+
+        iex> [1, 2, 3] |> lift(fn x -> x + 1 end)
+        [2, 3, 4]
+
+        iex> %{a: 1, b: 2} |> fn x -> x * 10 end
+        %{a: 10, b: 20}
+
+        iex> lift(%{a: 2, b: [1, 2, 3]}, fn
+        ...>   {key, int} when is_integer(int) -> {key, int * 100}
+        ...>   {:b, value} -> {:z, inspect(value)}
+        ...> end)
+        %{a: 200, z: "[1, 2, 3]"}
 
     """
     def lift(wrapped, fun)
@@ -15,7 +36,28 @@ defclass Witchcraft.Functor do
   defalias map(wrapped, fun), as: :lift
   defalias fmap(wrapped, fun), as: :lift
 
+  @doc ~S"""
+  Operator alias for `lift/2`
+
+  ## Example
+
+      iex> [1,2,3]
+      ...> ~> fn x -> x + 5 end
+      ...> ~> fn y -> y * 10 end
+      [60, 70, 80]
+
+  """
   defalias data ~> fun, as: :lift
+
+  @doc ~S"""
+  `<~/2` with arguments flipped
+
+  ## Examples
+
+      iex> fn x -> x + 5 end <~ [1,2,3]
+      [6, 7, 8]
+
+  """
   def fun <~ data, do: data ~> fun
 
   properties do
