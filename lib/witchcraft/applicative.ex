@@ -41,3 +41,7 @@ defclass Witchcraft.Applicative do
     end
   end
 end
+
+# definst Witchcraft.Applicative, for: Any do
+#   def wrap(fun) when is_function(fun), do: &Quark.SKI.k/1
+# end

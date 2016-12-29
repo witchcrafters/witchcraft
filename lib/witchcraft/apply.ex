@@ -50,6 +50,10 @@ defclass Witchcraft.Apply do
   end
 end
 
+# definst Witchcraft.Apply, for: Any do
+#   def ap(f, g) when is_function(f), do: fn x -> f.(x).(g.(x)) end
+# end
+
 # definst Witchcraft.Apply, for: List do
 #   def ap(fun_list, list) do
 #     Witchcraft.Foldable.fold(list, [], fn(item, acc) ->
