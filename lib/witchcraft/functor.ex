@@ -11,31 +11,39 @@ defclass Witchcraft.Functor do
   need to map over a bitstring, convert it to and from a charlist.
   """
 
+  alias __MODULE__
+
+  @type t :: any
+
   where do
     @doc ~S"""
-    `lift` a function into one layer of a data wrapper. Often called `map`
-    there is in fact there is a `map` alias.
+    `map` a function into one layer of a data wrapper.
+    There is an autocurrying variant: `lift/2`.
 
     ## Examples
 
-        iex> [1, 2, 3] |> lift(fn x -> x + 1 end)
+        iex> [1, 2, 3] |> map(fn x -> x + 1 end)
         [2, 3, 4]
 
         iex> %{a: 1, b: 2} |> fn x -> x * 10 end
         %{a: 10, b: 20}
 
-        iex> lift(%{a: 2, b: [1, 2, 3]}, fn
+        iex> map(%{a: 2, b: [1, 2, 3]}, fn
         ...>   int when is_integer(int) -> int * 100
         ...>   value -> inspect(value)
         ...> end)
         %{a: 200, b: "[1, 2, 3]"}
 
     """
-    def lift(wrapped, fun)
+    def map(wrapped, fun)
   end
 
-  defalias map(wrapped, fun), as: :lift
-  defalias fmap(wrapped, fun), as: :lift
+
+  @doc ~S"""
+  `map/2` but with the function automatically curried
+  """
+  @spec lift(Functor.t, fun) :: Functor.t
+  def lift(wrapped, fun), do: map(wrapped, Quark.curry(fun))
 
   @doc ~S"""
   Operator alias for `lift/2`
@@ -61,6 +69,18 @@ defclass Witchcraft.Functor do
   """
   def fun <~ data, do: data ~> fun
 
+  @doc ~S"""
+  Replace all inner elements with a constant value
+
+  ## Examples
+
+      iex> [1, 2, 3] |> replace("hi")
+      ["hi", "hi", "hi"]
+
+  """
+  @spec replace(Functor.t, any) :: Functor.t
+  def replace(wrapped, replace_with), do: wrapped ~> fn _ -> replace_with end
+
   properties do
     def identity(data) do
       wrapped = generate(data)
@@ -81,24 +101,29 @@ defclass Witchcraft.Functor do
   end
 end
 
+definst Witchcraft.Functor, for: Any do
+  def map(f, g) when is_function(f), do: Quark.compose(f, g)
+  def map(x, _), do: raise %Protocol.UndefinedError{protocol: Witchcraft.Functor, value: x}
+end
+
 definst Witchcraft.Functor, for: List do
-  def lift(list, fun), do: Enum.map(list, fun)
+  def map(list, fun), do: Enum.map(list, fun)
 end
 
 definst Witchcraft.Functor, for: Tuple do
-  def lift(tuple, fun) do
+  def map(tuple, fun) do
     tuple
     |> Tuple.to_list
-    |> Witchcraft.Functor.lift(fun)
+    |> Witchcraft.Functor.map(fun)
     |> List.to_tuple
   end
 end
 
 definst Witchcraft.Functor, for: Map do
-  def lift(map, fun) do
-    map
+  def map(hashmap, fun) do
+    hashmap
     |> Map.to_list
-    |> Witchcraft.Functor.lift(fn {key, value} -> {key, fun.(value)} end)
+    |> Witchcraft.Functor.map(fn {key, value} -> {key, fun.(value)} end)
     |> Enum.into(%{})
   end
 end

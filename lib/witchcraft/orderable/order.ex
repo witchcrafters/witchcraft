@@ -30,9 +30,9 @@ defmodule Witchcraft.Orderable.Order do
 
   defmacro is_order(item) do
     quote do
-      item == %Witchcraft.Orderable.Order.Greater{}
-      or item == %Witchcraft.Orderable.Order.Lesser{}
-      or item == %Witchcraft.Orderable.Order.Equal{}
+      unquote(item) == %Witchcraft.Orderable.Order.Greater{}
+      or unquote(item) == %Witchcraft.Orderable.Order.Lesser{}
+      or unquote(item) == %Witchcraft.Orderable.Order.Equal{}
     end
   end
 end

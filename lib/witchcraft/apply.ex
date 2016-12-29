@@ -1,37 +1,54 @@
-# defclass Witchcraft.Apply do
-#   extend Witchcraft.Functor
+import TypeClass
 
-#   where do
-#     def ap(wrapped_fun, wrapped)
-#   end
+defclass Witchcraft.Apply do
+  extend Witchcraft.Functor
 
-#   properties do
-#     def composition(data) do
-#       a = generate(data)
-#       b = Semigroup.concat(&inspect/1, Monoid.empty(a))
-#       c = Semigroup.concat(&String.first/1, Monoid.empty(a))
+  import Witchcraft.Functor
 
-#       left =
-#         b |> Apply.ap(
-#           c|> Apply.ap(
-#             a |> Witchcraft.Functor.lift(
-#               fn f ->
-#                 fn g ->
-#                   fn x ->
-#                     f.(g.(x))
-#                   end
-#                 end
-#               end
-#             )
-#           )
-#         )
+  defmacro __using__(_) do
+    quote do
+      import Witchcraft.Functor
+      import unquote(__MODULE__)
+    end
+  end
 
-#       right = b |> ap(c) |> ap(a)
+  where do
+    def ap(wrapped_funs, wrapped)
+  end
 
-#       left == right
-#     end
-#   end
-# end
+  def reverse_ap(wrapped, wrapped_funs), do: ap(wrapped_funs, wrapped)
+
+  defalias wrapped_funs <<~ wrapped, as: :ap
+  defalias wrapped ~>> wrapped_funs, as: :reverse_ap
+
+  def lift(a, fun, b), do: fun <~ a <<~ b
+  def lift(a, fun, b, c), do: fun <~ a <<~ b <<~ c
+  def lift(a, fun, b, c, d), do: fun <~ a <<~ b <<~ c <<~ d
+  def lift(a, fun, b, c, d, e), do: fun <~ a <<~ b <<~ c <<~ d <<~ e
+  def lift(a, fun, b, c, d, e, f), do: fun <~ a <<~ b <<~ c <<~ d <<~ e <<~ f
+  def lift(a, fun, b, c, d, e, f, g), do: fun <~ a <<~ b <<~ c <<~ d <<~ e <<~ f <<~ g
+  def lift(a, fun, b, c, d, e, f, g, h), do: fun <~ a <<~ b <<~ c <<~ d <<~ e <<~ f <<~ g <<~ h
+  def lift(a, fun, b, c, d, e, f, g, h, i), do: fun <~ a <<~ b <<~ c <<~ d <<~ e <<~ f <<~ g <<~ h <<~ i
+
+  properties do
+    def composition(data) do
+      alias Witchcraft.Functor
+
+      # Force strings
+      as = data |> generate |> Functor.lift(&inspect/1)
+
+      fs = data |> generate |> Functor.lift(fn x -> fn y -> inspect(y) <> "foo" <> x end end)
+      gs = data |> generate |> Functor.lift(fn x -> fn y -> x <> "bar" <> inspect(y) end end)
+      hs = data |> generate |> Functor.lift(fn x -> fn y -> x <> inspect(y) <> "baz" end end)
+      comps = data |> generate |> Functor.replace(&Quark.compose/2)
+
+      left  = fs    |> Apply.ap(as) |> Apply.ap(gs) |> Apply.ap(hs)
+      right = comps |> Apply.ap(hs) |> Apply.ap(gs) |> Apply.ap(as)
+
+      left == right
+    end
+  end
+end
 
 # definst Witchcraft.Apply, for: List do
 #   def ap(fun_list, list) do
