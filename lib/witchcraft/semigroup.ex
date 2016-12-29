@@ -82,7 +82,7 @@ defclass Witchcraft.Semigroup do
   """
   @spec concat([Semigroup.t]) :: Semigroup.t
   def concat(list_xs) when is_list(list_xs) do
-    Witchcraft.Foldable.fold(list_xs, &Semigroup.append/2)
+    Witchcraft.Foldable.foldr(list_xs, &Semigroup.append/2)
   end
 
   @doc ~S"""

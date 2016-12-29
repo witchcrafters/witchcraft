@@ -19,6 +19,26 @@ defclass Witchcraft.Monoid do
 
   @type t :: any
 
+  defmacro __using__(alias: true) do
+    quote do
+      use Witchcraft.Monoid, alias: Monoid
+    end
+  end
+
+  defmacro __using__(alias: as_alias) do
+    quote do
+      alias Witchcraft.Semigroup, as: unquote(as_alias)
+      alias Witchcraft.Monoid, as: unquote(as_alias)
+    end
+  end
+
+  defmacro __using__(_) do
+    quote do
+      import Witchcraft.Semigroup
+      import Witchcraft.Monoid
+    end
+  end
+
   where do
     @doc ~S"""
     An "emptied out" or "starting position" of the passed data

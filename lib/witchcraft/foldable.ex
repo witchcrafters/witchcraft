@@ -12,12 +12,25 @@ defclass Witchcraft.Foldable do
       ...> sum.([4, 5, 6])
       15
 
+  ## Properties
+
+  People are working on Foldable properties. This is one of the exceptions to
+  there needing to conform to properties.
+  The best closest property so far is abstract and strongly typed, so not
+  easily expressible in Elixir.
+  Ex. https://mail.haskell.org/pipermail/libraries/2015-February/024943.html
+
   """
+
+  alias __MODULE__
 
   alias Witchcraft.Orderable
   alias Witchcraft.Orderable.Order
+  alias Witchcraft.Semigroup
 
   import Kernel, except: [length: 1, max: 2, min: 2]
+
+  require Foldable.EmptyError
 
   use Exceptional
   use Quark
@@ -68,7 +81,7 @@ defclass Witchcraft.Foldable do
   end
 
   @spec fold(Foldable.t) :: any
-  def fold(foldable), do: foldable |> fold_map(&Quark.id/1)
+  def fold(foldable), do: fold_map(foldable, &Quark.id/1)
 
   #   Left-associative fold of a structure.
 
@@ -85,7 +98,7 @@ defclass Witchcraft.Foldable do
   def foldl(foldable, seed, reducer) do
     foldr(foldable, &Quark.id/1, fn(seed_focus, acc) ->
       fn focus -> seed_focus.(reducer.(focus, acc)) end
-    end)
+    end).(seed)
   end
 
   # foldl1 :: (a -> a -> a) -> t a -> a Source #
@@ -118,7 +131,7 @@ defclass Witchcraft.Foldable do
   end
 
   @spec max(Foldable.t, by: ((any, any) -> Order.t)) :: Maybe.t
-  def max(foldable, by: comparator) do
+  def! max(foldable, by: comparator) do
     foldr(foldable, fn(focus, acc) ->
       case comparator.(focus, acc) do
         %Order.Greater{} -> focus
@@ -128,16 +141,12 @@ defclass Witchcraft.Foldable do
   end
 
   @spec max(Foldable.t) :: any
-  def max(foldable_comparable), do: max(foldable_comparable, by: &Orderable.compare/2)
-
-  def max!(foldable, by: comparator), do: foldable |> max(by: comparator) |> ensure!
-
-  def max!(foldable), do: foldable |> max |> ensure!
+  def! max(foldable_comparable), do: max(foldable_comparable, by: &Orderable.compare/2)
 
   # The largest element of a non-empty structure.
 
   @spec min(Foldable.t, by: ((any, any) -> Order.t)) :: any | Maybe.t
-  def min(foldable, by: comparitor) do
+  def! min(foldable, by: comparitor) do
     foldr(foldable, fn(focus, acc) ->
       case comparitor.(focus, acc) do
         %Order.Greater{} -> focus
@@ -146,74 +155,211 @@ defclass Witchcraft.Foldable do
     end)
   end
 
-  def min(foldable), do: min(foldable, by: &Orderable.compare/2)
-
-  def min!(foldable, by: comparator), do: foldable |> min(by: comparator) |> ensure!
-
-  def min!(foldable), do: foldable |> min |> ensure!
+  def! min(foldable), do: min(foldable, by: &Orderable.compare/2)
 
   @spec random(Foldable.t) :: any | Foldable.EmptyError.t
-  def random(foldable) do
+  def! random(foldable) do
     foldable
     |> to_list
-    |> safe(Enum.random).()
+    |> safe(&Enum.random/1).()
     |> case do
          %Enum.EmptyError{} -> Foldable.EmptyError.new(foldable)
          value -> value
        end
   end
 
+  @doc ~S"""
+  Sum all numbers in a foldable
+
+  ## Examples
+
+      iex> sum [1, 2, 3]
+      6
+
+      iex> %BinaryTree{
+      ...>   left:  4,
+      ...>   right: %BinaryTree{
+      ...>     left: 2,
+      ...>     right: 10
+      ...>   }
+      ...> } |> sum
+      16
+
+  """
   @spec sum(Foldable.t) :: number
   def sum(foldable), do: foldr(foldable, 0, &+/2)
 
+  @doc ~S"""
+  Product of all numbers in a foldable
+
+  ## Examples
+
+      iex> product [1, 2, 3]
+      6
+
+      iex> %BinaryTree{
+      ...>   left:  4,
+      ...>   right: %BinaryTree{
+      ...>     left: 2,
+      ...>     right: 10
+      ...>   }
+      ...> } |> product
+      80
+
+  """
   @spec product(Foldable.t) :: number
   def product(foldable), do: foldr(foldable, 0, &*/2)
 
-  # Map each element of the structure to a monoid, and combine the results.
-  @spec fold_map(Foldable.t, fun) :: any
-  def fold_map(foldable_monoid, fun) do
-    import Witchcraft.Monoid
-    foldr(foldable_monoid, empty(foldable_monoid), fn(focus, acc) ->
-      fun.(focus) <> acc
-    end)
+  @doc ~S"""
+  Concatenate all lists in a foldable structure
+
+  ## Examples
+
+      iex> [[1, 2, 3], [4, 5, 6]]
+      [1, 2, 3, 4, 5, 6]
+
+      iex> %BinaryTree{
+      ...>   left:  [1, 2, 3],
+      ...>   right: %BinaryTree{
+      ...>     left:  [4, 5],
+      ...>     right: [6]
+      ...>   }
+      ...> }
+      [1, 2, 3, 4, 5, 6]
+
+  """
+  @spec concat(Foldable.t) :: [any]
+  def concat(contained_lists) do
+    contained_lists
+    |> foldr([], &Semigroup.append/2)
+    |> Semigroup.concat
   end
 
-  # The concatenation of all the elements of a container of lists.
-  # Must be a monoid
-  def concat(contained_lists), do: foldr(contained_lists, &Witchcraft.Monoid.concat/2)
-
-  # concatMap :: Foldable t => (a -> [b]) -> t a -> [b] Source #
   # Map a function over all the elements of a container and concatenate the resulting lists.
+  @doc ~S"""
+  Lift a function over a foldable structure generating lists of results,
+  and then concatenate the resulting lists
+
+  ## Examples
+
+      iex> [1, 2, 3, 4, 5, 6]
+      ...> |> concat_map(fn x -> [x, x] end)
+      [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
+
+      iex> %BinaryTree{
+      ...>   left:  1,
+      ...>   right: %BinaryTree{
+      ...>     left:  2,
+      ...>     right: 3
+      ...>   }
+      ...> }
+      ...> |> concat_map(fn x -> [x, x] end)
+      [1, 1, 2, 2, 3, 3]
+
+  """
+  @spec concat_map(Foldable.t, (any -> [any])) :: [any]
   def concat_map(foldable, a_to_list_b) do
     foldable
     |> foldr(fn(inner_focus, acc) -> a_to_list_b.(inner_focus) <> acc end)
     |> concat
   end
 
-  # all? returns the conjunction of a container of Bools. For the result to be True, the container must be finite; False, however, results from a False value finitely far from the left end.
+  @doc ~S"""
+  Check if a foldable is full of only `true`s
+
+  ## Examples
+
+      iex> all? [true, true, false]
+      false
+
+      iex> %BinaryTree{
+      ...>   left:  true,
+      ...>   right: %BinaryTree{
+      ...>     left:  true,
+      ...>     right: false
+      ...>   }
+      ...> } |> all?
+      false
+
+  """
   @spec all?(Foldable.t) :: boolean
   def all?(foldable_bools), do: foldr(foldable_bools, true, &and/2)
 
+  @doc ~S"""
+  The same as `all?/1`, but with a custom predicate matcher
+
+  ## Examples
+
+      iex> all?([1, 2, 3], &Integer.is_odd?/1)
+      false
+
+      iex> %BinaryTree{
+      ...>   left:  1,
+      ...>   right: %BinaryTree{
+      ...>     left:  2,
+      ...>     right: 3
+      ...>   }
+      ...> }
+      ...> |> all?(&Integer.is_odd?/1)
+      false
+
+  """
   @spec all?(Foldable.t, (any -> boolean)) :: boolean
   def all?(foldable, predicate) do
     foldr(foldable, true, fn(focus, acc) -> predicate.(focus) and acc end)
   end
 
-  # or :: Foldable t => t Bool -> Bool Source #
-  # or returns the disjunction of a container of Bools. For the result to be False, the container must be finite; True, however, results from a True value finitely far from the left end.
+  @doc ~S"""
+  Check if a foldable contains any `true`s
+
+  ## Examples
+
+      iex> any? [true, true, false]
+      true
+
+      iex> %BinaryTree{
+      ...>   left:  true,
+      ...>   right: %BinaryTree{
+      ...>     left:  true,
+      ...>     right: false
+      ...>   }
+      ...> } |> any?
+      true
+
+  """
   @spec any?(Foldable.t) :: boolean
   def any?(foldable_bools), do: foldr(foldable_bools, false, &or/2)
 
+  @doc ~S"""
+  The same as `all?/1`, but with a custom predicate matcher
+
+  ## Examples
+
+      iex> any?([1, 2, 3], &Integer.is_odd?/1)
+      true
+
+      iex> %BinaryTree{
+      ...>   left:  1,
+      ...>   right: %BinaryTree{
+      ...>     left:  2,
+      ...>     right: 3
+      ...>   }
+      ...> }
+      ...> |> any(&Integer.is_odd?/1)
+      true
+
+  """
   @spec any?(Foldable.t, (any -> boolean)) :: boolean
   def any?(foldable, predicate) do
     foldr(foldable, false, fn(focus, acc) -> predicate.(focus) or acc end)
   end
 
-  # People are working on Foldable properties
-  # The best answer so far is abstract and strongly typed
-  # Ex. https://mail.haskell.org/pipermail/libraries/2015-February/024943.html
   properties do
   end
+end
+
+definst Witchcraft.Foldable, for: Tuple do
+  def foldr(tuple, seed, reducer), do: tuple |> Tuple.to_list |> foldr(seed, reducer)
 end
 
 definst Witchcraft.Foldable, for: List do
