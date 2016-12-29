@@ -84,7 +84,11 @@ defclass Witchcraft.Functor do
   properties do
     def identity(data) do
       wrapped = generate(data)
-      Functor.map(wrapped, &Quark.id/1) == wrapped
+      if is_function(wrapped) do
+        Functor.map(wrapped, &Quark.id/1).("foo") == wrapped.("foo")
+      else
+        Functor.map(wrapped, &Quark.id/1) == wrapped
+      end
     end
 
     def composition(data) do
@@ -93,16 +97,20 @@ defclass Witchcraft.Functor do
       f = fn x -> inspect(wrapped == x) end
       g = fn x -> inspect(wrapped != x) end
 
-      x = wrapped |> Functor.map(fn x -> x |> g.() |> f.() end)
-      y = wrapped |> Functor.map(g) |> Functor.map(f)
+      left  = wrapped |> Functor.map(fn x -> x |> g.() |> f.() end)
+      right = wrapped |> Functor.map(g) |> Functor.map(f)
 
-      x == y
+      if is_function(data) do
+        left.("foo") == right.("foo")
+      else
+        left == right
+      end
     end
   end
 end
 
 definst Witchcraft.Functor, for: Any do
-  def map(f, g) when is_function(f), do: Quark.compose(f, g)
+  def map(f, g) when is_function(f), do: Quark.compose(g, f)
   def map(x, _), do: raise %Protocol.UndefinedError{protocol: Witchcraft.Functor, value: x}
 end
 
