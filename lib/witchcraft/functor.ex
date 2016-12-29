@@ -84,7 +84,7 @@ defclass Witchcraft.Functor do
   properties do
     def identity(data) do
       wrapped = generate(data)
-      Functor.lift(wrapped, &Quark.id/1) == wrapped
+      Functor.map(wrapped, &Quark.id/1) == wrapped
     end
 
     def composition(data) do
@@ -93,8 +93,8 @@ defclass Witchcraft.Functor do
       f = fn x -> inspect(wrapped == x) end
       g = fn x -> inspect(wrapped != x) end
 
-      x = wrapped |> Functor.lift(fn x -> x |> g.() |> f.() end)
-      y = wrapped |> Functor.lift(g) |> Functor.lift(f)
+      x = wrapped |> Functor.map(fn x -> x |> g.() |> f.() end)
+      y = wrapped |> Functor.map(g) |> Functor.map(f)
 
       x == y
     end
