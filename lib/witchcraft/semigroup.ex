@@ -129,9 +129,9 @@ defclass Witchcraft.Semigroup do
   end
 end
 
-definst Witchcraft.Semigroup, for: Any do
-  def append(f, g) when is_function(f), do: Quark.compose(g, f)
-end
+# definst Witchcraft.Semigroup, for: Any do
+#   def append(f, g) when is_function(f), do: Quark.compose(g, f)
+# end
 
 definst Witchcraft.Semigroup, for: Integer do
   def append(a, b) when is_integer(b), do: a + b

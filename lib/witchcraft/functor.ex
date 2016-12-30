@@ -12,10 +12,11 @@ defclass Witchcraft.Functor do
   """
 
   alias __MODULE__
+  use Quark
 
   @type t :: any
 
-  where [include: Function] do
+  where do
     @doc ~S"""
     `map` a function into one layer of a data wrapper.
     There is an autocurrying variant: `lift/2`.
@@ -43,7 +44,7 @@ defclass Witchcraft.Functor do
   `map/2` but with the function automatically curried
   """
   @spec lift(Functor.t, fun) :: Functor.t
-  def lift(wrapped, fun), do: map(wrapped, Quark.curry(fun))
+  def lift(wrapped, fun), do: Functor.map(wrapped, curry(fun))
 
   @doc ~S"""
   Operator alias for `lift/2`
@@ -79,16 +80,15 @@ defclass Witchcraft.Functor do
 
   """
   @spec replace(Functor.t, any) :: Functor.t
-  def replace(wrapped, replace_with), do: wrapped ~> fn _ -> replace_with end
+  def replace(wrapped, replace_with), do: wrapped ~> &constant(replace_with, &1)
 
   properties do
     def identity(data) do
       wrapped = generate(data)
-      if is_function(wrapped) do
-        Functor.map(wrapped, &Quark.id/1).("foo") == wrapped.("foo")
-      else
-        Functor.map(wrapped, &Quark.id/1) == wrapped
-      end
+
+      wrapped
+      |> Functor.map(&id/1)
+      |> equal?(wrapped)
     end
 
     def composition(data) do
@@ -100,17 +100,14 @@ defclass Witchcraft.Functor do
       left  = wrapped |> Functor.map(fn x -> x |> g.() |> f.() end)
       right = wrapped |> Functor.map(g) |> Functor.map(f)
 
-      if is_function(data) do
-        left.("foo") == right.("foo")
-      else
-        left == right
-      end
+      equal?(left, right)
     end
   end
 end
 
 definst Witchcraft.Functor, for: Function do
-  def map(f, g), do: Quark.compose(g, f)
+  use Quark
+  def map(f, g), do: compose(g, f)
 end
 
 definst Witchcraft.Functor, for: List do

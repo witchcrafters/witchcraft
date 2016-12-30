@@ -53,7 +53,6 @@ defclass Witchcraft.Monoid do
 
     """
     def empty(sample)
-    @fallback_to_any true
   end
 
   defdelegate zero(sample), to: Proto, as: :empty
@@ -84,9 +83,9 @@ defclass Witchcraft.Monoid do
   end
 end
 
-definst Witchcraft.Monoid, for: Any do
-  def empty(sample) when is_function(sample), do: &Quark.id/1
-end
+# definst Witchcraft.Monoid, for: Any do
+#   def empty(sample) when is_function(sample), do: &Quark.id/1
+# end
 
 definst Witchcraft.Monoid, for: Integer do
   def empty(_), do: 0

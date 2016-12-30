@@ -4,11 +4,11 @@ defclass Witchcraft.Applicative do
   extend Witchcraft.Apply
 
   where do
-    def wrap(sample, to_wrap)
+    def of(sample, to_wrap)
   end
 
-  defalias of(sample),   as: :wrap
-  defalias pure(sample), as: :wrap
+  defalias wrap(sample, to_wrap), as: :wrap
+  defalias pure(sample, to_wrap), as: :wrap
 
   properties do
     use Witchcraft.Apply
@@ -24,24 +24,24 @@ defclass Witchcraft.Applicative do
       a = generate(data)
       f = &inspect/1
 
-      left  = Applicative.wrap(data, f) ~>> Applicative.wrap(data, a)
-      right = Applicative.wrap(data, f.(a))
+      left  = Applicative.of(data, f) ~>> Applicative.of(data, a)
+      right = Applicative.of(data, f.(a))
 
       left == right
     end
 
     def interchange(data) do
       as = generate(data)
-      fs = Functor.replace(as, &inspect/1)
+      fs = replace(as, &inspect/1)
 
-      left  = fs <<~ Applicative.wrap(fs, as)
-      right = Applicative.wrap(fs, fn g -> g.(as) end) <<~ fs
+      left  = fs <<~ Applicative.of(fs, as)
+      right = Applicative.of(fs, fn g -> g.(as) end) <<~ fs
 
       left == right
     end
   end
 end
 
-# definst Witchcraft.Applicative, for: Any do
+# definst Witchcraft.Applicative, for: Functio💯n do
 #   def wrap(fun) when is_function(fun), do: &Quark.SKI.k/1
 # end
