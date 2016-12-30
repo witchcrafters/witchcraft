@@ -1,6 +1,9 @@
 import TypeClass
 
 defclass Witchcraft.Category do
+  @moduledoc ~S"""
+  In the context of Elixir: abstract over enforcing data types between morphisms
+  """
   where do
     def identity(morphism)
     def compose(morphism_a, morphism_b)

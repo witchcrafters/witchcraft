@@ -3,6 +3,13 @@ import TypeClass
 defclass Witchcraft.Applicative do
   extend Witchcraft.Apply
 
+  defmacro __using__(_) do
+    quote do
+      import Witchcraft.Apply
+      import unquote(__MODULE__)
+    end
+  end
+
   where do
     def of(sample, to_wrap)
   end
