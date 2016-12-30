@@ -24,6 +24,9 @@ defclass Witchcraft.Chainable do
   defalias chainable >>> chain_fun, as: :chain
   defalias chain_fun <<< chainable, as: :reverse_chain
 
+  def join(nested), do: nested >>> &Quark.id/1
+  defalias flatten(nested), as: :join
+
   properties do
     def associative(data) do
       a = generate(data)
