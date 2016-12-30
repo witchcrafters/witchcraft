@@ -15,7 +15,7 @@ defclass Witchcraft.Functor do
 
   @type t :: any
 
-  where do
+  where [include: Function] do
     @doc ~S"""
     `map` a function into one layer of a data wrapper.
     There is an autocurrying variant: `lift/2`.
@@ -109,9 +109,8 @@ defclass Witchcraft.Functor do
   end
 end
 
-definst Witchcraft.Functor, for: Any do
-  def map(f, g) when is_function(f), do: Quark.compose(g, f)
-  def map(x, _), do: raise %Protocol.UndefinedError{protocol: Witchcraft.Functor, value: x}
+definst Witchcraft.Functor, for: Function do
+  def map(f, g), do: Quark.compose(g, f)
 end
 
 definst Witchcraft.Functor, for: List do

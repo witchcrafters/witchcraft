@@ -53,6 +53,7 @@ defclass Witchcraft.Monoid do
 
     """
     def empty(sample)
+    @fallback_to_any true
   end
 
   defdelegate zero(sample), to: Proto, as: :empty
@@ -63,14 +64,28 @@ defclass Witchcraft.Monoid do
   properties do
     def left_identity(data) do
       a = generate(data)
-      Semigroup.append(Monoid.empty(a), a) == a
+
+      if is_function(a) do
+        Semigroup.append(Monoid.empty(a), a).("foo") == a.("foo")
+      else
+        Semigroup.append(Monoid.empty(a), a) == a
+      end
     end
 
     def right_identity(data) do
       a = generate(data)
-      Semigroup.append(a, Monoid.empty(a)) == a
+
+      if is_function(a) do
+        Semigroup.append(a, Monoid.empty(a)).("foo") == a.("foo")
+      else
+        Semigroup.append(a, Monoid.empty(a)) == a
+      end
     end
   end
+end
+
+definst Witchcraft.Monoid, for: Any do
+  def empty(sample) when is_function(sample), do: &Quark.id/1
 end
 
 definst Witchcraft.Monoid, for: Integer do
