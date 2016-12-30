@@ -14,6 +14,8 @@ defclass Witchcraft.Applicative do
     def of(sample, to_wrap)
   end
 
+  def of(sample), do: fn to_wrap -> of(sample, to_wrap) end
+
   defalias wrap(sample, to_wrap), as: :wrap
   defalias pure(sample, to_wrap), as: :wrap
 
