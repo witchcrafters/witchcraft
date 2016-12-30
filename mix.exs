@@ -19,7 +19,7 @@ defmodule Witchcraft.Mixfile do
       source_url:   "https://github.com/expede/witchcraft",
       homepage_url: "https://github.com/expede/witchcraft",
 
-      aliases: ["quality": ["test", "credo --strict"]],
+      aliases: ["quality": ["test", "espec", "credo --strict", "inch"]],
 
       deps: [
         {:credo,    "~> 0.4",  only: [:dev, :test]},
