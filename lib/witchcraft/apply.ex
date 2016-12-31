@@ -33,18 +33,19 @@ defclass Witchcraft.Apply do
   properties do
     def composition(data) do
       alias Witchcraft.Functor
+      use Quark
 
       # Force strings
       as = data |> generate |> Functor.lift(&inspect/1)
 
-      fs = data |> generate |> Functor.lift(fn x -> fn y -> inspect(y) <> "foo" <> x end end)
-      gs = data |> generate |> Functor.lift(fn x -> fn y -> x <> "bar" <> inspect(y) end end)
-      hs = data |> generate |> Functor.lift(fn x -> fn y -> x <> inspect(y) <> "baz" end end)
+      fs = data |> generate |> Functor.replace(curry fn(x, y) -> inspect(y) <> "foo" <> inspect(x) end)
+      gs = data |> generate |> Functor.replace(curry fn(x, y) -> inspect(x) <> "bar" <> inspect(y) end)
+      hs = data |> generate |> Functor.replace(curry fn(x, y) -> inspect(x) <> inspect(y) <> "baz" end)
 
-      comps = data |> generate |> Functor.replace(&Quark.compose/2)
+      comps = data |> generate |> Functor.replace(curry &Quark.compose/2)
 
-      left  = fs    |> Apply.ap(as) |> Apply.ap(gs) |> Apply.ap(hs)
-      right = comps |> Apply.ap(hs) |> Apply.ap(gs) |> Apply.ap(as)
+      left  = fs    |> Apply.ap(as) |> Apply.ap(gs) #|> Apply.ap(hs)
+      right = comps |> Apply.ap(hs) |> Apply.ap(gs) #|> Apply.ap(as)
 
       equal?(left, right)
     end
@@ -52,16 +53,17 @@ defclass Witchcraft.Apply do
 end
 
 # definst Witchcraft.Apply, for: Function do
-#   def ap(f, g), do: fn x -> f.(x).(g.(x)) end
+#   use Quark
+#   def ap(f, g), do: fn x -> curry(f).(x).(curry(g).(x)) end
 # end
 
-# definst Witchcraft.Apply, for: List do
-#   def ap(fun_list, list) do
-#     Witchcraft.Foldable.fold(list, [], fn(item, acc) ->
-#       acc ++ Witchcraft.Functor.map(fun_list, fn fun -> fun.(item) end)
-#     end)
-#   end
-# end
+definst Witchcraft.Apply, for: List do
+  def ap(fun_list, list) do
+    Witchcraft.Foldable.foldr(fun_list, [], fn(fun, acc) ->
+      acc ++ Witchcraft.Functor.lift(list, fn item -> fun.(item) end)
+    end)
+  end
+end
 
 # definst Witchcraft.Apply, for: Tuple do
 #   def ap(fun_tuple, arg_tuple) do
