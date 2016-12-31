@@ -50,26 +50,26 @@ defclass Witchcraft.Apply do
   end
 end
 
-# definst Witchcraft.Apply, for: Function do
-#   use Quark
-#   def ap(f, g), do: fn x -> curry(f).(x).(curry(g).(x)) end
-# end
+definst Witchcraft.Apply, for: Function do
+  use Quark
+  def ap(f, g) when is_function(g), do: fn x -> curry(f).(x).(curry(g).(x)) end
+end
 
 definst Witchcraft.Apply, for: List do
   use Quark
 
-  def ap(fun_list, list) do
+  def ap(fun_list, list) when is_list(list) do
     Witchcraft.Foldable.foldr(fun_list, [], fn(fun, acc) ->
       acc ++ Witchcraft.Functor.lift(list, fun)
     end)
   end
 end
 
-# definst Witchcraft.Apply, for: Tuple do
-#   def ap(fun_tuple, arg_tuple) do
-#     fun_list = Tuple.to_list(fun_tuple)
-#     arg_list = Tuple.to_list(arg_tuple)
-
-#     Witchcraft.Apply.ap(fun_list, arg_list)
-#   end
-# end
+definst Witchcraft.Apply, for: Tuple do
+  def ap(fun_tuple, arg_tuple) when is_tuple(arg_tuple) do
+    fun_tuple
+    |> Tuple.to_list
+    |> Witchcraft.Apply.ap(Tuple.to_list(arg_tuple))
+    |> List.to_tuple
+  end
+end
