@@ -12,34 +12,24 @@ defclass Witchcraft.Monad do
   end
 
   defmacro monad(do: {:__block__, ctx, body}) do
-    # [witchcraft_monad | body]
-    # body
-    # |> Enum.reverse
-    # |> Enum.reduce([], fn
-      # ({:<-, ctx, [variables, inner_body]}, acc) ->
-      #   quote do
-      #     # Witchcraft.Chainable.bind(unquote(inner_body), fn
-      #     #   (unquote_splicing(List.wrap(variables))) -> unquote_splicing(acc)
-      #     # end)
-      #   end
-
-      # ({:return, ctx, inner_body}, acc) ->
-      #   quote do
-      #     Witchcraft.Monad.return(witchcraft_monad, unquote(inner_body))
-      #   end
-
-      # (ast = {:<-, _, _}, acc) -> quote do: unquote(ast).(unquote(acc))
-      # (ast = {:return, _, inner}, acc) -> quote do: unquote(ast).(Witchcraft.Applicative.of [], unquote_splicing(inner))
-      # (ast, acc) -> quote do: fn f -> Witchcraft.Chainable.bindx(unquote(acc), unquote(ast) |> f.()) end
-    # end)
-
-    body
-    |> Enum.map(fn
-      ast = {:<-, _, _} -> ast
-      ast = {:return, _, _} -> ast
-      ast -> quote do: fn f -> fn _ -> unquote(ast) |> f.() end end
+    Witchcraft.Foldable.foldr(body,
+      fn
+        (ast = {:<-, ctx, inner}, acc) ->
+          new_ast = {:<-, [], inner}
+          quote do
+            unquote(new_ast).(unquote(acc))
+          end
+        # (ast = {:return, _, _}, acc) -> ast
+        (ast = {tag, ctx, inner}, acc) ->
+          new_ast = {tag, [], inner}
+          quote do
+            Witchcraft.Chainable.bindx(unquote(new_ast), unquote(acc))
+          end
     end)
-    |> Witchcraft.Foldable.foldr(&Witchcraft.Chainable.bind/2)
+    |> fn x ->
+      IO.puts(inspect x)
+      x
+    end.()
   end
 
   def return([], body), do: Witchcraft.Applicative.of([], body)
@@ -51,8 +41,9 @@ defclass Witchcraft.Monad do
 
   defmacro left <- right do
     quote do
-      fn f ->
-        fn unquote(left) -> unquote(right) |> f.() end
+      import Witchcraft.Chainable
+      fn continue ->
+        unquote(right) >>> fn unquote(left) -> continue end
       end
     end
   end

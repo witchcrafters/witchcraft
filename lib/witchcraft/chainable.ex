@@ -24,8 +24,8 @@ defclass Witchcraft.Chainable do
   defalias chainable >>> chain_fun, as: :chain
   defalias chain_fun <<< chainable, as: :reverse_chain
 
-  def bindx(chainable_a, chainable_b), do: chain(chainable_a, fn _ -> chainable_b end)
-  def reverse_bind(chainable_b, chainable_a), do: bindx(chainable_a, chainable_b)
+  def bind_(chainable_a, chainable_b), do: chain(chainable_a, fn _ -> chainable_b end)
+  def reverse_bind_(chainable_b, chainable_a), do: bind_(chainable_a, chainable_b)
 
   def join(nested), do: nested >>> &Quark.id/1
   defalias flatten(nested), as: :join
