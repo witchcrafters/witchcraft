@@ -40,18 +40,19 @@ defclass Witchcraft.Apply do
       fs = data |> generate |> Functor.lift(fn x -> fn y -> inspect(y) <> "foo" <> x end end)
       gs = data |> generate |> Functor.lift(fn x -> fn y -> x <> "bar" <> inspect(y) end end)
       hs = data |> generate |> Functor.lift(fn x -> fn y -> x <> inspect(y) <> "baz" end end)
+
       comps = data |> generate |> Functor.replace(&Quark.compose/2)
 
       left  = fs    |> Apply.ap(as) |> Apply.ap(gs) |> Apply.ap(hs)
       right = comps |> Apply.ap(hs) |> Apply.ap(gs) |> Apply.ap(as)
 
-      left == right
+      equal?(left, right)
     end
   end
 end
 
-# definst Witchcraft.Apply, for: Any do
-#   def ap(f, g) when is_function(f), do: fn x -> f.(x).(g.(x)) end
+# definst Witchcraft.Apply, for: Function do
+#   def ap(f, g), do: fn x -> f.(x).(g.(x)) end
 # end
 
 # definst Witchcraft.Apply, for: List do
