@@ -108,9 +108,8 @@ defclass Witchcraft.Foldable do
   # A variant of foldl that has no base case, and thus may only be applied to non-empty structures.
   # foldl1 f = foldl1 f . toList
   def foldl(foldable, reducer) do
-    foldable
-    |> to_list
-    |> foldl(reducer)
+    [x | xs] = to_list(foldable)
+    foldl(xs, x, reducer)
   end
 
   # toList :: t a -> [a] Source #
@@ -366,7 +365,7 @@ definst Witchcraft.Foldable, for: Tuple do
 end
 
 definst Witchcraft.Foldable, for: List do
-  def foldr(list, seed, reducer), do: Enum.reduce(list, seed, reducer)
+  def foldr(list, seed, reducer), do: List.foldr(list, seed, reducer)
 end
 
 definst Witchcraft.Foldable, for: Map do
