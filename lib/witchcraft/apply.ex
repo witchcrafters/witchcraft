@@ -31,21 +31,19 @@ defclass Witchcraft.Apply do
   def lift(a, fun, b, c, d, e, f, g, h, i), do: fun <~ a <<~ b <<~ c <<~ d <<~ e <<~ f <<~ g <<~ h <<~ i
 
   properties do
+    # v.ap(u.ap(a.map(f => g => x => f(g(x))))) is equivalent to v.ap(u).ap(a)
+
     def composition(data) do
       alias Witchcraft.Functor
+      alias Witchcraft.Apply
       use Quark
 
-      # Force strings
-      as = data |> generate |> Functor.lift(&inspect/1)
+      as = data |> generate |> Functor.map(&inspect/1)
+      fs = data |> generate |> Functor.replace(fn x -> x <> x end)
+      gs = data |> generate |> Functor.replace(fn y -> y <> "foo" end)
 
-      fs = data |> generate |> Functor.replace(curry fn(x, y) -> inspect(y) <> "foo" <> inspect(x) end)
-      gs = data |> generate |> Functor.replace(curry fn(x, y) -> inspect(x) <> "bar" <> inspect(y) end)
-      hs = data |> generate |> Functor.replace(curry fn(x, y) -> inspect(x) <> inspect(y) <> "baz" end)
-
-      comps = data |> generate |> Functor.replace(curry &Quark.compose/2)
-
-      left  = fs    |> Apply.ap(as) |> Apply.ap(gs) #|> Apply.ap(hs)
-      right = comps |> Apply.ap(hs) |> Apply.ap(gs) #|> Apply.ap(as)
+      left  = Apply.ap(fs, Apply.ap(gs, as))
+      right = fs |> Functor.lift(&compose/2) |> Apply.ap(gs) |> Apply.ap(as)
 
       equal?(left, right)
     end
@@ -58,9 +56,11 @@ end
 # end
 
 definst Witchcraft.Apply, for: List do
+  use Quark
+
   def ap(fun_list, list) do
     Witchcraft.Foldable.foldr(fun_list, [], fn(fun, acc) ->
-      acc ++ Witchcraft.Functor.lift(list, fn item -> fun.(item) end)
+      acc ++ Witchcraft.Functor.lift(list, fun)
     end)
   end
 end
