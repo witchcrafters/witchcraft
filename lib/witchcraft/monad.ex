@@ -27,5 +27,5 @@ defclass Witchcraft.Monad do
   end
 end
 
-# List |> conforms(to: Monad)
+# List |> conforms(to: Witchcraft.Monad)
 # Function |> conforms(to: Monad)

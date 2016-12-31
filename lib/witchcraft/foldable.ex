@@ -6,7 +6,7 @@ defclass Witchcraft.Foldable do
 
   ## Examples
 
-      iex> sum = fn nums -> foldr(sums, 0, &+/2) end
+      iex> sum = &foldr(&1, 0, &+/2)
       ...> sum.([1, 2, 3])
       6
       ...> sum.([4, 5, 6])
@@ -55,7 +55,7 @@ defclass Witchcraft.Foldable do
 
     ## Examples
 
-        iex> sum = fn nums -> foldr(sums, 0, &+/2) end
+        iex> sum = &foldr(&1, 0, &+/2) end
         ...> sum.([1, 2, 3])
         6
         ...> sum.([4, 5, 6])
@@ -66,12 +66,15 @@ defclass Witchcraft.Foldable do
     def foldr(foldable, seed, reducer)
   end
 
-  # foldr1 in Haskell
+  @doc ~S"""
+  The same as `foldr/3`, but uses the first element as the seed
+  """
   @spec foldr(Foldable.t, fun) :: any
   def foldr(foldable, reducer) do
-    foldable
-    |> to_list
-    |> foldr(reducer)
+    case to_list(foldable) do
+      []       -> []
+      [a | as] -> foldr(as, a, reducer)
+    end
   end
 
   @spec fold_map(Foldable.t, fun) :: any

@@ -18,6 +18,7 @@ defclass Witchcraft.Applicative do
 
   defalias wrap(sample, to_wrap), as: :wrap
   defalias pure(sample, to_wrap), as: :wrap
+  defalias unit(sample, to_wrap), as: :wrap
 
   properties do
     use Witchcraft.Apply

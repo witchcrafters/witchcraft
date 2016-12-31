@@ -36,8 +36,3 @@ defclass Witchcraft.Category do
     end
   end
 end
-
-# definst Witchcraft.Category, for: Function do
-#   def identity(fun), do: fun
-#   def compose(f, g), do: Quark.compose(f, g)
-# end

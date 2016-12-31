@@ -3,6 +3,8 @@ import TypeClass
 defclass Witchcraft.Orderable do
   extend Witchcraft.Setoid
 
+  @type t :: any
+
   where do
     def compare(a, b)
   end
