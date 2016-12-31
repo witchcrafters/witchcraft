@@ -105,29 +105,29 @@ defclass Witchcraft.Functor do
   end
 end
 
-definst Witchcraft.Functor, for: Function do
-  use Quark
-  def map(f, g), do: compose(g, f)
-end
+# definst Witchcraft.Functor, for: Function do
+#   use Quark
+#   def map(f, g), do: compose(g, f)
+# end
 
 definst Witchcraft.Functor, for: List do
   def map(list, fun), do: Enum.map(list, fun)
 end
 
-definst Witchcraft.Functor, for: Tuple do
-  def map(tuple, fun) do
-    tuple
-    |> Tuple.to_list
-    |> Witchcraft.Functor.map(fun)
-    |> List.to_tuple
-  end
-end
+# definst Witchcraft.Functor, for: Tuple do
+#   def map(tuple, fun) do
+#     tuple
+#     |> Tuple.to_list
+#     |> Witchcraft.Functor.map(fun)
+#     |> List.to_tuple
+#   end
+# end
 
-definst Witchcraft.Functor, for: Map do
-  def map(hashmap, fun) do
-    hashmap
-    |> Map.to_list
-    |> Witchcraft.Functor.map(fn {key, value} -> {key, fun.(value)} end)
-    |> Enum.into(%{})
-  end
-end
+# definst Witchcraft.Functor, for: Map do
+#   def map(hashmap, fun) do
+#     hashmap
+#     |> Map.to_list
+#     |> Witchcraft.Functor.map(fn {key, value} -> {key, fun.(value)} end)
+#     |> Enum.into(%{})
+#   end
+# end

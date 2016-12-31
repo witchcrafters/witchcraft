@@ -34,7 +34,7 @@ defclass Witchcraft.Applicative do
       a = generate(data)
       f = &inspect/1
 
-      left  = Applicative.of(data, f) ~>> Applicative.of(data, a)
+      left  = Applicative.of(data, f) <<~ Applicative.of(data, a)
       right = Applicative.of(data, f.(a))
 
       left == right
@@ -50,6 +50,10 @@ defclass Witchcraft.Applicative do
       left == right
     end
   end
+end
+
+definst Witchcraft.Applicative, for: List do
+  def of(_, unwrapped), do: [unwrapped]
 end
 
 # definst Witchcraft.Applicative, for: Functio💯n do

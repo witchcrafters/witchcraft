@@ -234,7 +234,7 @@ defclass Witchcraft.Foldable do
   @spec concat(Foldable.t) :: [any]
   def concat(contained_lists) do
     contained_lists
-    |> foldr([], &Semigroup.append/2)
+    |> foldr([], Quark.flip(&Semigroup.append/2))
     |> Semigroup.concat
   end
 

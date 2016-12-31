@@ -110,28 +110,14 @@ defclass Witchcraft.Semigroup do
       left  = a |> Semigroup.append(b) |> Semigroup.append(c)
       right = Semigroup.append(a, Semigroup.append(b, c))
 
-      cond do
-        is_float(left) ->
-          # This is a special case!
-          # In theory , a float *is* a semigroup, but due to rounding it fails the
-          # automatic prop test. Please voice your opinion if you believe that this
-          # shoudl be treated at the machine rounded version rather than the idea of
-          # a float: https://github.com/expede/witchcraft/issues/new
-          round(left) == round(right)
-
-        is_function(left) ->
-          left.("foo") == right.("foo")
-
-        true ->
-          left == right
-      end
+      equal?(left, right)
     end
   end
 end
 
-# definst Witchcraft.Semigroup, for: Any do
-#   def append(f, g) when is_function(f), do: Quark.compose(g, f)
-# end
+definst Witchcraft.Semigroup, for: Function do
+  def append(f, g) when is_function(f), do: Quark.compose(g, f)
+end
 
 definst Witchcraft.Semigroup, for: Integer do
   def append(a, b) when is_integer(b), do: a + b

@@ -4,6 +4,39 @@ defclass Witchcraft.Monad do
   extend Witchcraft.Applicative
   extend Witchcraft.Chainable
 
+  # add return unquote(datatype), inner
+  # defmacro monad(datatype, do: body) do
+  #   body
+  #   |> Enum.reverse
+  #   |> Enum.reduce(fn
+  #     ({:<-, ctx, [variables | inner_body]}, acc) ->
+  #       quote do
+  #         Witchcraft.Chainable.bind(unquote(inner_body), fn
+  #           (unquote_splicing(variables)) -> unquote(acc)
+  #         end)
+  #       end
+
+  #       # {:bind, ctx, [
+  #       #     inner_body,
+  #       #     {:fn, [], [
+  #       #         {:->, [], [
+  #       #                 [variables],
+  #       #                 {
+  #       #                   {:., [], [
+  #       #                       {:__aliases__, [alias: false], [:Witchcraft, :Chainable]},
+  #       #                       :bind
+  #       #                     ]},
+  #       #                   [context: Elixir, import: Kernel],
+  #       #                   acc
+  #       #                 }
+  #       #               ]}
+  #       #       ]}
+  #       #   ]}
+
+  #     (ast, acc) -> quote do: Witchcraft.Chainable.bind_(unquote(acc), unquote(ast))
+  #   end)
+  # end
+
   properties do
     import Witchcraft.Applicative
     import Witchcraft.Chainable

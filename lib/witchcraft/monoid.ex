@@ -87,23 +87,23 @@ end
 #   def empty(sample) when is_function(sample), do: &Quark.id/1
 # end
 
-definst Witchcraft.Monoid, for: Integer do
-  def empty(_), do: 0
-end
+# definst Witchcraft.Monoid, for: Integer do
+#   def empty(_), do: 0
+# end
 
-definst Witchcraft.Monoid, for: Float do
-  def empty(_), do: 0.0
-end
+# definst Witchcraft.Monoid, for: Float do
+#   def empty(_), do: 0.0
+# end
 
 
-definst Witchcraft.Monoid, for: BitString do
-  def empty(_), do: ""
-end
+# definst Witchcraft.Monoid, for: BitString do
+#   def empty(_), do: ""
+# end
 
 definst Witchcraft.Monoid, for: List do
   def empty(_), do: []
 end
 
-definst Witchcraft.Monoid, for: Map do
-  def empty(_), do: %{}
-end
+# definst Witchcraft.Monoid, for: Map do
+#   def empty(_), do: %{}
+# end
