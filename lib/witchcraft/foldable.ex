@@ -98,10 +98,14 @@ defclass Witchcraft.Foldable do
   #   For a general Foldable structure this should be semantically identical to,
 
   #     foldl f z = foldl f z . toList
+  # def foldl(foldable, seed, reducer) do
+  #   foldr(foldable, &Quark.id/1, fn(seed_focus, acc) ->
+  #     fn focus -> seed_focus.(reducer.(focus, acc)) end
+  #   end).(seed)
+  # end
+  # foldl f a bs = foldr (\b g x -> g (f x b)) id bs a
   def foldl(foldable, seed, reducer) do
-    foldr(foldable, &Quark.id/1, fn(seed_focus, acc) ->
-      fn focus -> seed_focus.(reducer.(focus, acc)) end
-    end).(seed)
+    foldr(foldable, &Quark.id/1, fn(x, g) -> fn (b) -> g.(reducer.(x, b)) end end).(seed)
   end
 
   # foldl1 :: (a -> a -> a) -> t a -> a Source #
