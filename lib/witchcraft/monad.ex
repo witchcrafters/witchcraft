@@ -17,11 +17,15 @@ defclass Witchcraft.Monad do
     IO.puts("INPUT: " <> inspect input)
     Witchcraft.Foldable.foldr(Enum.reverse(body),
       fn
+        (ast = {:<-, ctx, inner = [left = {lt, lc, lb}, right]}, acc = {:fn, _, _}) ->
+          IO.puts("BIND+CALL: " <> inspect(ast) <> " <<>> " <> inspect(acc))
+          quote do: unquote(right) >>> fn unquote(left) -> unquote(acc).(unquote(left)) end
+
+
+
         (ast = {:<-, ctx, inner = [left = {lt, lc, lb}, right]}, acc) ->
-          IO.puts("bind: " <> inspect(ast) <> " <<>> " <> inspect(acc))
-          quote do
-            unquote(right) >>> fn unquote(left) -> unquote(acc) end
-          end
+          IO.puts("BIND: " <> inspect(ast) <> " <<>> " <> inspect(acc))
+          quote do: unquote(right) >>> fn unquote(left) -> unquote(acc) end
 
         (ast, acc) ->
           IO.puts("FORGET: " <> inspect(ast) <> " <<>> " <> inspect(acc))
