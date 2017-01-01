@@ -4,7 +4,6 @@ defmodule Witchcraft.Monad.AST do
   def preprocess(input, datatype) do
     Macro.prewalk(normalize(input), fn
       {:return, _ctx, [inner]} -> quote do: pure(unquote(datatype), unquote(inner))
-      {:let, ctx, args} -> {:=, ctx, args}
       ast -> ast
     end)
   end

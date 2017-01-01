@@ -26,6 +26,8 @@ defclass Witchcraft.Monad do
     quote do: monad(do: unquote(AST.preprocess(input, datatype)))
   end
 
+  defmacro let(left, do: right), do: quote do: unquote(left) = unquote(right)
+
   properties do
     import Witchcraft.Applicative
     import Witchcraft.Chainable
