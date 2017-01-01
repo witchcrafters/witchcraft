@@ -4,44 +4,58 @@ defclass Witchcraft.Monad do
   extend Witchcraft.Applicative
   extend Witchcraft.Chainable
 
+  import Witchcraft.Applicative
   import Witchcraft.Chainable
 
-  # add return unquote(datatype), inner
-  # defmacro monad(data, do: body) do
-  #   quote do
-  #     monad do: fn witchcraft_monad -> unquote(body) end.(unquote(data))
-  #   end
-  # end
-
-  defmacro monad(do: input = {:__block__, ctx, body}) do
+  defmacro monad(do: input) do
     IO.puts("INPUT: " <> inspect input)
-    Witchcraft.Foldable.foldr(Enum.reverse(body),
-      fn
-        (ast = {:<-, ctx, inner = [left = {lt, lc, lb}, right]}, acc = {:fn, _, _}) ->
-          IO.puts("BIND+CALL: " <> inspect(ast) <> " <<>> " <> inspect(acc))
-          quote do: unquote(right) >>> fn unquote(left) -> unquote(acc).(unquote(left)) end
 
-
-
-        (ast = {:<-, ctx, inner = [left = {lt, lc, lb}, right]}, acc) ->
-          IO.puts("BIND: " <> inspect(ast) <> " <<>> " <> inspect(acc))
-          quote do: unquote(right) >>> fn unquote(left) -> unquote(acc) end
-
-        (ast, acc) ->
-          IO.puts("FORGET: " <> inspect(ast) <> " <<>> " <> inspect(acc))
-          quote do: bind_forget(unquote(ast), unquote(acc))
-    end)
+    input
+    |> normalize_ast
     |> fn x ->
-      IO.puts("OUTPUT: " <> inspect x)
+      IO.puts ("NORAMLIZED: " <> inspect x)
       x
     end.()
+    |> Witchcraft.Foldable.foldr(
+      fn
+        (ast = {:<-, ctx, inner = [left = {lt, lc, lb}, right]}, acc) ->
+          inner =
+            case acc do
+              {:fn, _, _} -> quote do: unquote(acc).(unquote(left))
+              acc -> acc
+            end
+
+          quote do: unquote(right) >>> fn unquote(left) -> unquote(inner) end
+
+        (ast, acc) -> quote do: bind_forget(unquote(ast), unquote(acc))
+    end)
+  end
+  # IO.puts("BIND+CALL: " <> inspect(ast) <> " <<>> " <> inspect(acc))
+  # IO.puts("BIND: " <> inspect(ast) <> " <<>> " <> inspect(acc))
+  # IO.puts("FORGET: " <> inspect(ast) <> " <<>> " <> inspect(acc))
+  # |> fn x ->
+  #   IO.puts("OUTPUT: " <> inspect x)
+  #   x
+  # end.()
+
+  defmacro monad(datatype, do: input) do
+    transformed_ast =
+      input
+      |> normalize_ast
+      |> Macro.prewalk(fn
+        {:return, _ctx, inner} -> quote do: pure(unquote(datatype), unquote(inner))
+        ast -> ast
+      end)
+
+    quote do: monad(do: unquote(transformed_ast))
   end
 
-  def return([], body), do: Witchcraft.Applicative.of([], body)
-
-  defmacro monad(do: body) do
-    new_body = {:__block__, [], [body]}
-    quote do: Witchcraft.Monad.monad(do: unquote(new_body))
+  def normalize_ast(ast) do
+    IO.puts ("NORMALIZE" <> inspect ast)
+    case ast do
+      block =  {:__block__, _, inner} -> inner
+      plain -> List.wrap(plain)
+    end
   end
 
   # defmacro left <- right do
