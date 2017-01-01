@@ -8,8 +8,9 @@ defclass Witchcraft.Monad do
   import Witchcraft.Chainable
 
   defmacro monad(do: input) do
-    Witchcraft.Foldable.foldr(AST.normalize(input), fn
-      (ast = {:<-, ctx, inner = [left = {lt, lc, lb}, right]}, acc) ->
+    Witchcraft.Foldable.foldr(Enum.reverse(AST.normalize(input)), fn
+      (ast = {:<-, ctx, inner = [old_left = {lt, lc, lb}, right]}, acc) ->
+        left = {lt, lc, nil}
         case acc do
           {:fn, _, _} ->
             quote do: unquote(right) >>> fn unquote(left) -> unquote(acc).(unquote(left)) end
@@ -20,6 +21,10 @@ defclass Witchcraft.Monad do
 
       (ast, acc) -> quote do: bind_forget(unquote(ast), unquote(acc))
     end)
+    |> fn x ->
+      IO.puts(inspect x)
+      x
+    end.()
   end
 
   defmacro monad(datatype, do: input) do
