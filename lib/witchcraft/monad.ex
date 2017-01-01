@@ -4,30 +4,31 @@ defclass Witchcraft.Monad do
   extend Witchcraft.Applicative
   extend Witchcraft.Chainable
 
-  # add return unquote(datatype), inner
-  defmacro monad(data, do: body) do
-    quote do
-      monad do: fn witchcraft_monad -> unquote(body) end.(unquote(data))
-    end
-  end
+  import Witchcraft.Chainable
 
-  defmacro monad(do: {:__block__, ctx, body}) do
-    Witchcraft.Foldable.foldr(body,
+  # add return unquote(datatype), inner
+  # defmacro monad(data, do: body) do
+  #   quote do
+  #     monad do: fn witchcraft_monad -> unquote(body) end.(unquote(data))
+  #   end
+  # end
+
+  defmacro monad(do: input = {:__block__, ctx, body}) do
+    IO.puts("INPUT: " <> inspect input)
+    Witchcraft.Foldable.foldr(Enum.reverse(body),
       fn
-        (ast = {:<-, ctx, inner}, acc) ->
-          new_ast = {:<-, [], inner}
+        (ast = {:<-, ctx, inner = [left = {lt, lc, lb}, right]}, acc) ->
+          IO.puts("bind: " <> inspect(ast) <> " <<>> " <> inspect(acc))
           quote do
-            unquote(new_ast).(unquote(acc))
+            unquote(right) >>> fn unquote(left) -> unquote(acc) end
           end
-        # (ast = {:return, _, _}, acc) -> ast
-        (ast = {tag, ctx, inner}, acc) ->
-          new_ast = {tag, [], inner}
-          quote do
-            Witchcraft.Chainable.bindx(unquote(new_ast), unquote(acc))
-          end
+
+        (ast, acc) ->
+          IO.puts("FORGET: " <> inspect(ast) <> " <<>> " <> inspect(acc))
+          quote do: bind_forget(unquote(ast), unquote(acc))
     end)
     |> fn x ->
-      IO.puts(inspect x)
+      IO.puts("OUTPUT: " <> inspect x)
       x
     end.()
   end
@@ -39,14 +40,16 @@ defclass Witchcraft.Monad do
     quote do: Witchcraft.Monad.monad(do: unquote(new_body))
   end
 
-  defmacro left <- right do
-    quote do
-      import Witchcraft.Chainable
-      fn continue ->
-        unquote(right) >>> fn unquote(left) -> continue end
-      end
-    end
-  end
+  # defmacro left <- right do
+  #   quote do
+  #     import Witchcraft.Chainable
+  #     fn continue ->
+  #     end
+  #     # fn continue ->
+  #     #   unquote(right) >>> fn unquote(left) -> continue end
+  #     # end
+  #   end
+  # end
 
   defdelegate return(sample, body), to: Witchacrft.Applicative, as: :of
 
