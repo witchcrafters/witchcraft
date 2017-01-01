@@ -29,10 +29,6 @@ defclass Witchcraft.Monad do
 
       (ast, acc) -> quote do: bind_forget(unquote(ast), unquote(acc))
     end)
-    |> fn x ->
-      IO.puts(inspect x)
-      x
-    end.()
   end
 
   @doc ~S"""
