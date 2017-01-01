@@ -8,26 +8,17 @@ defclass Witchcraft.Monad do
   import Witchcraft.Chainable
 
   defmacro monad(do: input) do
-    IO.puts("INPUT: " <> inspect input)
+    Witchcraft.Foldable.foldr(normalize_ast(input), fn
+      (ast = {:<-, ctx, inner = [left = {lt, lc, lb}, right]}, acc) ->
+        inner =
+          case acc do
+            {:fn, _, _} -> quote do: unquote(acc).(unquote(left))
+            acc -> acc
+          end
 
-    input
-    |> normalize_ast
-    |> fn x ->
-      IO.puts ("NORAMLIZED: " <> inspect x)
-      x
-    end.()
-    |> Witchcraft.Foldable.foldr(
-      fn
-        (ast = {:<-, ctx, inner = [left = {lt, lc, lb}, right]}, acc) ->
-          inner =
-            case acc do
-              {:fn, _, _} -> quote do: unquote(acc).(unquote(left))
-              acc -> acc
-            end
+        quote do: unquote(right) >>> fn unquote(left) -> unquote(inner) end
 
-          quote do: unquote(right) >>> fn unquote(left) -> unquote(inner) end
-
-        (ast, acc) -> quote do: bind_forget(unquote(ast), unquote(acc))
+      (ast, acc) -> quote do: bind_forget(unquote(ast), unquote(acc))
     end)
   end
   # IO.puts("BIND+CALL: " <> inspect(ast) <> " <<>> " <> inspect(acc))
@@ -43,7 +34,9 @@ defclass Witchcraft.Monad do
       input
       |> normalize_ast
       |> Macro.prewalk(fn
-        {:return, _ctx, inner} -> quote do: pure(unquote(datatype), unquote(inner))
+        {:return, _ctx, [inner]} ->
+          IO.puts("convert: " <> inspect inner)
+          quote do: pure(unquote(datatype), unquote(inner))
         ast -> ast
       end)
 
@@ -69,7 +62,7 @@ defclass Witchcraft.Monad do
   #   end
   # end
 
-  defdelegate return(sample, body), to: Witchacrft.Applicative, as: :of
+  # defdelegate return(sample, body), to: Witchacrft.Applicative, as: :of
 
   # defmacro return(body) do
   #   quote do: Witchcraft.Monad.return(@withcraft_monad, unquote(body))
