@@ -4,69 +4,27 @@ defclass Witchcraft.Monad do
   extend Witchcraft.Applicative
   extend Witchcraft.Chainable
 
-  import Witchcraft.Applicative
+  alias Witchcraft.Monad.AST
   import Witchcraft.Chainable
 
   defmacro monad(do: input) do
-    Witchcraft.Foldable.foldr(normalize_ast(input), fn
+    Witchcraft.Foldable.foldr(AST.normalize(input), fn
       (ast = {:<-, ctx, inner = [left = {lt, lc, lb}, right]}, acc) ->
-        inner =
-          case acc do
-            {:fn, _, _} -> quote do: unquote(acc).(unquote(left))
-            acc -> acc
-          end
+        case acc do
+          {:fn, _, _} ->
+            quote do: unquote(right) >>> fn unquote(left) -> unquote(acc).(unquote(left)) end
 
-        quote do: unquote(right) >>> fn unquote(left) -> unquote(inner) end
+          acc ->
+            quote do: unquote(right) >>> fn unquote(left) -> unquote(acc) end
+        end
 
       (ast, acc) -> quote do: bind_forget(unquote(ast), unquote(acc))
     end)
   end
-  # IO.puts("BIND+CALL: " <> inspect(ast) <> " <<>> " <> inspect(acc))
-  # IO.puts("BIND: " <> inspect(ast) <> " <<>> " <> inspect(acc))
-  # IO.puts("FORGET: " <> inspect(ast) <> " <<>> " <> inspect(acc))
-  # |> fn x ->
-  #   IO.puts("OUTPUT: " <> inspect x)
-  #   x
-  # end.()
 
   defmacro monad(datatype, do: input) do
-    transformed_ast =
-      input
-      |> normalize_ast
-      |> Macro.prewalk(fn
-        {:return, _ctx, [inner]} ->
-          IO.puts("convert: " <> inspect inner)
-          quote do: pure(unquote(datatype), unquote(inner))
-        ast -> ast
-      end)
-
-    quote do: monad(do: unquote(transformed_ast))
+    quote do: monad(do: unquote(AST.preprocess(input, datatype)))
   end
-
-  def normalize_ast(ast) do
-    IO.puts ("NORMALIZE" <> inspect ast)
-    case ast do
-      block =  {:__block__, _, inner} -> inner
-      plain -> List.wrap(plain)
-    end
-  end
-
-  # defmacro left <- right do
-  #   quote do
-  #     import Witchcraft.Chainable
-  #     fn continue ->
-  #     end
-  #     # fn continue ->
-  #     #   unquote(right) >>> fn unquote(left) -> continue end
-  #     # end
-  #   end
-  # end
-
-  # defdelegate return(sample, body), to: Witchacrft.Applicative, as: :of
-
-  # defmacro return(body) do
-  #   quote do: Witchcraft.Monad.return(@withcraft_monad, unquote(body))
-  # end
 
   properties do
     import Witchcraft.Applicative
