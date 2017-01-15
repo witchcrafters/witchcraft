@@ -7,6 +7,15 @@ defclass Witchcraft.Monad do
   alias Witchcraft.Monad.AST
   import Witchcraft.Chainable
 
+  defmacro __using__(_) do
+    quote do
+      use Witchcraft.Applicative
+      use Witchcraft.Chainable
+
+      import unquote(__MODULE__)
+    end
+  end
+
   @doc ~S"""
       monad do
         a <- [1,2,3]
@@ -16,7 +25,7 @@ defclass Witchcraft.Monad do
       #=> [5, 6, 7, 6, 7, 8, 7, 8, 9]
   """
   defmacro monad(do: input) do
-    Witchcraft.Foldable.foldr(Enum.reverse(AST.normalize(input)), fn
+    Witchcraft.Foldable.right_fold(Enum.reverse(AST.normalize(input)), fn
       (ast = {:<-, ctx, inner = [old_left = {lt, lc, lb}, right]}, acc) ->
         left = {lt, lc, nil}
         case acc do

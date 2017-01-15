@@ -6,6 +6,7 @@ defmodule Witchcraft do
       use Witchcraft.Monoid
 
       use Witchcraft.Functor
+      use Witchcraft.Traversable
       use Witchcraft.Applicative
       use Witchcraft.Monad
     end

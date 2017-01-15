@@ -1,36 +1,52 @@
-# use TypeClass
+use TypeClass
 
-# defclass Witchcraft.Traversable do
-#   extend Witchcraft.Foldable
-#   extend Witchcraft.Functor
+defclass Witchcraft.Traversable do
+  extend Witchcraft.Foldable
+  extend Witchcraft.Functor
 
-#   where do
-#     def traverse(traversable, wrap_map)
-#   end
+  defmacro __using__(_) do
+    quote do
+      import Witchcraft.Functor
+      use Witchcraft.Foldable
 
-#   properties do
-#     # u.traverse(F.of, F.of) is equivalent to F.of(u) for any Applicative F (identity)
-#     # traverse Identity = Identity -- identity
-#     def identity(data) do
-#       a = generate(data)
+      import unquote(__MODULE__)
+    end
+  end
 
-#     end
+  where do
+    def traverse(traversable, mapping_fun)
+  end
 
-#     # u.traverse(x => new Compose(x), Compose.of) is equivalent to new Compose(u.traverse(x => x, F.of).map(x => x.traverse(x => x, G.of))) for Compose defined below and any Applicatives F and G (composition)
-#     # traverse (Compose . fmap g . f) = Compose . fmap (traverse g) . traverse f -- composition
-#     def composition(data) do
-#       a = generate(data)
-#     end
-#   end
-# end
+  properties do
+    def naturality(data) do
+      a = generate(data)
+      left  = a |> &Traversable.traverse(f) |> t
+      right = a |> Traversable.traverse(t <|> f)
 
-# definst Witchcraft.Functor, for: List do
-#   def traverse(list, fun) do
-#     list
-#     |> Witchcraft.Traversable.foldr([], fn [x | ys], acc ->
-#       ys
-#       |> Witchcraft.Apply.ap(fun.(x))
-#       |> Enum.concat
-#     end)
-#   end
-# end
+      equal?(left, right)
+    end
+
+    def identity(data) do
+      a = generate(data)
+      Traversable.traverse(a, &Algae.Id.new/1) == Algae.Id.new(a)
+    end
+
+    def composition(data) do
+      traverse (Compose . fmap g . f) = Compose . fmap (traverse g) . traverse f
+
+      a = generate(data)
+      inner = Algae.Compose.new <|> &Functor.lift(g) <|> &f/1
+
+      Traversable.traverse(a, inner) == inner.(a)
+    end
+  end
+
+  @spec left_cumulative_lift(any, any, ((any, any) -> {any, any})) :: {any, any}
+  def left_cumulative_lift(traversable, acc, acc_map) do
+    traverse(acc, Witchcraft.Traversable.State.Left.new <|> curry(acc_map)).run(traversable)
+  end
+
+  def right_cumulative_lift() do
+    traverse(acc, Alge.State.Left.new <|> curry(acc_map)).run(traversable)
+  end
+end

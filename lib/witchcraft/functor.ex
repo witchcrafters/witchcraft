@@ -39,7 +39,6 @@ defclass Witchcraft.Functor do
     def map(wrapped, fun)
   end
 
-
   @doc ~S"""
   `map/2` but with the function automatically curried
   """

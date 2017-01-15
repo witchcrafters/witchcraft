@@ -6,7 +6,7 @@ defclass Witchcraft.Foldable do
 
   ## Examples
 
-      iex> sum = &foldr(&1, 0, &+/2)
+      iex> sum = &right_fold(&1, 0, &+/2)
       ...> sum.([1, 2, 3])
       6
       ...> sum.([4, 5, 6])
@@ -55,32 +55,32 @@ defclass Witchcraft.Foldable do
 
     ## Examples
 
-        iex> sum = &foldr(&1, 0, &+/2) end
+        iex> sum = &right_fold(&1, 0, &+/2) end
         ...> sum.([1, 2, 3])
         6
         ...> sum.([4, 5, 6])
         15
 
     """
-    @spec foldr(Foldable.t, any, ((any, any) -> any)) :: any
-    def foldr(foldable, seed, reducer)
+    @spec right_fold(Foldable.t, any, ((any, any) -> any)) :: any
+    def right_fold(foldable, seed, reducer)
   end
 
   @doc ~S"""
-  The same as `foldr/3`, but uses the first element as the seed
+  The same as `right_fold/3`, but uses the first element as the seed
   """
-  @spec foldr(Foldable.t, fun) :: any
-  def foldr(foldable, reducer) do
+  @spec right_fold(Foldable.t, fun) :: any
+  def right_fold(foldable, reducer) do
     case to_list(foldable) do
       []       -> []
-      [a | as] -> foldr(as, a, reducer)
+      [a | as] -> right_fold(as, a, reducer)
     end
   end
 
   @spec fold_map(Foldable.t, fun) :: any
   def fold_map(foldable, fun) do
     import Witchcraft.Monoid
-    foldable |> foldr(empty(foldable), fn(x, acc) -> fun.(x) <> acc end)
+    foldable |> right_fold(empty(foldable), fn(x, acc) -> fun.(x) <> acc end)
   end
 
   @spec fold(Foldable.t) :: any
@@ -88,57 +88,57 @@ defclass Witchcraft.Foldable do
 
   #   Left-associative fold of a structure.
 
-  #   In the case of lists, foldl, when applied to a binary operator, a starting value (typically the left-identity of the operator), and a list, reduces the list using the binary operator, from left to right:
+  #   In the case of lists, left_fold, when applied to a binary operator, a starting value (typically the left-identity of the operator), and a list, reduces the list using the binary operator, from left to right:
 
-  #   foldl f z [x1, x2, ..., xn] == (...((z `f` x1) `f` x2) `f`...) `f` xn
-  #   Note that to produce the outermost application of the operator the entire input list must be traversed. This means that foldl' will diverge if given an infinite list.
+  #   left_fold f z [x1, x2, ..., xn] == (...((z `f` x1) `f` x2) `f`...) `f` xn
+  #   Note that to produce the outermost application of the operator the entire input list must be traversed. This means that left_fold' will diverge if given an infinite list.
 
-  # Also note that if you want an efficient left-fold, you probably want to use foldl' instead of foldl. The reason for this is that latter does not force the "inner" results (e.g. z f x1 in the above example) before applying them to the operator (e.g. to (f x2)). This results in a thunk chain O(n) elements long, which then must be evaluated from the outside-in.
+  # Also note that if you want an efficient left-fold, you probably want to use left_fold' instead of left_fold. The reason for this is that latter does not force the "inner" results (e.g. z f x1 in the above example) before applying them to the operator (e.g. to (f x2)). This results in a thunk chain O(n) elements long, which then must be evaluated from the outside-in.
 
   #   For a general Foldable structure this should be semantically identical to,
 
-  #     foldl f z = foldl f z . toList
-  # def foldl(foldable, seed, reducer) do
-  #   foldr(foldable, &Quark.id/1, fn(seed_focus, acc) ->
+  #     left_fold f z = left_fold f z . toList
+  # def left_fold(foldable, seed, reducer) do
+  #   right_fold(foldable, &Quark.id/1, fn(seed_focus, acc) ->
   #     fn focus -> seed_focus.(reducer.(focus, acc)) end
   #   end).(seed)
   # end
-  # foldl f a bs = foldr (\b g x -> g (f x b)) id bs a
-  def foldl(foldable, seed, reducer) do
-    foldr(foldable, &Quark.id/1, fn(x, g) -> fn (b) -> g.(reducer.(x, b)) end end).(seed)
+  # left_fold f a bs = right_fold (\b g x -> g (f x b)) id bs a
+  def left_fold(foldable, seed, reducer) do
+    right_fold(foldable, &Quark.id/1, fn(x, g) -> fn (b) -> g.(reducer.(x, b)) end end).(seed)
   end
 
-  # foldl1 :: (a -> a -> a) -> t a -> a Source #
-  # A variant of foldl that has no base case, and thus may only be applied to non-empty structures.
-  # foldl1 f = foldl1 f . toList
-  def foldl(foldable, reducer) do
+  # left_fold1 :: (a -> a -> a) -> t a -> a Source #
+  # A variant of left_fold that has no base case, and thus may only be applied to non-empty structures.
+  # left_fold1 f = left_fold1 f . toList
+  def left_fold(foldable, reducer) do
     [x | xs] = to_list(foldable)
-    foldl(xs, x, reducer)
+    left_fold(xs, x, reducer)
   end
 
   # toList :: t a -> [a] Source #
   # List of elements of a structure, from left to right.
   @spec to_list(Foldable.t) :: [any]
-  def to_list(foldable), do: foldr(foldable, [], fn(x, acc) -> [x | acc] end)
+  def to_list(foldable), do: right_fold(foldable, [], fn(x, acc) -> [x | acc] end)
 
   @spec empty?(Foldable.t) :: boolean
-  def empty?(foldable), do: foldr(foldable, true, fn(_focus, _acc) -> false end)
+  def empty?(foldable), do: right_fold(foldable, true, fn(_focus, _acc) -> false end)
 
   # Returns the size/length of a finite structure as an Int. The default implementation is optimized for structures that are similar to cons-lists, because there is no general way to do better.
   @spec length(Foldable.t) :: non_neg_integer
   def length(list) when is_list(list), do: Kernel.length(list)
-  def length(foldable), do: foldr(foldable, 0, fn(_, acc) -> 1 + acc end)
+  def length(foldable), do: right_fold(foldable, 0, fn(_, acc) -> 1 + acc end)
 
   defalias count(foldable), as: :length
   defalias size(foldable),  as: :length
 
   def elem(foldable, target) do
-    foldr(foldable, false, fn(focus, acc) -> acc or (focus == target) end)
+    right_fold(foldable, false, fn(focus, acc) -> acc or (focus == target) end)
   end
 
   @spec max(Foldable.t, by: ((any, any) -> Order.t)) :: Maybe.t
   def! max(foldable, by: comparator) do
-    foldr(foldable, fn(focus, acc) ->
+    right_fold(foldable, fn(focus, acc) ->
       case comparator.(focus, acc) do
         %Order.Greater{} -> focus
         _ -> acc
@@ -153,7 +153,7 @@ defclass Witchcraft.Foldable do
 
   @spec min(Foldable.t, by: ((any, any) -> Order.t)) :: any | Maybe.t
   def! min(foldable, by: comparitor) do
-    foldr(foldable, fn(focus, acc) ->
+    right_fold(foldable, fn(focus, acc) ->
       case comparitor.(focus, acc) do
         %Order.Greater{} -> focus
         _ -> acc
@@ -193,7 +193,7 @@ defclass Witchcraft.Foldable do
 
   """
   @spec sum(Foldable.t) :: number
-  def sum(foldable), do: foldr(foldable, 0, &+/2)
+  def sum(foldable), do: right_fold(foldable, 0, &+/2)
 
   @doc ~S"""
   Product of all numbers in a foldable
@@ -214,7 +214,7 @@ defclass Witchcraft.Foldable do
 
   """
   @spec product(Foldable.t) :: number
-  def product(foldable), do: foldr(foldable, 0, &*/2)
+  def product(foldable), do: right_fold(foldable, 0, &*/2)
 
   @doc ~S"""
   Concatenate all lists in a foldable structure
@@ -237,7 +237,7 @@ defclass Witchcraft.Foldable do
   @spec concat(Foldable.t) :: [any]
   def concat(contained_lists) do
     contained_lists
-    |> foldr([], Quark.flip(&Semigroup.append/2))
+    |> right_fold([], Quark.flip(&Semigroup.append/2))
     |> Semigroup.concat
   end
 
@@ -266,7 +266,7 @@ defclass Witchcraft.Foldable do
   @spec concat_map(Foldable.t, (any -> [any])) :: [any]
   def concat_map(foldable, a_to_list_b) do
     foldable
-    |> foldr(fn(inner_focus, acc) -> a_to_list_b.(inner_focus) <> acc end)
+    |> right_fold(fn(inner_focus, acc) -> a_to_list_b.(inner_focus) <> acc end)
     |> concat
   end
 
@@ -289,7 +289,7 @@ defclass Witchcraft.Foldable do
 
   """
   @spec all?(Foldable.t) :: boolean
-  def all?(foldable_bools), do: foldr(foldable_bools, true, &and/2)
+  def all?(foldable_bools), do: right_fold(foldable_bools, true, &and/2)
 
   @doc ~S"""
   The same as `all?/1`, but with a custom predicate matcher
@@ -312,7 +312,7 @@ defclass Witchcraft.Foldable do
   """
   @spec all?(Foldable.t, (any -> boolean)) :: boolean
   def all?(foldable, predicate) do
-    foldr(foldable, true, fn(focus, acc) -> predicate.(focus) and acc end)
+    right_fold(foldable, true, fn(focus, acc) -> predicate.(focus) and acc end)
   end
 
   @doc ~S"""
@@ -334,7 +334,7 @@ defclass Witchcraft.Foldable do
 
   """
   @spec any?(Foldable.t) :: boolean
-  def any?(foldable_bools), do: foldr(foldable_bools, false, &or/2)
+  def any?(foldable_bools), do: right_fold(foldable_bools, false, &or/2)
 
   @doc ~S"""
   The same as `all?/1`, but with a custom predicate matcher
@@ -357,7 +357,7 @@ defclass Witchcraft.Foldable do
   """
   @spec any?(Foldable.t, (any -> boolean)) :: boolean
   def any?(foldable, predicate) do
-    foldr(foldable, false, fn(focus, acc) -> predicate.(focus) or acc end)
+    right_fold(foldable, false, fn(focus, acc) -> predicate.(focus) or acc end)
   end
 
   properties do
@@ -365,15 +365,15 @@ defclass Witchcraft.Foldable do
 end
 
 definst Witchcraft.Foldable, for: Tuple do
-  def foldr(tuple, seed, reducer), do: tuple |> Tuple.to_list |> foldr(seed, reducer)
+  def right_fold(tuple, seed, reducer), do: tuple |> Tuple.to_list |> right_fold(seed, reducer)
 end
 
 definst Witchcraft.Foldable, for: List do
-  def foldr(list, seed, reducer), do: List.foldr(list, seed, reducer)
+  def right_fold(list, seed, reducer), do: List.right_fold(list, seed, reducer)
 end
 
 definst Witchcraft.Foldable, for: Map do
-  def foldr(map, seed, reducer), do: Enum.reduce(map, seed, reducer)
+  def right_fold(map, seed, reducer), do: Enum.reduce(map, seed, reducer)
 end
 
 
@@ -381,11 +381,11 @@ end
 
 
     # WHEN WE HAVE MONAD
-  # foldrM :: (Foldable t, Monad m) => (a -> b -> m b) -> b -> t a -> m b Source #
+  # right_foldM :: (Foldable t, Monad m) => (a -> b -> m b) -> b -> t a -> m b Source #
 
   # Monadic fold over the elements of a structure, associating to the right, i.e. from right to left.
 
-  # foldlM :: (Foldable t, Monad m) => (b -> a -> m b) -> b -> t a -> m b Source #
+  # left_foldM :: (Foldable t, Monad m) => (b -> a -> m b) -> b -> t a -> m b Source #
 
   #   Monadic fold over the elements of a structure, associating to the left, i.e. from left to right.
 

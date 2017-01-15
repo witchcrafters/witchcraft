@@ -55,7 +55,7 @@ end
 
 definst Witchcraft.Apply, for: List do
   def ap(fun_list, list) when is_list(list) do
-    Witchcraft.Foldable.foldr(fun_list, [], fn(fun, acc) ->
+    Witchcraft.Foldable.right_fold(fun_list, [], fn(fun, acc) ->
       acc ++ Witchcraft.Functor.lift(list, fun)
     end)
   end
