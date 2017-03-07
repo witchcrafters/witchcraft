@@ -3,7 +3,7 @@ defmodule WitchcraftTest do
 
   # # Monoid
   # # ======
-  # doctest Witchcraft.Monoid, import: true
+  doctest Witchcraft.Monoid, import: true
 
   # doctest Witchcraft.Monoid.Protocol.Integer, import: true
   # doctest Witchcraft.Monoid.Protocol.Float, import: true
