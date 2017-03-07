@@ -16,12 +16,16 @@ defclass Witchcraft.Category do
 
     def left_identity(data) do
       a = generate(data)
-      Category.compose(Category.identity(a), a) == a
+      ident = Category.compose(Category.identity(a), a)
+
+      equal?(a, ident)
     end
 
     def right_identity(data) do
       a = generate(data)
-      Category.compose(a, Category.identity(a)) == a
+      ident = Category.compose(a, Category.identity(a))
+
+      equal?(a, ident)
     end
 
     def associative(data) do
@@ -32,7 +36,7 @@ defclass Witchcraft.Category do
       left  = a |> Category.compose(b) |> Category.compose(c)
       right = Category.compose(a, Category.compose(b, c))
 
-      left == right
+      equal?(left, right)
     end
   end
 end

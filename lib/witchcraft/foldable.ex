@@ -369,7 +369,7 @@ definst Witchcraft.Foldable, for: Tuple do
 end
 
 definst Witchcraft.Foldable, for: List do
-  def right_fold(list, seed, reducer), do: List.right_fold(list, seed, reducer)
+  def right_fold(list, seed, reducer), do: List.foldr(list, seed, reducer)
 end
 
 definst Witchcraft.Foldable, for: Map do

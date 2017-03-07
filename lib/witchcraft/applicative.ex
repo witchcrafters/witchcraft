@@ -27,7 +27,7 @@ defclass Witchcraft.Applicative do
       a = generate(data)
       f = &Quark.id/1
 
-      a == (a ~>> Applicative.of(a, f))
+      equal?(a, a ~>> Applicative.of(a, f))
     end
 
     def homomorphism(data) do
@@ -37,7 +37,7 @@ defclass Witchcraft.Applicative do
       left  = Applicative.of(data, f) <<~ Applicative.of(data, a)
       right = Applicative.of(data, f.(a))
 
-      left == right
+      equal?(left, right)
     end
 
     def interchange(data) do
@@ -47,7 +47,7 @@ defclass Witchcraft.Applicative do
       left  = fs <<~ Applicative.of(fs, as)
       right = Applicative.of(fs, fn g -> g.(as) end) <<~ fs
 
-      left == right
+      equal?(left, right)
     end
   end
 end
