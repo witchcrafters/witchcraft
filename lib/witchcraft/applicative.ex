@@ -1,70 +1,61 @@
-defmodule Witchcraft.Applicative do
-  @moduledoc """
-  Applicative functors provide a method of seqing a function contained in a
-  data structure to a value of the same type. This allows you to seq and compose
-  functions to values while avoiding repeated manual wrapping and unwrapping
-  of those values.
+import TypeClass
 
-  # Properties
-  ## Identity
-  `seq`ing a lifted `id` to some lifted value `v` does not change `v`
-
-      seq(v, wrap(&id(&1))) == v
-
-  ## Composition
-  `seq` composes normally.
-
-      seq((wrap &compose(&1,&2)), (seq(u,(seq(v, w))))) == seq(u,(seq(v, w)))
-
-  ## Homomorphism
-  `seq`ing a `wrap`ped function to a `wrap`ped value is the same as wrapping the
-  result of the function on that value.
-
-      seq(wrap x, wrap f) == wrap f(x))
-
-  ## Interchange
-  The order does not matter when `seq`ing to a `wrap`ped value
-  and a `wrap`ped function.
-
-      seq(wrap y, u) == seq(u, wrap &(lift(y, &1))
-
-  ## Functor
-  Being an applicative _functor_, `seq` behaves as `lift` on `wrap`ped values
-
-      lift(x, f) == seq(x, (wrap f))
-
-  # Notes
-  Given that Elixir functons are right-associative, you can write clean looking,
-  but much more ambiguous versions:
-
-      wrap(y) |> seq(u) == seq(u, wrap(&lift(y, &1)))
-      lift(x, f) == seq(x, wrap f)
-
-  However, it is strongly recommended to include the parentheses for clarity.
-
-  """
+defclass Witchcraft.Applicative do
+  extend Witchcraft.Apply
 
   defmacro __using__(_) do
     quote do
+      import Witchcraft.Apply
       import unquote(__MODULE__)
-      require Witchcraft.Applicative.Function
-      use Witchcraft.Functor
     end
   end
 
-  defdelegate wrap(bare), to: Witchcraft.Applicative.Wrap
+  where do
+    def of(sample, to_wrap)
+  end
 
-  defdelegate wrap(specemin, bare),  to: Witchcraft.Applicative.Protocol
-  defdelegate seq(applicative, fun), to: Witchcraft.Applicative.Protocol
+  def of(sample), do: fn to_wrap -> of(sample, to_wrap) end
 
-  defdelegate rewrap(specemin), to: Witchcraft.Applicative.Function
-  defdelegate lift(val_1, val_2, fun), to: Witchcraft.Applicative.Function
-  defdelegate lift(val_1, val_2, val_3, fun), to: Witchcraft.Applicative.Function
-  defdelegate lift(val_1, val_2, val_3, val_4, fun), to: Witchcraft.Applicative.Function
+  defalias wrap(sample, to_wrap), as: :of
+  defalias pure(sample, to_wrap), as: :of
+  defalias unit(sample, to_wrap), as: :of
 
-  defdelegate seq_first(first, second),  to: Witchcraft.Applicative.Function
-  defdelegate seq_second(first, second), to: Witchcraft.Applicative.Function
+  properties do
+    use Witchcraft.Apply
 
-  defdelegate data ~>> func, to: Witchcraft.Applicative.Operator
-  defdelegate func <<~ data, to: Witchcraft.Applicative.Operator
+    def identity(data) do
+      a = generate(data)
+      f = &Quark.id/1
+
+      equal?(a, a ~>> Applicative.of(a, f))
+    end
+
+    def homomorphism(data) do
+      a = generate(data)
+      f = &inspect/1
+
+      left  = Applicative.of(data, f) <<~ Applicative.of(data, a)
+      right = Applicative.of(data, f.(a))
+
+      equal?(left, right)
+    end
+
+    def interchange(data) do
+      as = generate(data)
+      fs = replace(as, &inspect/1)
+
+      left  = fs <<~ Applicative.of(fs, as)
+      right = Applicative.of(fs, fn g -> g.(as) end) <<~ fs
+
+      equal?(left, right)
+    end
+  end
 end
+
+definst Witchcraft.Applicative, for: List do
+  def of(_, unwrapped), do: [unwrapped]
+end
+
+# definst Witchcraft.Applicative, for: Functio💯n do
+#   def wrap(fun) when is_function(fun), do: &Quark.SKI.k/1
+# end

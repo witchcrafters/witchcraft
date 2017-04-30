@@ -1,47 +1,109 @@
-defmodule Witchcraft.Monoid do
+import TypeClass
+
+defclass Witchcraft.Monoid do
   @moduledoc ~S"""
-  Monoids are a set of elements, and a binary combining operation (`op`) that
-  returns another member of the set.
+  Monoid extends the semigroup with the concept of an "empty" or "zero" element.
 
-  # Properties
+  ## Examples
 
-  ## Associativity
+      iex> empty(10)
+      0
 
-  1. Given a binary joining operation `•`,
-  2. and all `a`, `b`, and `c` of the set,
-  3. then: `a • (b • c) == (a • b) • c`
+      iex> empty [1, 2, 3, 4, 5]
+      []
 
-  ## Identity element
-
-  * Unique element (`id`, sometimes called the 'zero' of the set)
-  * Behaves as an identity with `op`
-
-      identity = 0
-      op = &(&1 + &2) # Integer addition
-      append(34, identity) == 34
-
-      identity = 1
-      append = &(&1 * &2) # Integer multiplication
-      append(42, identity) == 42
-
-  ## Counter-Example
-
-  Integer division is not a monoid.
-  Because you cannot divide by zero, the property does not hold
-  for all values in the set.
   """
 
-  import Kernel, except: [<>: 2]
+  alias Witchcraft.Monoid
+  extend Witchcraft.Semigroup, alias: true
 
-  defmacro __using__(_) do
+  @type t :: any
+
+  defmacro __using__(alias: true) do
     quote do
-      import Kernel, except: [<>: 2]
-      import unquote(__MODULE__)
+      use Witchcraft.Monoid, alias: Monoid
     end
   end
 
-  defdelegate identity(a), to: Witchcraft.Monoid.Protocol
-  defdelegate append(a, b), to: Witchcraft.Monoid.Protocol
+  defmacro __using__(alias: as_alias) do
+    quote do
+      alias Witchcraft.Semigroup, as: unquote(as_alias)
+      alias Witchcraft.Monoid, as: unquote(as_alias)
+    end
+  end
 
-  defdelegate a <> b, to: Witchcraft.Monoid.Operator
+  defmacro __using__(_) do
+    quote do
+      import Witchcraft.Semigroup
+      import Witchcraft.Monoid
+    end
+  end
+
+  where do
+    @doc ~S"""
+    An "emptied out" or "starting position" of the passed data
+
+    ## Example
+
+        iex> empty(10)
+        0
+
+        iex> empty [1, 2, 3, 4, 5]
+        []
+
+    """
+    def empty(sample)
+  end
+
+  defdelegate zero(sample), to: Proto, as: :empty
+
+  @spec empty?(Monoid.t) :: boolean
+  def empty?(monoid), do: empty(monoid) == monoid
+
+  properties do
+    def left_identity(data) do
+      a = generate(data)
+
+      if is_function(a) do
+        Semigroup.append(Monoid.empty(a), a).("foo") == a.("foo")
+      else
+        Semigroup.append(Monoid.empty(a), a) == a
+      end
+    end
+
+    def right_identity(data) do
+      a = generate(data)
+
+      if is_function(a) do
+        Semigroup.append(a, Monoid.empty(a)).("foo") == a.("foo")
+      else
+        Semigroup.append(a, Monoid.empty(a)) == a
+      end
+    end
+  end
 end
+
+# definst Witchcraft.Monoid, for: Any do
+#   def empty(sample) when is_function(sample), do: &Quark.id/1
+# end
+
+definst Witchcraft.Monoid, for: Integer do
+  def empty(_), do: 0
+end
+
+# definst Witchcraft.Monoid, for: Float do
+#   def empty(_), do: 0.0
+# end
+
+
+# definst Witchcraft.Monoid, for: BitString do
+#   def empty(_), do: ""
+# end
+
+definst Witchcraft.Monoid, for: List do
+  def empty(_), do: []
+end
+
+# definst Witchcraft.Monoid, for: Map do
+#   def empty(_), do: %{}
+# end

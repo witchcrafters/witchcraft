@@ -1,66 +1,132 @@
-defmodule Witchcraft.Functor do
+import TypeClass
+
+defclass Witchcraft.Functor do
   @moduledoc ~S"""
-  Functors provide a way to apply a function to value(s) a datatype
-  (lists, trees, maybes, etc).
+  Functors are datatypes that allow the application of functions to their interior values.
+  Always returns data in the same structure (same size, leaves, &c)
 
-  All elements of the data being mapped over need to be consumable by
-  the lifted function. The simplest way to handle this is to have only one
-  type in the data/collection.
+  Please note that bitstrings are not functors, as they fail the
+  functor composition constraint. They change the structure of the underlying data,
+  and thus composed lifting does not equal lifing a composed function. If you
+  need to map over a bitstring, convert it to and from a charlist.
+  """
 
-  ## Terminology
-  The term `lift` is used rather than the more common `map`.
+  alias __MODULE__
+  use Quark
 
-  First, this makes clear that the use is to lift functions into containers.
+  @type t :: any
 
-  Second, if you want mapping behaviour on collections, check out
-  [`Enum.map`](http://elixir-lang.org/docs/v1.1/elixir/Enum.html#map/2).
-  In fact, the default implimentation *is* `Enum.map`, so you can use this with the
-  build-in datatypes.
+  where do
+    @doc ~S"""
+    `map` a function into one layer of a data wrapper.
+    There is an autocurrying variant: `lift/2`.
 
-  Third, the naming becomes more consistent with
-  [`Applicative`](http://www.robotoverlord.io/witchcraft/Witchcraft.Applicative.Functions.html)'s
-  `lift2`, `lift3`, and so on.
+    ## Examples
 
-  ## Properties
-  ### Identity
-  Mapping the identity function over the object returns the same object
-  ex. `lift([1,2,3], id) == [1,2,3]`
+        iex> [1, 2, 3] |> map(fn x -> x + 1 end)
+        [2, 3, 4]
 
-  ### Distributive
-  `lift(data, (f |> g)) == data |> lift(f) |> lift(g)`
+        iex> %{a: 1, b: 2} |> fn x -> x * 10 end
+        %{a: 10, b: 20}
 
-  ### Associates all objects
-  Mapping a function onto an object returns a value.
-  ie: does not throw an error, returns a value of the target type (not of
-  the wrong type, or the type `none`)
+        iex> map(%{a: 2, b: [1, 2, 3]}, fn
+        ...>   int when is_integer(int) -> int * 100
+        ...>   value -> inspect(value)
+        ...> end)
+        %{a: 200, b: "[1, 2, 3]"}
 
-  ## Notes:
-  - The argument order convention is reversed from most other lanaguges
-  - Most (if not all) implimentations of `lift` should be
-    expressible in terms of
-    [`Enum.reduce/3`](http://elixir-lang.org/docs/v1.0/elixir/Enum.html#reduce/3)
-  - Falls back to
-    [`Enum.map/2`](http://elixir-lang.org/docs/v1.0/elixir/Enum.html#map/2)
+    """
+    def map(wrapped, fun)
+  end
+
+  @doc ~S"""
+  `map/2` but with the function automatically curried
+  """
+  @spec lift(Functor.t, fun) :: Functor.t
+  def lift(wrapped, fun), do: Functor.map(wrapped, curry(fun))
+
+  @doc ~S"""
+  Operator alias for `lift/2`
+
+  ## Example
+
+      iex> [1,2,3]
+      ...> ~> fn x -> x + 5 end
+      ...> ~> fn y -> y * 10 end
+      [60, 70, 80]
+
+  """
+  defalias data ~> fun, as: :lift
+
+  @doc ~S"""
+  `<~/2` with arguments flipped
 
   ## Examples
 
-      iex> [1,2,3] |> lift(&(&1 + 1))
-      [2,3,4]
+      iex> (fn x -> x + 5 end) <~ [1,2,3]
+      [6, 7, 8]
 
   """
+  def fun <~ data, do: data ~> fun
 
-  defmacro __using__(_) do
-    quote do
-      import unquote(__MODULE__)
+  @doc ~S"""
+  Replace all inner elements with a constant value
+
+  ## Examples
+
+      iex> [1, 2, 3] |> replace("hi")
+      ["hi", "hi", "hi"]
+
+  """
+  @spec replace(Functor.t, any) :: Functor.t
+  def replace(wrapped, replace_with), do: wrapped ~> &constant(replace_with, &1)
+
+  properties do
+    def identity(data) do
+      wrapped = generate(data)
+
+      wrapped
+      |> Functor.map(&id/1)
+      |> equal?(wrapped)
+    end
+
+    def composition(data) do
+      wrapped = generate(data)
+
+      f = fn x -> inspect(wrapped == x) end
+      g = fn x -> inspect(wrapped != x) end
+
+      left  = wrapped |> Functor.map(fn x -> x |> g.() |> f.() end)
+      right = wrapped |> Functor.map(g) |> Functor.map(f)
+
+      equal?(left, right)
     end
   end
-
-  defdelegate lift(data, fun), to: Witchcraft.Functor.Protocol
-  defdelegate lift(fun),       to: Witchcraft.Functor.Function
-  defdelegate lift(),          to: Witchcraft.Functor.Function
-
-  defdelegate replace(data, const), to: Witchcraft.Functor.Function
-
-  defdelegate data ~> func, to: Witchcraft.Functor.Operator
-  defdelegate func <~ data, to: Witchcraft.Functor.Operator
 end
+
+# definst Witchcraft.Functor, for: Function do
+#   use Quark
+#   def map(f, g), do: compose(g, f)
+# end
+
+definst Witchcraft.Functor, for: List do
+  def map(list, fun), do: Enum.map(list, fun)
+end
+
+# definst Witchcraft.Functor, for: Tuple do
+#   def map(tuple, fun) do
+#     tuple
+#     |> Tuple.to_list
+#     |> Witchcraft.Functor.map(fun)
+#     |> List.to_tuple
+#   end
+# end
+
+# definst Witchcraft.Functor, for: Map do
+#   def map(hashmap, fun) do
+#     hashmap
+#     |> Map.to_list
+#     |> Witchcraft.Functor.map(fn {key, value} -> {key, fun.(value)} end)
+#     |> Enum.into(%{})
+#   end
+# end
