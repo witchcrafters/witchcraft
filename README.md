@@ -1,4 +1,4 @@
-![](./brand/Wordmark/EPS/WC-wordmark-print.eps)
+![](./brand/Wordmark/PNG/WC-wordmark-lrg@2x.png)
 
 `Witchcraft` is a library providing common algebraic and categorical abstractions to Elixir.
 (Monoids, functors, monads, arrows, and categories)
