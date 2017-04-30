@@ -7,8 +7,8 @@ defmodule Witchcraft.Mixfile do
       name: "Witchcraft",
       description: "Common algebras (monoids, functors, monads, &c)",
 
-      version: "1.0.0-rc.1",
-      elixir:  "~> 1.3",
+      version: "1.0.0-alpha-1",
+      elixir:  "~> 1.4",
 
       package: [
         maintainers: ["Brooklyn Zelenka"],
@@ -22,24 +22,23 @@ defmodule Witchcraft.Mixfile do
       aliases: ["quality": ["test", "credo --strict", "inch"]],
 
       deps: [
-        {:credo,    "~> 0.4",  only: [:dev, :test]},
+        {:credo, "~> 0.7",  only: [:dev, :test]},
 
         {:dialyxir, "~> 0.3",  only: :dev},
-        {:earmark,  "~> 1.0",  only: :dev},
-        {:ex_doc,   "~> 0.13", only: :dev},
+        {:earmark,  "~> 1.2",  only: :dev},
+        {:ex_doc,   "~> 0.15", only: :dev},
 
         {:inch_ex, "~> 0.5",  only: [:dev, :docs, :test]},
 
-        # {:algae,       "~> 0.12"},
-        {:exceptional, "~> 2.0"},
+        {:exceptional, "~> 2.1"},
         {:operator,    "~> 0.2"},
-        {:quark,       "~> 2.1"},
+        {:quark,       "~> 2.2"},
         {:type_class,  "~> 1.0"}
       ],
 
       docs: [
         extras: ["README.md"],
-        logo: "./brand/logo.png",
+        logo: "./brand/Icon/PNG/WC-icon-sml@2x.png",
         main: "readme"
       ]
     ]
