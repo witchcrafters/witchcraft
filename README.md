@@ -4,6 +4,7 @@
 (Monoids, functors, monads, arrows, and categories)
 
 [![Build Status](https://travis-ci.org/expede/witchcraft.svg?branch=master)](https://travis-ci.org/expede/witchcraft) [![Inline docs](http://inch-ci.org/github/expede/witchcraft.svg?branch=master)](http://inch-ci.org/github/expede/witchcraft) [![Deps Status](https://beta.hexfaktor.org/badge/all/github/expede/witchcraft.svg)](https://beta.hexfaktor.org/github/expede/witchcraft) [![hex.pm version](https://img.shields.io/hexpm/v/witchcraft.svg?style=flat)](https://hex.pm/packages/witchcraft) [![API Docs](https://img.shields.io/badge/api-docs-yellow.svg?style=flat)](http://hexdocs.pm/witchcraft/) [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/expede/witchcraft/blob/master/LICENSE)
+
 A big thank you to [Brandon Labbé](https://dribbble.com/brandonlabbe) for creating the logo to this project
 
 # Table of Contents
