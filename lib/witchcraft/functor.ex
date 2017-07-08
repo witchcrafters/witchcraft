@@ -130,3 +130,7 @@ end
 #     |> Enum.into(%{})
 #   end
 # end
+
+definst Witchcraft.Functor, for: Algae.Id do
+  def map(%Algae.Id{id: a}, fun), do: %Algae.Id{id: fun.(a)}
+end

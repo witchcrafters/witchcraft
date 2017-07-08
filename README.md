@@ -30,6 +30,15 @@ def deps do
 end
 ```
 
+# Relationship to Other Packages
+```
+         TypeClass
+             ↓
+Quark → Witchcraft
+   ↘    ↙
+    Algae
+```
+
 # Values
 ## Beginner Friendliness
 As much as possible, keep things friendly. Concrete examples are available in the

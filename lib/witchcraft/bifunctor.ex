@@ -3,6 +3,8 @@ import TypeClass
 defclass Witchcraft.Bifunctor do
   extend Witchcraft.Functor
 
+  alias __MODULE__
+
   where do
     def bimap(functor, f, g)
   end

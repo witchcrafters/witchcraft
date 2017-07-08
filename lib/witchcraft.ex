@@ -11,4 +11,12 @@ defmodule Witchcraft do
       use Witchcraft.Monad
     end
   end
+
+  defimpl TypeClass.Property.Generator, for: Algae.Id do
+    @moduledoc false
+
+    def generate(_) do
+      %Algae.Id{id: TypeClass.Property.Generator.generate(true)}
+    end
+  end
 end
