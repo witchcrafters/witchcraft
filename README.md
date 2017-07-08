@@ -1,4 +1,4 @@
-![](./brand/Wordmark/PNG/WC-wordmark-lrg@2x.png)
+![](https://github.com/expede/witchcraft/raw/master/brand/Wordmark/PNG/WC-wordmark-lrg@2x.png)
 
 `Witchcraft` is a library providing common algebraic and categorical abstractions to Elixir.
 (Monoids, functors, monads, arrows, and categories)
@@ -7,7 +7,8 @@
 
 A big thank you to [Brandon Labbé](https://dribbble.com/brandonlabbe) for creating the logo to this project
 
-# Table of Contents
+# README
+## Table of Contents
 - [Quick Start](#quick-start)
 - [Values](#values)
   - [Beginner Friendliness](#beginner-friendliness)
@@ -32,11 +33,55 @@ end
 
 # Relationship to Other Packages
 ```
-         TypeClass
-             ↓
-Quark → Witchcraft
-   ↘    ↙
-    Algae
+Quark    TypeClass
+    ↘    ↙
+   Witchcraft
+       ↓
+     Algae
+```
+
+* [Quark](https://hex.pm/packages/quark): Standard combinators (`id`, `compose`, &c)
+* [TypeClass](https://hex.pm/packages/type_class): Used internally to generate type classes
+* [Algae](https://hex.pm/packages/algae): Algebraic data types that implement Witchcraft type classes
+
+# Hierarchy
+
+```
+
+Semigroupoid  Semigroup  Setoid   Foldable   Functor -----------┐
+     ↓           ↓         ↓         ↓     ↙   ↓   ↘           |
+  Category     Monoid     Ord    Traversable  Apply  Bifunctor  |
+     ↓                                       ↙    ↘             ↓
+   Arrow                            Applicative   Chain       Extend
+                                             ↘    ↙             ↓
+                                              Monad           Comonad
+
+```
+
+It is very common to want everything in a chain. You can import the entire chain
+with `use`. For example:
+
+```elixir
+use Witchcraft.Monad
+```
+
+Any options that you pass to `use` will be propagated all the way down the chain
+
+```elixir
+use Witchcraft.Monad, except: [~>: 2]
+```
+
+Some modules override `Kernel` operators and functions. While this is generally safe,
+if you would like to skip all overrides, pass `override_kernel: false` as an option
+
+```elixir
+use Witchcraft.Foldable, override_kernel: false
+```
+
+Finally, to import the entire library:
+
+```elixir
+use Witchcraft
 ```
 
 # Values
