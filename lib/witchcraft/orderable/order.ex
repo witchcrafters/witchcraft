@@ -1,7 +1,7 @@
 import TypeClass
 
 defmodule Witchcraft.Orderable.Order do
-  @type t :: Equal.t | Greater.t | Less.t
+  @type t :: Equal.t | Greater.t | Lesser.t
 
   defmodule Greater do
     @type t :: %Greater{}
