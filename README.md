@@ -58,10 +58,10 @@ Concrete examples are available via doctests.
 
 ### Consistency & Ethos
 
-Elixir does a lot of things differently from other functional languages.
+Elixir does a lot of things differently from certain other functional languages.
 The idea of a data "subject" being piped though functions is conceptually different from
-pure composition of functions that are later applied. `Witchcraft` honours the Elixir
-way, and operators point in the direction that data travels.
+pure composition of functions that are later applied. `Witchcraft` honours the
+Elixir/Elm/OCaml way, and operators point in the direction that data travels.
 
 Some functions in the Elixir standard library have been expanded to work with more
 types while keeping the basic idea the same. For example, `<>` has been expanded
