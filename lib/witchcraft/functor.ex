@@ -194,6 +194,14 @@ defclass Witchcraft.Functor do
       iex> async_map([1, 2, 3], fn x -> x * 10 end)
       [10, 20, 30]
 
+      0..10_000
+      |> Enum.to_list()
+      |> async_map(fn x ->
+        Process.sleep(500)
+        x * 10
+      end)
+      #=> [0, 10, ...] in around a second
+
   """
   @spec async_map(Functor.t(), (any() -> any())) :: Functor.t()
   def async_map(functor, fun) do
@@ -215,6 +223,13 @@ defclass Witchcraft.Functor do
       ...> |> async_reverse_map([1, 2, 3])
       [10, 20, 30]
 
+      fn x ->
+        Process.sleep(500)
+        x * 10
+      end
+      |> async_reverse_map(Enumto_list(0..10_000))
+      #=> [0, 10, ...] in around a second
+
   """
   @spec async_reverse_map((any() -> any()), Functor.t()) :: Functor.t()
   def async_reverse_map(fun, functor), do: async_map(functor, fun)
@@ -226,6 +241,14 @@ defclass Witchcraft.Functor do
 
       iex> async_lift([1, 2, 3], fn x -> x * 10 end)
       [10, 20, 30]
+
+      0..10_000
+      |> Enum.to_list()
+      |> async_lift(fn x ->
+        Process.sleep(500)
+        x * 10
+      end)
+      #=> [0, 10, ...] in around a second
 
   """
   @spec async_lift(Functor.t(), fun()) :: Functor.t()
@@ -239,6 +262,13 @@ defclass Witchcraft.Functor do
       iex> fn x -> x * 10 end
       ...> |> async_over([1, 2, 3])
       [10, 20, 30]
+
+      fn x ->
+        Process.sleep(500)
+        x * 10
+      end
+      |> async_over(Enumto_list(0..10_000))
+      #=> [0, 10, ...] in around a second
 
   """
   @spec async_over(fun(), Functor.t()) :: Functor.t()
