@@ -232,13 +232,41 @@ defclass Witchcraft.Arrow do
 
   @doc """
   Alias for `product/2`, meant to invoke a spacial metaphor
+
+  ## Examples
+
+      iex> beside(&(&1 - 10), &(&1 <> "!")).({42, "Hi"})
+      {32, "Hi!"}
+
   """
-  @spec product(Arrow.t(), Arrow.t()) :: Arrow.t()
+  @spec beside(Arrow.t(), Arrow.t()) :: Arrow.t()
   defalias beside(a, b), as: :product
 
+  @doc """
+  Operator alias for `product/2`
+
+  ## Examples
+
+      iex> arr = fn x -> x - 10 end ^^^ fn y -> y <> "!" end
+      ...> arr.({42, "Hi"})
+      {32, "Hi!"}
+
+      iex> {42, "Hi"} |> (fn x -> x - 10 end ^^^ fn y -> y <> "!" end).()
+      {32, "Hi!"}
+
+  """
   @spec Arrow.t() ^^^ Arrow.t() :: Arrow.t()
   defalias a ^^^ b, as: :product
 
+  @doc """
+  Swap positions of elements in a tuple.
+
+  ## Examples
+
+      iex> swap({1, 2})
+      {2, 1}
+
+  """
   @spec swap({any(), any()}) :: {any(), any()}
   def swap({x, y}), do: {y, x}
 

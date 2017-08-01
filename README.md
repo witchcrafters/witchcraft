@@ -7,14 +7,16 @@ Monoids, functors, monads, arrows, categories, and more.
 
 
 # README
+
 ## Table of Contents
-- [Quick Start](#quick-start)
-- [Library Family](#library-family)
-- [Type Class Hierarchy](#type-class-hierarchy)
-- [Operators](#operators)
-- [Values](#values)
-- [Haskell Translation Table](#haskell-translation-table)
-- [Credits](#credits)
+
+* [Quick Start](#quick-start)
+* [Library Family](#library-family)
+* [Values](#values)
+* [Type Class Hierarchy](#type-class-hierarchy)
+* [Operators](#operators)
+* [Haskell Translation Table](#haskell-translation-table)
+* [Credits](#credits)
 
 ## Quick Start
 
@@ -42,43 +44,10 @@ Quark    TypeClass
 * [TypeClass](https://hex.pm/packages/type_class): Used internally to generate type classes
 * [Algae](https://hex.pm/packages/algae): Algebraic data types that implement `Witchcraft` type classes
 
-## Type Class Hierarchy
-
-```md
-
-Semigroupoid  Semigroup  Setoid   Foldable   Functor -----------┐
-     ↓           ↓         ↓         ↓     ↙   ↓   ↘           |
-  Category     Monoid     Ord    Traversable  Apply  Bifunctor  |
-     ↓                                       ↙    ↘             ↓
-   Arrow                            Applicative   Chain       Extend
-                                             ↘    ↙             ↓
-                                              Monad           Comonad
-
-```
-
-It is very common to want everything in a chain. You can import the entire chain
-with `use`. For example, you can import the entire library with:
-
-```elixir
-use Witchcraft.Monad
-```
-
-Any options that you pass to `use` will be propagated all the way down the chain
-
-```elixir
-use Witchcraft.Monad, except: [~>: 2]
-```
-
-Some modules override `Kernel` operators and functions. While this is generally safe,
-if you would like to skip all overrides, pass `override_kernel: false` as an option
-
-```elixir
-use Witchcraft.Foldable, override_kernel: false
-```
-
 ## Values
 
 ### Beginner Friendliness
+
 You shouldn't have to learn another language just to understand powerful abstractions!
 By enabling people to use a language that they already know, and is already in the
 same ballpark in terms of values (emphasis on immutability, &c), we can teach and
@@ -88,6 +57,7 @@ As much as possible, keep things friendly and well explained.
 Concrete examples are available via doctests.
 
 ### Consistency & Ethos
+
 Elixir does a lot of things differently from other functional languages.
 The idea of a data "subject" being piped though functions is conceptually different from
 pure composition of functions that are later applied. `Witchcraft` honours the Elixir
@@ -112,6 +82,70 @@ into companies using Scala, so we should be able to do the same here.
 All functions are compatible with regular Elixir code, and no types are enforced aside
 from what is used in protocol dispatch. Any struct can be made into a Witchcraft
 class instance (given that it conforms to the properties).
+
+## Type Class Hierarchy
+
+```
+Semigroupoid  Semigroup  Setoid   Foldable   Functor -----------┐
+     ↓           ↓         ↓         ↓     ↙   ↓   ↘           |
+  Category     Monoid     Ord    Traversable  Apply  Bifunctor  |
+     ↓                                       ↙    ↘             ↓
+   Arrow                            Applicative   Chain       Extend
+                                             ↘    ↙             ↓
+                                              Monad           Comonad
+```
+
+Having a clean slate, we have been able to use a clean of typeclasses. This is largely
+taken from the [Fantasy Land Specification](https://github.com/fantasyland/fantasy-land)
+and Edward Kmett's [semigroupoids](https://hackage.haskell.org/package/semigroupoids) package.
+
+As usual, all `Applicative`s are `Functor`s, and all `Monad`s are `Applicative`s.
+This grants us the ability to reuse functions in their child classes.
+For example, `of` can be used for both `pure` and `return`, `lift/*` can handle
+both `liftA*` and `liftM*`, and so on.
+
+### Import Chains
+
+It is very common to want everything in a chain. You can import the entire chain
+with `use`. For example, you can import the entire library with:
+
+```elixir
+use Witchcraft.Monad
+```
+
+Any options that you pass to `use` will be propagated all the way down the chain
+
+```elixir
+use Witchcraft.Monad, except: [~>: 2]
+```
+
+Some modules override `Kernel` operators and functions. While this is generally safe,
+if you would like to skip all overrides, pass `override_kernel: false` as an option
+
+```elixir
+use Witchcraft.Foldable, override_kernel: false
+```
+
+## Operators
+
+| Family       | Function         | Operator |
+|-------------:|:-----------------|:---------|
+| Setoid       | `equivalent?`    | `==`     |
+|              | `nonequivalent?` | `!=`     |
+| Ord          | `greater_than?`  | `>`      |
+|              | `lesser_than?`   | `<`      |
+| Monoid       | `append`         | `<>`     |
+| Functor      | `lift`           | `~>`     |
+|              | `pipe_ap`        | `~>>`    |
+|              | `chain`          | `>>>`    |
+|              | `reverse_lift`   | `<~`     |
+|              | `ap`             | `<<~`    |
+|              | `reverse_chain`  | `<<<`    |
+| Semigroupoid | `compose`        | `<\|>`   |
+|              | `pipe_compose`   | `<~>`    |
+| Arrow        | `product`        | `^^^`    |
+|              | `fanout`         | `&&&`    |
+
 
 ## Haskell Translation Table
 
@@ -143,16 +177,6 @@ class instance (given that it conforms to the properties).
 | `=<<`           | `<<</2`       |
 | `***`           | `^^^/2`       |
 | `&&&`           | `&&&/2`       |
-
-### Hierarchy
-Having a clean slate, we have been able to use a clean of typeclasses. This is largely
-taken from the [Fantasy Land Specification](https://github.com/fantasyland/fantasy-land)
-and Edward Kmett's [semigroupoids](https://hackage.haskell.org/package/semigroupoids) package.
-
-As usual, all `Applicative`s are `Functor`s, and all `Monad`s are `Applicative`s.
-This grants us the ability to reuse functions in their child classes.
-For example, `of` can be used for both `pure` and `return`, `lift/*` can handle
-both `liftA*` and `liftM*`, and so on.
 
 ## Credits
 
