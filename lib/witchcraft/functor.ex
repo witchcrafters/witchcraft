@@ -116,7 +116,7 @@ defclass Witchcraft.Functor do
   @spec lift(Functor.t(), fun()) :: Functor.t()
   def lift(wrapped, fun), do: Functor.map(wrapped, curry(fun))
 
-  @doc ~S"""
+  @doc """
   `lift/2` but with arguments flipped.
 
   ## Examples
@@ -126,7 +126,7 @@ defclass Witchcraft.Functor do
 
   """
   @spec over(fun(), Functor.t()) :: Functor.t()
-  def over(fun, wrapped), do: lift(wrapped, lift)
+  def over(fun, wrapped), do: lift(wrapped, fun)
 
   @doc ~S"""
   Operator alias for `lift/2`
@@ -230,7 +230,6 @@ defclass Witchcraft.Functor do
   """
   @spec async_lift(Functor.t(), fun()) :: Functor.t()
   def async_lift(functor, fun), do: async_map(functor, curry(fun))
-
 
   @doc """
   `async_lift/2` with arguments flipped.
