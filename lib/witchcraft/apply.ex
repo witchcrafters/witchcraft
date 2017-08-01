@@ -91,7 +91,8 @@ defclass Witchcraft.Apply do
 
   where do
     @doc """
-    Apply argumnets to a function, when both are wrapped in the same data structure
+    Map/apply arguments to functions, when both are wrapped in the same
+    type of data structure.
 
     ## Examples
 
@@ -107,8 +108,8 @@ defclass Witchcraft.Apply do
         # 100 * 5 / 100          200 * 5 / 50
 
     """
-    @spec ap(Apply.fun(), Apply.t()) :: Apply.t()
-    def ap(wrapped_funs, wrapped_args)
+    @spec ap(Apply.t(), Apply.fun()) :: Apply.t()
+    def ap(wrapped_args, wrapped_funs)
   end
 
   properties do
@@ -120,13 +121,13 @@ defclass Witchcraft.Apply do
       fs = data |> generate() |> Functor.replace(fn x -> x <> x end)
       gs = data |> generate() |> Functor.replace(fn y -> y <> "foo" end)
 
-      left  = Apply.ap(fs, Apply.ap(gs, as))
+      left  = Apply.ap(Apply.ap(as, gs), fs)
 
       right =
         fs
         |> Functor.lift(&compose/2)
-        |> Apply.ap(gs)
-        |> Apply.ap(as)
+        |> fn x -> Apply.ap(gs, x) end.()
+        |> fn y -> Apply.ap(as, y) end.()
 
       equal?(left, right)
     end
@@ -140,12 +141,12 @@ defclass Witchcraft.Apply do
   ## Examples
 
       iex> [1, 2, 3]
-      ...> |> pipe_ap([fn x -> x + 1 end, fn y -> y * 10 end])
+      ...> |> reverse_ap([fn x -> x + 1 end, fn y -> y * 10 end])
       [2, 10, 3, 20, 4, 30]
 
   """
-  @spec pipe_ap(Apply.t(), Applt.fun()) :: Apply.t()
-  def pipe_ap(wrapped, wrapped_funs), do: lift(wrapped, wrapped_funs, fn(x, f) -> f.(x) end)
+  @spec reverse_ap(Apply.fun(), Apply.t()) :: Apply.t()
+  def reverse_ap(wrapped_funs, wrapped), do: ap(wrapped, wrapped_funs)
 
   @doc """
   Operator alias for `ap/2`
@@ -171,10 +172,10 @@ defclass Witchcraft.Apply do
       [5, 6, 4, 5, 6, 7, 5, 6, 8, 9, 7, 8, 10, 11, 9, 10]
 
   """
-  defalias wrapped_funs <<~ wrapped, as: :curried_ap
+  defalias wrapped_funs <<~ wrapped, as: :curried_reverse_ap
 
   @doc """
-  Operator alias for `pipe_ap/2`, moving in the pipe direction
+  Operator alias for `reverse_ap/2`, moving in the pipe direction
 
   ## Examples
 
@@ -190,7 +191,7 @@ defclass Witchcraft.Apply do
       [5.0, 10.0, 2.0, 4.0, 10.0, 20.0, 4.0, 8.0]
 
   """
-  defalias wrapped ~>> wrapped_funs, as: :curried_pipe_ap
+  defalias wrapped ~>> wrapped_funs, as: :curried_ap
 
   @doc """
   Same as `ap/2`, but with all functions curried
@@ -203,28 +204,26 @@ defclass Witchcraft.Apply do
       [5, 6, 7, 6, 7, 8, 7, 8, 9, 4, 5, 6, 8, 10, 12, 12, 15, 18]
 
   """
-  @spec curried_ap(Apply.fun(), Apply.t()) :: Apply.t()
-  def curried_ap(wrapped_funs, wrapped_args) do
+  @spec curried_ap(Apply.t(), Apply.fun()) :: Apply.t()
+  def curried_ap(wrapped_args, wrapped_funs) do
     wrapped_funs
     |> Functor.map(&curry/1)
-    |> Apply.ap(wrapped_args)
+    |> Apply.reverse_ap(wrapped_args)
   end
 
   @doc """
-  Same as `pipe_ap/2`, but with all functions curried
+  Same as `reverse_ap/2`, but with all functions curried
 
   ## Examples
 
       iex> [1, 2, 3]
-      ...> |> curried_pipe_ap([fn x -> x + 1 end, fn y -> y * 10 end])
+      ...> |> curried_reverse_ap([fn x -> x + 1 end, fn y -> y * 10 end])
       [2, 3, 4, 10, 20, 30]
 
   """
-  @spec curried_pipe_ap(Apply.t(), Apply.fun()) :: Apply.t()
-  def curried_pipe_ap(wrapped_args, wrapped_funs) do
-    wrapped_funs
-    |> Functor.map(&curry/1)
-    |> Apply.ap(wrapped_args)
+  @spec curried_reverse_ap(Apply.fun(), Apply.t()) :: Apply.t()
+  def curried_reverse_ap(wrapped_funs, wrapped_args) do
+    curried_ap(wrapped_args, wrapped_funs)
   end
 
   @doc """
@@ -293,7 +292,7 @@ defclass Witchcraft.Apply do
 
   """
   @spec lift(Apply.t(), Apply.t(), fun()) :: Apply.t()
-  def lift(a, b, fun), do: a |> lift(fun) |> ap(b)
+  def lift(a, b, fun), do: a |> lift(fun) |> reverse_ap(b) # pass(b)?
 
   @doc """
   Extends `lift` to apply arguments to a ternary function
@@ -308,8 +307,8 @@ defclass Witchcraft.Apply do
   def lift(a, b, c, fun) do
     a
     |> lift(fun)
-    |> ap(b)
-    |> ap(c)
+    |> reverse_ap(b)
+    |> reverse_ap(c)
   end
 
   @doc """
@@ -322,16 +321,18 @@ defclass Witchcraft.Apply do
 
   """
   @spec lift(Apply.t(), Apply.t(), Apply.t(), Apply.t(), fun()) :: Apply.t()
-  def lift(a, b, c, d, fun), do: a |> lift(b, c, fun) |> ap(d)
+  def lift(a, b, c, d, fun), do: a |> lift(b, c, fun) |> reverse_ap(d)
 end
 
 definst Witchcraft.Apply, for: Function do
   use Quark
-  def ap(f, g), do: fn x -> curry(f).(x).(curry(g).(x)) end
+  def ap(g, f), do: fn x -> curry(f).(x).(curry(g).(x)) end
 end
 
 definst Witchcraft.Apply, for: List do
-  def ap(fun_list, val_list) when is_list(val_list) do
+  @force_type_instance true
+
+  def ap(val_list, fun_list) when is_list(fun_list) do
     Enum.flat_map(fun_list, fn(fun) ->
       Enum.map(val_list, fun)
     end)
@@ -347,10 +348,10 @@ definst Witchcraft.Apply, for: Tuple do
     {generate(""), generate(1), generate(0), generate(""), generate(""), generate("")}
   end
 
-  def ap({a, fun}, {y, z}), do: {a <> y, fun.(z)}
-  def ap({a, b, fun}, {x, y, z}), do: {a <> x, b <> y, fun.(z)}
-  def ap({a, b, c, fun}, {w, x, y, z}), do: {a <> w, b <> x, c <> y, fun.(z)}
-  def ap({a, b, c, d, fun}, {v, w, x, y, z}) do
+  def ap({v, w},          {a,          fun}), do: {a <> v, fun.(w)}
+  def ap({v, w, x},       {a, b,       fun}), do: {a <> v, b <> w, fun.(x)}
+  def ap({v, w, x, y},    {a, b, c,    fun}), do: {a <> v, b <> w, c <> x, fun.(y)}
+  def ap({v, w, x, y, z}, {a, b, c, d, fun}) do
     {
       a <> v,
       b <> w,
@@ -360,7 +361,7 @@ definst Witchcraft.Apply, for: Tuple do
     }
   end
 
-  def ap(tuple_a, tuple_b) when tuple_size(tuple_a) == tuple_size(tuple_b) do
+  def ap(tuple_b, tuple_a) when tuple_size(tuple_a) == tuple_size(tuple_b) do
     last_index = tuple_size(tuple_a) - 1
 
     tuple_a

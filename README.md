@@ -16,6 +16,7 @@ Monoids, functors, monads, arrows, categories, and more.
 * [Type Class Hierarchy](#type-class-hierarchy)
 * [Operators](#operators)
 * [Haskell Translation Table](#haskell-translation-table)
+* [Prior Art](#prior-art)
 * [Credits](#credits)
 
 ## Quick Start
@@ -149,34 +150,55 @@ use Witchcraft.Foldable, override_kernel: false
 
 ## Haskell Translation Table
 
-| Haskell Prelude | Witchcraft    |
-|----------------:|:--------------|
-| `flip ($)`      | `\|>/2`       |
-| `.`             | `<\|>/2`      |
-| `<<<`           | `<\|>/2`      |
-| `>>>`           | `<~>/2`       |
-| `<>`            | `<>/2`        |
-| `<$>`           | `<~/2`        |
-| `flip (<$>)`    | `~>/2`        |
-| `fmap`          | `lift/2`      |
-| `liftA`         | `lift/2`      |
-| `liftA2`        | `lift/3`      |
-| `liftA3`        | `lift/4`      |
-| `liftM`         | `lift/2`      |
-| `liftM2`        | `lift/3`      |
-| `liftM3`        | `lift/4`      |
-| `ap`            | `ap/2`        |
-| `<*>`           | `<<~/2`       |
-| `<**>`          | `~>>/2`       |
-| `*>`            | `then/2`      |
-| `<*`            | `following/2` |
-| `pure`          | `of/2`        |
-| `return`        | `of/2`        |
-| `>>`            | `then/2`      |
-| `>>=`           | `>>>/2`       |
-| `=<<`           | `<<</2`       |
-| `***`           | `^^^/2`       |
-| `&&&`           | `&&&/2`       |
+| Haskell Prelude | Witchcraft         |
+|----------------:|:-------------------|
+| `flip ($)`      | `\|>/2` (`Kernel`) |
+| `.`             | `<\|>/2`           |
+| `<<<`           | `<\|>/2`           |
+| `>>>`           | `<~>/2`            |
+| `<>`            | `<>/2`             |
+| `<$>`           | `<~/2`             |
+| `flip (<$>)`    | `~>/2`             |
+| `fmap`          | `lift/2`           |
+| `liftA`         | `lift/2`           |
+| `liftA2`        | `lift/3`           |
+| `liftA3`        | `lift/4`           |
+| `liftM`         | `lift/2`           |
+| `liftM2`        | `lift/3`           |
+| `liftM3`        | `lift/4`           |
+| `ap`            | `ap/2`             |
+| `<*>`           | `<<~/2`            |
+| `<**>`          | `~>>/2`            |
+| `*>`            | `then/2`           |
+| `<*`            | `following/2`      |
+| `pure`          | `of/2`             |
+| `return`        | `of/2`             |
+| `>>`            | `then/2`           |
+| `>>=`           | `>>>/2`            |
+| `=<<`           | `<<</2`            |
+| `***`           | `^^^/2`            |
+| `&&&`           | `&&&/2`            |
+
+## Prior Art
+
+This library draws heavy inspiration from mathematics, other laguages,
+other Elixir libraries. We would be a shame not to mention them here.
+
+The [`Monad`](https://hexdocs.pm/monad/Monad.html) library predates `Witchcraft`
+by several years. This library proved that it is entirely possible
+to bring do-notation to Elixir. It takers a very different approach:
+it is very up-front that it has a very loose definition of what it means for
+something to be a "monad", and relies on `behaviour`s rather than ad-hoc polymorphism.
+
+The Fantasy Land Spec
+
+Scalaz
+
+Swiftz
+
+NICTA
+
+
 
 ## Credits
 
