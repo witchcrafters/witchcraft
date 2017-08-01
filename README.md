@@ -27,7 +27,7 @@ A big thank you to [Brandon Labbé](https://dribbble.com/brandonlabbe) for creat
 
 ```
 def deps do
-  [{:witchcraft, "~> 0.5"}]
+  [{:witchcraft, "1.0.0-beta"}]
 end
 ```
 
@@ -59,7 +59,7 @@ Semigroupoid  Semigroup  Setoid   Foldable   Functor -----------┐
 ```
 
 It is very common to want everything in a chain. You can import the entire chain
-with `use`. For example:
+with `use`. For example, you can import the entire library with:
 
 ```elixir
 use Witchcraft.Monad
@@ -76,12 +76,6 @@ if you would like to skip all overrides, pass `override_kernel: false` as an opt
 
 ```elixir
 use Witchcraft.Foldable, override_kernel: false
-```
-
-Finally, to import the entire library:
-
-```elixir
-use Witchcraft
 ```
 
 # Values
