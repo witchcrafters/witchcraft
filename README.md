@@ -9,6 +9,8 @@ Monoids, functors, monads, arrows, categories, and more.
 # README
 ## Table of Contents
 - [Quick Start](#quick-start)
+- [Library Family](#library-family)
+- [Type Class Hierarchy](#type-class-hierarchy)
 - [Operators](#operators)
 - [Values](#values)
 - [Haskell Translation Table](#haskell-translation-table)
@@ -16,7 +18,7 @@ Monoids, functors, monads, arrows, categories, and more.
 
 ## Quick Start
 
-```
+```elixir
 def deps do
   [{:witchcraft, "1.0.0-beta"}]
 end
@@ -26,7 +28,8 @@ end
 use Witchcraft
 ```
 
-# Relationship to Other Packages
+## Library Family
+
 ```
 Quark    TypeClass
     ↘    ↙
@@ -39,9 +42,9 @@ Quark    TypeClass
 * [TypeClass](https://hex.pm/packages/type_class): Used internally to generate type classes
 * [Algae](https://hex.pm/packages/algae): Algebraic data types that implement `Witchcraft` type classes
 
-## Hierarchy
+## Type Class Hierarchy
 
-```
+```md
 
 Semigroupoid  Semigroup  Setoid   Foldable   Functor -----------┐
      ↓           ↓         ↓         ↓     ↙   ↓   ↘           |
