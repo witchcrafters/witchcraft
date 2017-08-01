@@ -13,17 +13,32 @@ defclass Witchcraft.Semigroup do
       "foo" <> " " <> "bar" == "foo bar"
 
   This generalizes the idea of a monoid, as it does not require an `empty` version.
+
+  ## Type Class
+
+  An instance of `Witchcraft.Semigroup` must define `Witchcraft.Semigroup.append/2`.
+
+      Semigroup  [append/2]
   """
 
   alias __MODULE__
   import Kernel, except: [<>: 2]
 
-  @type t :: any
+  @type t :: any()
 
-  defmacro __using__(_) do
-    quote do
-      import Kernel, except: [<>: 2]
-      import unquote(__MODULE__)
+  defmacro __using__(opts \\ []) do
+    {:ok, new_opts} =
+      Keyword.get_and_update(opts, :except, fn except ->
+        {:ok, [<>: 2] ++ (except || [])}
+      end)
+
+    if Access.get(opts, :override_kernel, true) do
+      quote do
+        import Kernel,              unquote(new_opts)
+        import unquote(__MODULE__), unquote(opts)
+      end
+    else
+      quote do: import unquote(__MODULE__), unquote(new_opts)
     end
   end
 
@@ -73,16 +88,16 @@ defclass Witchcraft.Semigroup do
 
   ## Example
 
-      iex> concat [[1, 2, 3], [4, 5, 6]]
+      iex> concat [
+      ...>   [1, 2, 3],
+      ...>   [4, 5, 6]
+      ...> ]
       [1, 2, 3, 4, 5, 6]
 
-      iex> concat [%{a: 1, b: 2}, %{c: 3. d: 4}, %{e: 5, f: 6}]
-      %{a: 1, b: 2, c: 3: d: 4, e: 5, f: 6}
-
   """
-  @spec concat([Semigroup.t]) :: Semigroup.t
-  def concat(list_xs) when is_list(list_xs) do
-    Witchcraft.Foldable.left_fold(list_xs, Quark.flip(&Semigroup.append/2))
+  @spec concat(Semigroup.t()) :: [Semigroup.t()]
+  def concat(semigroup_of_lists) do
+    Enum.reduce(semigroup_of_lists, [], &Semigroup.append(&2, &1))
   end
 
   @doc ~S"""
@@ -94,11 +109,13 @@ defclass Witchcraft.Semigroup do
       [1, 2, 3, 1, 2, 3, 1, 2, 3]
 
   """
-  @spec repeat(Semigroup.t, [times: pos_integer]) :: Semigroup.t
+  @spec repeat(Semigroup.t(), [times: non_neg_integer()]) :: Semigroup.t()
+  # credo:disable-for-lines:6 Credo.Check.Refactor.PipeChainStart
   def repeat(to_repeat, times: times) do
-    Stream.repeatedly(fn _ -> to_repeat end)
+    fn -> to_repeat end
+    |> Stream.repeatedly()
     |> Stream.take(times)
-    |> Enum.reduce(&Semigroup.append/2)
+    |> Enum.reduce(&Semigroup.append(&2, &1))
   end
 
   properties do
@@ -116,25 +133,42 @@ defclass Witchcraft.Semigroup do
 end
 
 definst Witchcraft.Semigroup, for: Function do
-  def append(f, g) when is_function(f), do: Quark.compose(g, f)
+  def append(f, g) when is_function(g), do: Quark.compose(g, f)
 end
 
 definst Witchcraft.Semigroup, for: Integer do
-  def append(a, b) when is_integer(b), do: a + b
+  def append(a, b), do: a + b
 end
 
 definst Witchcraft.Semigroup, for: Float do
-  def append(a, b) when is_float(b), do: a + b
+  def append(a, b), do: a + b
 end
 
 definst Witchcraft.Semigroup, for: BitString do
-  def append(a, b) when is_bitstring(b), do: Kernel.<>(a, b)
+  def append(a, b), do: Kernel.<>(a, b)
 end
 
 definst Witchcraft.Semigroup, for: List do
-  def append(a, b) when is_list(b), do: a ++ b
+  def append(a, b), do: a ++ b
 end
 
 definst Witchcraft.Semigroup, for: Map do
-  def append(a, b) when is_map(b), do: Map.merge(a, b)
+  def append(a, b), do: Map.merge(a, b)
+end
+
+definst Witchcraft.Semigroup, for: Tuple do
+  # credo:disable-for-lines:5 Credo.Check.Refactor.PipeChainStart
+  custom_generator(_) do
+    Stream.repeatedly(fn -> TypeClass.Property.Generator.generate(%{}) end)
+    |> Enum.take(10)
+    |> List.to_tuple()
+  end
+
+  def append(tuple_a, tuple_b) when tuple_size(tuple_a) == tuple_size(tuple_b) do
+    tuple_a
+    |> Tuple.to_list()
+    |> Enum.zip(Tuple.to_list(tuple_b))
+    |> Enum.map(fn({x, y}) -> Witchcraft.Semigroup.append(x, y) end)
+    |> List.to_tuple()
+  end
 end

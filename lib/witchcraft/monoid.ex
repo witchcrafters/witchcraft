@@ -4,38 +4,25 @@ defclass Witchcraft.Monoid do
   @moduledoc ~S"""
   Monoid extends the semigroup with the concept of an "empty" or "zero" element.
 
-  ## Examples
+  ## Type Class
 
-      iex> empty(10)
-      0
+  An instance of `Witchcraft.Monoid` must also implement `Witchcraft.Semigroup`,
+  and define `Witchcraft.Monoid.empty/1`.
 
-      iex> empty [1, 2, 3, 4, 5]
-      []
-
+      Semigroup  [append/2]
+          ↓
+       Monoid    [empty/1]
   """
 
-  alias Witchcraft.Monoid
+  alias __MODULE__
   extend Witchcraft.Semigroup, alias: true
 
-  @type t :: any
+  @type t :: any()
 
-  defmacro __using__(alias: true) do
+  defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Monoid, alias: Monoid
-    end
-  end
-
-  defmacro __using__(alias: as_alias) do
-    quote do
-      alias Witchcraft.Semigroup, as: unquote(as_alias)
-      alias Witchcraft.Monoid, as: unquote(as_alias)
-    end
-  end
-
-  defmacro __using__(_) do
-    quote do
-      import Witchcraft.Semigroup
-      import Witchcraft.Monoid
+      use Witchcraft.Semigroup,   unquote(opts)
+      import unquote(__MODULE__), unquote(opts)
     end
   end
 
@@ -55,8 +42,20 @@ defclass Witchcraft.Monoid do
     def empty(sample)
   end
 
-  defdelegate zero(sample), to: Proto, as: :empty
+  defalias zero(sample), as: :empty
 
+  @doc """
+  Check if a value is the empty element of that type
+
+  ## Examples
+
+      iex> empty?([])
+      true
+
+      iex> empty?([1])
+      false
+
+  """
   @spec empty?(Monoid.t) :: boolean
   def empty?(monoid), do: empty(monoid) == monoid
 
@@ -65,9 +64,9 @@ defclass Witchcraft.Monoid do
       a = generate(data)
 
       if is_function(a) do
-        Semigroup.append(Monoid.empty(a), a).("foo") == a.("foo")
+        equal?(Semigroup.append(Monoid.empty(a), a).("foo"), a.("foo"))
       else
-        Semigroup.append(Monoid.empty(a), a) == a
+        equal?(Semigroup.append(Monoid.empty(a), a), a)
       end
     end
 
@@ -83,27 +82,34 @@ defclass Witchcraft.Monoid do
   end
 end
 
-# definst Witchcraft.Monoid, for: Any do
-#   def empty(sample) when is_function(sample), do: &Quark.id/1
-# end
+definst Witchcraft.Monoid, for: Function do
+  def empty(sample) when is_function(sample), do: &Quark.id/1
+end
 
 definst Witchcraft.Monoid, for: Integer do
   def empty(_), do: 0
 end
 
-# definst Witchcraft.Monoid, for: Float do
-#   def empty(_), do: 0.0
-# end
+definst Witchcraft.Monoid, for: Float do
+  def empty(_), do: 0.0
+end
 
-
-# definst Witchcraft.Monoid, for: BitString do
-#   def empty(_), do: ""
-# end
+definst Witchcraft.Monoid, for: BitString do
+  def empty(_), do: ""
+end
 
 definst Witchcraft.Monoid, for: List do
   def empty(_), do: []
 end
 
-# definst Witchcraft.Monoid, for: Map do
-#   def empty(_), do: %{}
-# end
+definst Witchcraft.Monoid, for: Map do
+  def empty(_), do: %{}
+end
+
+definst Witchcraft.Monoid, for: Tuple do
+  custom_generator(_) do
+    {}
+  end
+
+  def empty(_), do: {}
+end

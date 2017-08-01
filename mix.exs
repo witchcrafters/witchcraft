@@ -7,8 +7,8 @@ defmodule Witchcraft.Mixfile do
       name: "Witchcraft",
       description: "Common algebras (monoids, functors, monads, &c)",
 
-      version: "1.0.0-alpha-1",
-      elixir:  "~> 1.4",
+      version: "1.0.0-beta",
+      elixir:  "~> 1.5",
 
       package: [
         maintainers: ["Brooklyn Zelenka"],
@@ -33,12 +33,12 @@ defmodule Witchcraft.Mixfile do
         {:exceptional, "~> 2.1"},
         {:operator,    "~> 0.2"},
         {:quark,       "~> 2.2"},
-        {:type_class,  "~> 1.0"}
+        {:type_class,  "~> 1.2"}
       ],
 
       docs: [
         extras: ["README.md"],
-        logo: "./brand/Icon/PNG/WC-icon-sml@2x.png",
+        logo: "./brand/Icon/PNG/WC-icon-sml@2x-circle.png",
         main: "readme"
       ]
     ]

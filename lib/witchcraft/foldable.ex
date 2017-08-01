@@ -1,46 +1,61 @@
 import TypeClass
 
 defclass Witchcraft.Foldable do
-  @moduledoc ~S"""
+  @moduledoc """
   Data that can be folded over to change its structure by altering or combining elements
 
   ## Examples
 
-      iex> sum = &right_fold(&1, 0, &+/2)
-      ...> sum.([1, 2, 3])
+      iex> right_fold([1, 2, 3], 0, &+/2) # sum
       6
-      ...> sum.([4, 5, 6])
-      15
 
   ## Properties
 
   People are working on Foldable properties. This is one of the exceptions to
-  there needing to conform to properties.
-  The best closest property so far is abstract and strongly typed, so not
-  easily expressible in Elixir.
-  Ex. https://mail.haskell.org/pipermail/libraries/2015-February/024943.html
+  there needing to conform to properties. In the meantime, we are testing that
+  naturality is preserved, which is be a free theorm.
 
+  If that fails, something is very wrong with the instance.
+
+  ## Type Class
+
+  An instance of `Witchcraft.Foldable` define `Witchcraft.Foldable.right_fold/3`.
+
+      Foldable   [right_fold/3]
   """
 
   alias __MODULE__
-
-  alias Witchcraft.Orderable
-  alias Witchcraft.Orderable.Order
-  alias Witchcraft.Semigroup
+  alias Witchcraft.{Ord, Monad, Monoid, Semigroup, Unit}
 
   import Kernel, except: [length: 1, max: 2, min: 2]
+  import Exceptional.Safe, only: [safe: 1]
 
   require Foldable.EmptyError
 
-  use Exceptional
+  use Witchcraft.Monad
   use Quark
 
-  @type t :: any
+  @type t :: any()
 
-  defmacro __using__(_) do
-    quote do
-      import Kernel, except: [length: 1, max: 2, min: 2]
-      import unquote(__MODULE__)
+  defmacro __using__(opts \\ []) do
+    {:ok, new_opts} =
+      Keyword.get_and_update(opts, :except, fn except ->
+        {:ok, [length: 1, max: 2, min: 2] ++ (except || [])}
+      end)
+
+    if Access.get(opts, :override_kernel, true) do
+      quote do
+        import Kernel,               unquote(new_opts)
+        import Witchcraft.Semigroup, unquote(opts)
+        import Witchcraft.Ord,       unquote(opts)
+        import unquote(__MODULE__),  unquote(opts)
+      end
+    else
+      quote do
+        import Witchcraft.Semigroup, unquote(opts)
+        import Witchcraft.Ord,       unquote(opts)
+        import unquote(__MODULE__),  unquote(new_opts)
+      end
     end
   end
 
@@ -50,121 +65,351 @@ defclass Witchcraft.Foldable do
     it to a single summary value. The right-association makes it possible to
     cease computation on infinite streams of data.
 
-    The reducer must be a binary function, with the second argument being the
+    The folder must be a binary function, with the second argument being the
     accumulated value thus far.
 
     ## Examples
 
-        iex> sum = &right_fold(&1, 0, &+/2) end
+        iex> sum = fn xs -> right_fold(xs, 0, &+/2) end
         ...> sum.([1, 2, 3])
         6
         ...> sum.([4, 5, 6])
         15
 
     """
-    @spec right_fold(Foldable.t, any, ((any, any) -> any)) :: any
-    def right_fold(foldable, seed, reducer)
+    @spec right_fold(Foldable.t(), any(), ((any(), any()) -> any())) :: any()
+    def right_fold(foldable, seed, folder)
+  end
+
+  properties do
+    # Free theorm
+    def naturality(data) do
+      foldable = generate(data)
+      seed     = "seed"
+
+      f = &Quark.constant/2
+      g = &Quark.id/1
+
+      left =
+        foldable
+        |> Foldable.right_fold(seed, f)
+        |> g.()
+
+      right =
+        foldable
+        |> g.()
+        |> Witchcraft.Foldable.right_fold(fn(x, acc) -> f.((g.(acc)), x) end)
+
+      equal?(left, right)
+    end
   end
 
   @doc ~S"""
   The same as `right_fold/3`, but uses the first element as the seed
+
+  ## Examples
+
+      iex> right_fold([1, 2, 3], &+/2)
+      6
+
+      iex> right_fold([100, 2, 5], &//2)
+      40.0 # (2 / (5 / 100))
+
+      iex> right_fold([[], 1, 2, 3], fn(x, acc) -> [x | acc] end)
+      [1, 2, 3]
+
   """
-  @spec right_fold(Foldable.t, fun) :: any
-  def right_fold(foldable, reducer) do
+  @spec right_fold(Foldable.t(), fun()) :: any()
+  def right_fold(foldable, folder) do
     case to_list(foldable) do
       []       -> []
-      [a | as] -> right_fold(as, a, reducer)
+      [a | as] -> right_fold(as, a, folder)
     end
   end
 
-  @spec fold_map(Foldable.t, fun) :: any
-  def fold_map(foldable, fun) do
-    import Witchcraft.Monoid
-    foldable |> right_fold(empty(foldable), fn(x, acc) -> fun.(x) <> acc end)
+  @doc ~S"""
+  Left-associative fold over a structure to alter the structure and/or reduce
+  it to a single summary value.
+
+  The folder must be a binary function, with the second argument being the
+  accumulated value thus far.
+
+  ## Examples
+
+      iex> sum = fn xs -> right_fold(xs, 0, &+/2) end
+      ...> sum.([1, 2, 3])
+      6
+      ...> sum.([4, 5, 6])
+      15
+
+      iex> left_fold([1, 2, 3], [], fn(x, acc) -> [x | acc] end)
+      [[[[] | 1] | 2] | 3]
+
+  """
+  def left_fold(foldable, seed, folder) do
+    right_fold(foldable, &Quark.id/1, fn(b, g) ->
+      fn(x) ->
+        x
+        |> folder.(b)
+        |> g.()
+      end
+    end).(seed)
   end
 
-  @spec fold(Foldable.t) :: any
-  def fold(foldable), do: fold_map(foldable, &Quark.id/1)
+  @doc ~S"""
+  The same as `left_fold/3`, but uses the first element as the seed
 
-  #   Left-associative fold of a structure.
+  ## Examples
 
-  #   In the case of lists, left_fold, when applied to a binary operator, a starting value (typically the left-identity of the operator), and a list, reduces the list using the binary operator, from left to right:
+      iex> left_fold([1, 2, 3], &+/2)
+      6
 
-  #   left_fold f z [x1, x2, ..., xn] == (...((z `f` x1) `f` x2) `f`...) `f` xn
-  #   Note that to produce the outermost application of the operator the entire input list must be traversed. This means that left_fold' will diverge if given an infinite list.
+      iex> left_fold([100, 2, 5], &//2)
+      10.0 # ((100 / 2) / 5)
 
-  # Also note that if you want an efficient left-fold, you probably want to use left_fold' instead of left_fold. The reason for this is that latter does not force the "inner" results (e.g. z f x1 in the above example) before applying them to the operator (e.g. to (f x2)). This results in a thunk chain O(n) elements long, which then must be evaluated from the outside-in.
+      iex> left_fold([1 | [2 | [3]]], fn(x, acc) -> [x | acc] end)
+      [[1 | 2] | 3]
 
-  #   For a general Foldable structure this should be semantically identical to,
-
-  #     left_fold f z = left_fold f z . toList
-  # def left_fold(foldable, seed, reducer) do
-  #   right_fold(foldable, &Quark.id/1, fn(seed_focus, acc) ->
-  #     fn focus -> seed_focus.(reducer.(focus, acc)) end
-  #   end).(seed)
-  # end
-  # left_fold f a bs = right_fold (\b g x -> g (f x b)) id bs a
-  def left_fold(foldable, seed, reducer) do
-    right_fold(foldable, &Quark.id/1, fn(x, g) -> fn (b) -> g.(reducer.(x, b)) end end).(seed)
-  end
-
-  # left_fold1 :: (a -> a -> a) -> t a -> a Source #
-  # A variant of left_fold that has no base case, and thus may only be applied to non-empty structures.
-  # left_fold1 f = left_fold1 f . toList
-  def left_fold(foldable, reducer) do
+  """
+  def left_fold(foldable, folder) do
     [x | xs] = to_list(foldable)
-    left_fold(xs, x, reducer)
+    left_fold(xs, x, folder)
   end
 
-  # toList :: t a -> [a] Source #
-  # List of elements of a structure, from left to right.
-  @spec to_list(Foldable.t) :: [any]
+  @doc """
+  Combine all elements using monoidal append
+
+  ## Examples
+
+      iex> fold([1, 2, 3])
+      6
+
+      iex> fold([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+      [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+  """
+  @spec fold(Foldable.t()) :: any()
+  def fold(foldable), do: left_fold(foldable, &Semigroup.append/2)
+
+  @doc """
+  Map a functional over all elements and `fold` them together
+
+  ## Examples
+
+      iex> fold_map([1, 2, 3], fn x -> [x, x * 10] end)
+      [1, 10, 2, 20, 3, 30]
+
+      iex> fold_map([[1, 2, 3], [4, 5, 6], [7, 8, 9]], fn x -> [x, x] end)
+      [
+        [1, 2, 3], [1, 2, 3],
+        [4, 5, 6], [4, 5, 6],
+        [7, 8, 9], [7, 8, 9]
+      ]
+
+  """
+  @spec fold_map(Foldable.t(), fun()) :: any()
+  def fold_map(foldable, fun) do
+    right_fold(foldable, Monoid.empty(foldable), fn(element, acc) ->
+      element
+      |> fun.()
+      |> Semigroup.append(acc)
+    end)
+  end
+
+  @doc """
+  Turn any `Foldable` into a `List`
+
+  ## Example
+
+      iex> to_list({1, 2, 3})
+      [1, 2, 3]
+
+      iex> to_list(%{a: 1, b: 2, c: 3})
+      [c: 3, b: 2, a: 1]
+
+  """
+  @spec to_list(Foldable.t()) :: [any()]
   def to_list(foldable), do: right_fold(foldable, [], fn(x, acc) -> [x | acc] end)
 
-  @spec empty?(Foldable.t) :: boolean
+  @doc """
+  Check if a foldable data structure is empty
+
+  ## Examples
+
+      iex> empty?("")
+      true
+
+      iex> empty?("hi")
+      false
+
+      iex> empty?(%{})
+      true
+
+  """
+  @spec empty?(Foldable.t()) :: boolean
   def empty?(foldable), do: right_fold(foldable, true, fn(_focus, _acc) -> false end)
 
-  # Returns the size/length of a finite structure as an Int. The default implementation is optimized for structures that are similar to cons-lists, because there is no general way to do better.
-  @spec length(Foldable.t) :: non_neg_integer
+  @doc """
+  Count the number of elements in a foldable structure
+
+  ## Examples
+
+      iex> use Witchcraft.Foldable
+      ...> length(%{})
+      0
+      iex> length(%{a: 1, b: 2})
+      2
+      iex> length("ࠀabc")
+      4
+
+  """
+  @spec length(Foldable.t()) :: non_neg_integer()
   def length(list) when is_list(list), do: Kernel.length(list)
   def length(foldable), do: right_fold(foldable, 0, fn(_, acc) -> 1 + acc end)
 
   defalias count(foldable), as: :length
   defalias size(foldable),  as: :length
 
-  def elem(foldable, target) do
+  @doc """
+  Check if a foldable structure contains a particular element
+
+  ## Examples
+
+      iex> member?([1, 2, 3], 2)
+      true
+
+      iex> member?([1, 2, 3], 99)
+      false
+
+      iex> member?(%{a: 1, b: 2}, 2)
+      false
+
+      iex> member?(%{a: 1, b: 2}, {:b, 2})
+      true
+
+  """
+  @spec member?(Foldable.t(), any()) :: boolean()
+  def member?(foldable, target) do
     right_fold(foldable, false, fn(focus, acc) -> acc or (focus == target) end)
   end
 
-  @spec max(Foldable.t, by: ((any, any) -> Order.t)) :: Maybe.t
-  def! max(foldable, by: comparator) do
-    right_fold(foldable, fn(focus, acc) ->
+  @doc """
+  Find the maximum element in a foldable structure using a custom comparitor
+
+  Elements must implement `Witchcraft.Ord`.
+
+  Comes in both a safe and unsafe(`!`) version
+
+  ## Examples
+
+      iex> use Witchcraft.Foldable
+      ...> [1, 2, 7]
+      ...> |> max(by: fn(x, y) ->
+      ...>   x
+      ...>   |> Integer.mod(3)
+      ...>   |> Witchcraft.Ord.compare(Integer.mod(y, 3))
+      ...> end)
+      2
+
+  """
+  @spec max(Foldable.t(), by: ((any, any) -> Order.ordering())) :: Ord.t()
+  def max(foldable, by: comparator) do
+    Witchcraft.Foldable.right_fold(foldable, fn(focus, acc) ->
       case comparator.(focus, acc) do
-        %Order.Greater{} -> focus
+        :greater -> focus
         _ -> acc
       end
     end)
   end
 
-  @spec max(Foldable.t) :: any
-  def! max(foldable_comparable), do: max(foldable_comparable, by: &Orderable.compare/2)
+  @doc """
+  Find the maximum element in a foldable structure using the default ordering
+  from `Witchcraft.Ord`.
 
-  # The largest element of a non-empty structure.
+  Elements must implement `Witchcraft.Ord`.
 
-  @spec min(Foldable.t, by: ((any, any) -> Order.t)) :: any | Maybe.t
-  def! min(foldable, by: comparitor) do
+  ## Examples
+
+      iex> use Witchcraft.Foldable
+      ...> max([2, 3, 1])
+      3
+      ...> max([[4], [1, 2, 3, 4]])
+      [4]
+
+      %BinaryTree{
+        node: 1,
+        left: %BinaryTree{
+          node: 3
+          left: 4
+        },
+        right: 2
+      }
+      |> max()
+      #=> 4
+
+  """
+  @spec max(Foldable.t()) :: Ord.t()
+  def max(foldable_comparable), do: max(foldable_comparable, by: &Ord.compare/2)
+
+  @doc """
+  Find the maximum element in a foldable structure using a custom comparitor
+
+  Elements must implement `Witchcraft.Ord`.
+
+  Comes in both a safe and unsafe(`!`) version
+
+  ## Examples
+
+      iex> use Witchcraft.Foldable
+      ...> [8, 2, 1]
+      ...> |> min(by: fn(x, y) ->
+      ...>   x
+      ...>   |> Integer.mod(4)
+      ...>   |> Witchcraft.Ord.compare(Integer.mod(y, 4))
+      ...> end)
+      8
+
+  """
+  @spec min(Foldable.t(), by: ((any(), any()) -> Order.t())) :: any() | Maybe.t()
+  def min(foldable, by: comparitor) do
     right_fold(foldable, fn(focus, acc) ->
       case comparitor.(focus, acc) do
-        %Order.Greater{} -> focus
+        :lesser -> focus
         _ -> acc
       end
     end)
   end
 
-  def! min(foldable), do: min(foldable, by: &Orderable.compare/2)
+  @doc """
+  Find the minimum element in a foldable structure using the default ordering
+  from `Witchcraft.Ord`.
 
-  @spec random(Foldable.t) :: any | Foldable.EmptyError.t
-  def! random(foldable) do
+  Elements must implement `Witchcraft.Ord`.
+
+  ## Examples
+
+      iex> use Witchcraft.Foldable
+      ...> min([2, 3, 1])
+      1
+      ...> min([[4], [1, 2, 3, 4]])
+      [1, 2, 3, 4]
+
+      %BinaryTree{
+        node: 4,
+        left: %BinaryTree{
+          node: 3
+          left: 1
+        },
+        right: 2
+      }
+      |> min()
+      #=> 1
+
+  """
+  def min(foldable), do: min(foldable, by: &Ord.compare/2)
+
+  @spec random(Foldable.t()) :: any() | Foldable.EmptyError.t()
+  def random(foldable) do
     foldable
     |> to_list
     |> safe(&Enum.random/1).()
@@ -179,20 +424,20 @@ defclass Witchcraft.Foldable do
 
   ## Examples
 
-      iex> sum [1, 2, 3]
+      iex> sum([1, 2, 3])
       6
 
-      iex> %BinaryTree{
-      ...>   left:  4,
-      ...>   right: %BinaryTree{
-      ...>     left: 2,
-      ...>     right: 10
-      ...>   }
-      ...> } |> sum
-      16
+      %BinaryTree{
+        left:  4,
+        right: %BinaryTree{
+          left: 2,
+          right: 10
+        }
+      } |> sum()
+      #=> 16
 
   """
-  @spec sum(Foldable.t) :: number
+  @spec sum(Foldable.t()) :: number()
   def sum(foldable), do: right_fold(foldable, 0, &+/2)
 
   @doc ~S"""
@@ -200,95 +445,112 @@ defclass Witchcraft.Foldable do
 
   ## Examples
 
-      iex> product [1, 2, 3]
+      iex> product([1, 2, 3])
       6
 
-      iex> %BinaryTree{
-      ...>   left:  4,
-      ...>   right: %BinaryTree{
-      ...>     left: 2,
-      ...>     right: 10
-      ...>   }
-      ...> } |> product
-      80
+      %BinaryTree{
+        left:  4,
+        right: %BinaryTree{
+          left: 2,
+          right: 10
+        }
+      }
+      |> product()
+      #=> 80
 
   """
-  @spec product(Foldable.t) :: number
-  def product(foldable), do: right_fold(foldable, 0, &*/2)
+  @spec product(Foldable.t()) :: number()
+  def product(foldable), do: right_fold(foldable, &*/2)
 
   @doc ~S"""
   Concatenate all lists in a foldable structure
 
   ## Examples
 
-      iex> [[1, 2, 3], [4, 5, 6]]
-      [1, 2, 3, 4, 5, 6]
+      iex> concat([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+      [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-      iex> %BinaryTree{
-      ...>   left:  [1, 2, 3],
-      ...>   right: %BinaryTree{
-      ...>     left:  [4, 5],
-      ...>     right: [6]
-      ...>   }
-      ...> }
-      [1, 2, 3, 4, 5, 6]
+      %BinaryTree{
+        left:  [1, 2, 3],
+        right: %BinaryTree{
+          left:  [4, 5],
+          right: [6]
+        }
+      }
+      |> concat()
+      #=> [1, 2, 3, 4, 5, 6]
 
   """
-  @spec concat(Foldable.t) :: [any]
+  @spec concat(Foldable.t()) :: [any()]
   def concat(contained_lists) do
-    contained_lists
-    |> right_fold([], Quark.flip(&Semigroup.append/2))
-    |> Semigroup.concat
+    right_fold(contained_lists, [], &Semigroup.append/2)
   end
 
-  # Map a function over all the elements of a container and concatenate the resulting lists.
   @doc ~S"""
   Lift a function over a foldable structure generating lists of results,
   and then concatenate the resulting lists
 
   ## Examples
 
-      iex> [1, 2, 3, 4, 5, 6]
-      ...> |> concat_map(fn x -> [x, x] end)
+      iex> concat_map([1, 2, 3, 4, 5, 6], fn x -> [x, x] end)
       [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
 
-      iex> %BinaryTree{
-      ...>   left:  1,
-      ...>   right: %BinaryTree{
-      ...>     left:  2,
-      ...>     right: 3
-      ...>   }
-      ...> }
-      ...> |> concat_map(fn x -> [x, x] end)
-      [1, 1, 2, 2, 3, 3]
+      %BinaryTree{
+        left:  1,
+        right: %BinaryTree{
+          left:  2,
+          right: 3
+        }
+      }
+      |> concat_map(fn x -> [x, x] end)
+      #=> [1, 1, 2, 2, 3, 3]
 
   """
-  @spec concat_map(Foldable.t, (any -> [any])) :: [any]
-  def concat_map(foldable, a_to_list_b) do
+  @spec concat_map(Foldable.t(), (any() -> [any()])) :: [any()]
+  def concat_map(foldable, mapper) do
     foldable
-    |> right_fold(fn(inner_focus, acc) -> a_to_list_b.(inner_focus) <> acc end)
-    |> concat
+    |> right_fold([], fn(inner_focus, acc) ->
+      [mapper.(inner_focus) | acc]
+    end)
+    |> concat()
   end
+
+  @doc """
+  Test whether the structure is empty. The default implementation is
+  optimized for structures that are similar to lists, because there
+  is no general way to do better.
+
+  ## Examples
+
+      iex> null?([])
+      true
+
+      iex> null?([1, 2, 3])
+      false
+
+  """
+  @spec null?(Foldable.t()) :: boolean()
+  def null?(foldable), do: right_fold(foldable, true, fn(_, _) -> false end)
 
   @doc ~S"""
   Check if a foldable is full of only `true`s
 
   ## Examples
 
-      iex> all? [true, true, false]
+      iex> all?([true, true, false])
       false
 
-      iex> %BinaryTree{
-      ...>   left:  true,
-      ...>   right: %BinaryTree{
-      ...>     left:  true,
-      ...>     right: false
-      ...>   }
-      ...> } |> all?
-      false
+      %BinaryTree{
+        left:  true,
+        right: %BinaryTree{
+          left:  true,
+          right: false
+        }
+      } |> all?()
+      #=> false
 
   """
-  @spec all?(Foldable.t) :: boolean
+  @spec all?(Foldable.t()) :: boolean()
   def all?(foldable_bools), do: right_fold(foldable_bools, true, &and/2)
 
   @doc ~S"""
@@ -296,21 +558,22 @@ defclass Witchcraft.Foldable do
 
   ## Examples
 
-      iex> all?([1, 2, 3], &Integer.is_odd?/1)
+      iex> import Integer
+      ...> all?([1, 2, 3], &is_odd/1)
       false
 
-      iex> %BinaryTree{
-      ...>   left:  1,
-      ...>   right: %BinaryTree{
-      ...>     left:  2,
-      ...>     right: 3
-      ...>   }
-      ...> }
-      ...> |> all?(&Integer.is_odd?/1)
-      false
+      %BinaryTree{
+        left:  1,
+        right: %BinaryTree{
+          left:  2,
+          right: 3
+        }
+      }
+      |> all?(&Integer.is_odd?/1)
+      #=> false
 
   """
-  @spec all?(Foldable.t, (any -> boolean)) :: boolean
+  @spec all?(Foldable.t(), (any() -> boolean())) :: boolean()
   def all?(foldable, predicate) do
     right_fold(foldable, true, fn(focus, acc) -> predicate.(focus) and acc end)
   end
@@ -323,17 +586,17 @@ defclass Witchcraft.Foldable do
       iex> any? [true, true, false]
       true
 
-      iex> %BinaryTree{
-      ...>   left:  true,
-      ...>   right: %BinaryTree{
-      ...>     left:  true,
-      ...>     right: false
-      ...>   }
-      ...> } |> any?
-      true
+      %BinaryTree{
+        left:  true,
+        right: %BinaryTree{
+          left:  true,
+          right: false
+        }
+      } |> any?()
+      #=> true
 
   """
-  @spec any?(Foldable.t) :: boolean
+  @spec any?(Foldable.t()) :: boolean()
   def any?(foldable_bools), do: right_fold(foldable_bools, false, &or/2)
 
   @doc ~S"""
@@ -341,94 +604,49 @@ defclass Witchcraft.Foldable do
 
   ## Examples
 
-      iex> any?([1, 2, 3], &Integer.is_odd?/1)
+      iex> require Integer
+      ...> any?([1, 2, 3], &Integer.is_odd/1)
       true
 
-      iex> %BinaryTree{
-      ...>   left:  1,
-      ...>   right: %BinaryTree{
-      ...>     left:  2,
-      ...>     right: 3
-      ...>   }
-      ...> }
-      ...> |> any(&Integer.is_odd?/1)
-      true
+      %BinaryTree{
+        left:  1,
+        right: %BinaryTree{
+          left:  2,
+          right: 3
+        }
+      }
+      |> any(&Integer.is_odd?/1)
+      #=> true
 
   """
-  @spec any?(Foldable.t, (any -> boolean)) :: boolean
+  @spec any?(Foldable.t(), (any() -> boolean())) :: boolean()
   def any?(foldable, predicate) do
     right_fold(foldable, false, fn(focus, acc) -> predicate.(focus) or acc end)
   end
 
-  properties do
+  @doc """
+  Run each action from left to right, discarding all values.
+
+  Always returns `%Witchcraft.Unit{}` in the same foldbale structure that you started with.
+
+  ## Examples
+
+      iex> then_sequence([[1, 2, 3], [4, 5, 6]])
+      [
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{}
+      ]
+
+  """
+  @spec then_sequence(Foldable.t()) :: Monad.t()
+  def then_sequence(foldable_monad) do
+    right_fold(foldable_monad, of(foldable_monad, %Unit{}), &then/2)
   end
 end
-
-definst Witchcraft.Foldable, for: Tuple do
-  def right_fold(tuple, seed, reducer), do: tuple |> Tuple.to_list |> right_fold(seed, reducer)
-end
-
-definst Witchcraft.Foldable, for: List do
-  def right_fold(list, seed, reducer), do: List.foldr(list, seed, reducer)
-end
-
-definst Witchcraft.Foldable, for: Map do
-  def right_fold(map, seed, reducer), do: Enum.reduce(map, seed, reducer)
-end
-
-
-
-
-
-    # WHEN WE HAVE MONAD
-  # right_foldM :: (Foldable t, Monad m) => (a -> b -> m b) -> b -> t a -> m b Source #
-
-  # Monadic fold over the elements of a structure, associating to the right, i.e. from right to left.
-
-  # left_foldM :: (Foldable t, Monad m) => (b -> a -> m b) -> b -> t a -> m b Source #
-
-  #   Monadic fold over the elements of a structure, associating to the left, i.e. from left to right.
-
-# mapM_ :: (Foldable t, Monad m) => (a -> m b) -> t a -> m () Source #
-
-# Map each element of a structure to a monadic action, evaluate these actions from left to right, and ignore the results. For a version that doesn't ignore the results see mapM.
-
-# As of base 4.8.0.0, mapM_ is just traverse_, specialized to Monad.
-
-# forM_ :: (Foldable t, Monad m) => t a -> (a -> m b) -> m () Source #
-
-# forM_ is mapM_ with its arguments flipped. For a version that doesn't ignore the results see forM.
-
-# As of base 4.8.0.0, forM_ is just for_, specialized to Monad.
-
-# sequence_ :: (Foldable t, Monad m) => t (m a) -> m () Source #
-
-# Evaluate each monadic action in the structure from left to right, and ignore the results. For a version that doesn't ignore the results see sequence.
-
-# As of base 4.8.0.0, sequence_ is just sequenceA_, specialized to Monad.
-
-# msum :: (Foldable t, MonadPlus m) => t (m a) -> m a Source #
-
-# The sum of a collection of actions, generalizing concat. As of base 4.8.0.0, msum is just asum, specialized to MonadPlus.
-# WHEN APPLICATIVE
-# Applicative actions
-#   traverse_ :: (Foldable t, Applicative f) => (a -> f b) -> t a -> f () Source #
-
-#   Map each element of a structure to an action, evaluate these actions from left to right, and ignore the results. For a version that doesn't ignore the results see traverse.
-
-#   for_ :: (Foldable t, Applicative f) => t a -> (a -> f b) -> f () Source #
-
-#   for_ is traverse_ with its arguments flipped. For a version that doesn't ignore the results see for.
-
-#   >>> for_ [1..4] print
-#   1
-#   2
-#   3
-#   4
-#   sequenceA_ :: (Foldable t, Applicative f) => t (f a) -> f () Source #
-
-#     Evaluate each action in the structure from left to right, and ignore the results. For a version that doesn't ignore the results see sequenceA.
-
-#   asum :: (Foldable t, Alternative f) => t (f a) -> f a Source #
-
-#   The sum of a collection of actions, generalizing concat.

@@ -1,71 +1,376 @@
 import TypeClass
 
 defclass Witchcraft.Apply do
+  @moduledoc """
+  An extension of `Witchcraft.Functor`, `Apply` provides a way to map functions
+  to their arguments when both are wrapped in the same kind of container.
+
+  For a nice, illustrated introduction,
+  see [Functors, Applicatives, And Monads In Pictures](http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html).
+
+  ## Graphically
+
+  If function application looks like like
+
+      data |> function == result
+
+  and a functor looks like this
+
+      %Container<data> ~> function == %Container<result>
+
+  then an apply looks like
+
+      %Container<data> ~>> %Container<function> == %Container<result>
+
+  which is similar to function application inside containers, plus the ability to
+  attach special effects to applications.
+
+                 data --------------- function ---------------> result
+      %Container<data> --- %Container<function> ---> %Container<result>
+
+  This lets us do functorial things like
+
+  * continue applying values to a curried function resulting from a `Witchcraft.Functor.lift/2`
+  * apply multiple functions to multiple arguments (with lists)
+  * propogate some state (like [`Nothing`](https://hexdocs.pm/algae/Algae.Maybe.Nothing.html#content)
+  in [`Algae.Maybe`](https://hexdocs.pm/algae/Algae.Maybe.html#content))
+
+  but now with a much larger number of arguments, reuse partially applied functions,
+  and run effects with the function container as well as the data container.
+
+  ## Examples
+
+      iex> ap([fn x -> x + 1 end, fn y -> y * 10 end], [1, 2, 3])
+      [2, 3, 4, 10, 20, 30]
+
+      iex> import Witchcraft.Functor
+      ...> [100, 200]
+      ...> ~> fn(x, y, z) ->
+      ...>   x * y / z
+      ...> end <<~ [5, 2]
+      ...>     <<~ [100, 50]
+      [5.0, 10.0, 2.0, 4.0, 10.0, 20.0, 4.0, 8.0]
+      # ↓                          ↓
+      # 100 * 5 / 100          200 * 5 / 50
+
+      %Algae.Maybe.Just{just: 42}
+      ~> fn(x, y, z) ->
+        x * y / z
+      end <<~ %Algae.Maybe.Nothing{}
+          <<~ %Algae.Maybe.Just{just: 99}
+      #=> %Algae.Maybe.Nothing{}
+
+  ## Type Class
+
+  An instance of `Witchcraft.Apply` must also implement `Witchcraft.Functor`,
+  and define `Witchcraft.Apply.ap/2`.
+
+      Functor  [map/2]
+         ↓
+       Apply   [ap/2]
+  """
+
   extend Witchcraft.Functor
 
-  import Witchcraft.Functor
+  alias __MODULE__
+  alias Witchcraft.Functor
 
-  defmacro __using__(_) do
+  import Witchcraft.Functor, only: [lift: 2]
+
+  use Quark
+
+  @type t   :: any()
+  @type fun :: any()
+
+  defmacro __using__(opts \\ []) do
     quote do
-      import Witchcraft.Functor
-      import unquote(__MODULE__)
+      use Witchcraft.Functor,     unquote(opts)
+      import unquote(__MODULE__), unquote(opts)
     end
   end
 
   where do
-    def ap(wrapped_funs, wrapped)
+    @doc """
+    Apply argumnets to a function, when both are wrapped in the same data structure
+
+    ## Examples
+
+        iex> ap([fn x -> x + 1 end, fn y -> y * 10 end], [1, 2, 3])
+        [2, 3, 4, 10, 20, 30]
+
+        iex> [100, 200]
+        ...> |> Witchcraft.Functor.lift(fn(x, y, z) -> x * y / z end)
+        ...> |> ap([5, 2])
+        ...> |> ap([100, 50])
+        [5.0, 10.0, 2.0, 4.0, 10.0, 20.0, 4.0, 8.0]
+        # ↓                          ↓
+        # 100 * 5 / 100          200 * 5 / 50
+
+    """
+    @spec ap(Apply.fun(), Apply.t()) :: Apply.t()
+    def ap(wrapped_funs, wrapped_args)
   end
-
-  def reverse_ap(wrapped, wrapped_funs), do: ap(wrapped_funs, wrapped)
-
-  defalias wrapped_funs <<~ wrapped, as: :ap
-  defalias wrapped ~>> wrapped_funs, as: :reverse_ap
-
-  def lift(a, fun, b), do: fun <~ a <<~ b
-  def lift(a, fun, b, c), do: fun <~ a <<~ b <<~ c
-  def lift(a, fun, b, c, d), do: fun <~ a <<~ b <<~ c <<~ d
-  def lift(a, fun, b, c, d, e), do: fun <~ a <<~ b <<~ c <<~ d <<~ e
-  def lift(a, fun, b, c, d, e, f), do: fun <~ a <<~ b <<~ c <<~ d <<~ e <<~ f
-  def lift(a, fun, b, c, d, e, f, g), do: fun <~ a <<~ b <<~ c <<~ d <<~ e <<~ f <<~ g
-  def lift(a, fun, b, c, d, e, f, g, h), do: fun <~ a <<~ b <<~ c <<~ d <<~ e <<~ f <<~ g <<~ h
-  def lift(a, fun, b, c, d, e, f, g, h, i), do: fun <~ a <<~ b <<~ c <<~ d <<~ e <<~ f <<~ g <<~ h <<~ i
 
   properties do
     def composition(data) do
       alias Witchcraft.Functor
-      alias Witchcraft.Apply
       use Quark
 
-      as = data |> generate |> Functor.map(&inspect/1)
-      fs = data |> generate |> Functor.replace(fn x -> x <> x end)
-      gs = data |> generate |> Functor.replace(fn y -> y <> "foo" end)
+      as = data |> generate() |> Functor.map(&inspect/1)
+      fs = data |> generate() |> Functor.replace(fn x -> x <> x end)
+      gs = data |> generate() |> Functor.replace(fn y -> y <> "foo" end)
 
       left  = Apply.ap(fs, Apply.ap(gs, as))
-      right = fs |> Functor.lift(&compose/2) |> Apply.ap(gs) |> Apply.ap(as)
+
+      right =
+        fs
+        |> Functor.lift(&compose/2)
+        |> Apply.ap(gs)
+        |> Apply.ap(as)
 
       equal?(left, right)
     end
   end
+
+  @doc """
+  Pipe-ordered application. NOT just a flipped version of `ap/2`.
+
+  This isn't just a flipped `ap` in order to get correct effect sequencing.
+
+  ## Examples
+
+      iex> [1, 2, 3]
+      ...> |> pipe_ap([fn x -> x + 1 end, fn y -> y * 10 end])
+      [2, 10, 3, 20, 4, 30]
+
+  """
+  @spec pipe_ap(Apply.t(), Applt.fun()) :: Apply.t()
+  def pipe_ap(wrapped, wrapped_funs), do: lift(wrapped, wrapped_funs, fn(x, f) -> f.(x) end)
+
+  @doc """
+  Operator alias for `ap/2`
+
+  Moves against the pipe direction, but in the order of normal function application
+
+  ## Examples
+
+      iex> [fn x -> x + 1 end, fn y -> y * 10 end] <<~ [1, 2, 3]
+      [2, 3, 4, 10, 20, 30]
+
+      iex> import Witchcraft.Functor
+      ...>
+      ...> [100, 200]
+      ...> ~> fn(x, y, z) -> x * y / z
+      ...> end <<~ [5, 2]
+      ...>     <<~ [100, 50]
+      ...> ~> fn x -> x + 1 end
+      [6.0, 11.0, 3.0, 5.0, 11.0, 21.0, 5.0, 9.0]
+
+      iex> import Witchcraft.Functor, only: [<~: 2]
+      ...> fn(a, b, c, d) -> a * b - c + d end <~ [1, 2] <<~ [3, 4] <<~ [5, 6] <<~ [7, 8]
+      [5, 6, 4, 5, 6, 7, 5, 6, 8, 9, 7, 8, 10, 11, 9, 10]
+
+  """
+  defalias wrapped_funs <<~ wrapped, as: :curried_ap
+
+  @doc """
+  Operator alias for `pipe_ap/2`, moving in the pipe direction
+
+  ## Examples
+
+      iex> [1, 2, 3] ~>> [fn x -> x + 1 end, fn y -> y * 10 end]
+      [2, 3, 4, 10, 20, 30]
+
+      iex> import Witchcraft.Functor
+      ...>
+      ...> [100, 50]
+      ...> ~>> ([5, 2]     # Note the bracket
+      ...> ~>> ([100, 200] # on both `Apply` lines
+      ...> ~> fn(x, y, z) -> x * y / z end))
+      [5.0, 10.0, 2.0, 4.0, 10.0, 20.0, 4.0, 8.0]
+
+  """
+  defalias wrapped ~>> wrapped_funs, as: :curried_pipe_ap
+
+  @doc """
+  Same as `ap/2`, but with all functions curried
+
+  ## Examples
+
+      iex> [&+/2, &*/2]
+      ...> |> curried_ap([1, 2, 3])
+      ...> |> ap([4, 5, 6])
+      [5, 6, 7, 6, 7, 8, 7, 8, 9, 4, 5, 6, 8, 10, 12, 12, 15, 18]
+
+  """
+  @spec curried_ap(Apply.fun(), Apply.t()) :: Apply.t()
+  def curried_ap(wrapped_funs, wrapped_args) do
+    wrapped_funs
+    |> Functor.map(&curry/1)
+    |> Apply.ap(wrapped_args)
+  end
+
+  @doc """
+  Same as `pipe_ap/2`, but with all functions curried
+
+  ## Examples
+
+      iex> [1, 2, 3]
+      ...> |> curried_pipe_ap([fn x -> x + 1 end, fn y -> y * 10 end])
+      [2, 3, 4, 10, 20, 30]
+
+  """
+  @spec curried_pipe_ap(Apply.t(), Apply.fun()) :: Apply.t()
+  def curried_pipe_ap(wrapped_args, wrapped_funs) do
+    wrapped_funs
+    |> Functor.map(&curry/1)
+    |> Apply.ap(wrapped_args)
+  end
+
+  @doc """
+  Sequence actions, replacing the first/previous values with the last argument
+
+  This is essentially a sequence of actions forgetting the first argument
+
+  ## Examples
+
+      iex> [1, 2, 3]
+      ...> |> then([4, 5, 6])
+      ...> |> then([7, 8, 9])
+      [
+        7, 8, 9,
+        7, 8, 9,
+        7, 8, 9,
+        7, 8, 9,
+        7, 8, 9,
+        7, 8, 9,
+        7, 8, 9,
+        7, 8, 9,
+        7, 8, 9
+      ]
+
+      iex> {1, 2, 3} |> then({4, 5, 6}) |> then({7, 8, 9})
+      {12, 15, 9}
+
+  """
+  @spec then(Apply.t(), Apply.t()) :: Apply.t()
+  def then(wrapped_a, wrapped_b), do: lift(wrapped_a, wrapped_b, &Quark.constant(&2, &1))
+
+  @doc """
+  Sequence actions, replacing the last argument with the first argument's values
+
+  This is essentially a sequence of actions forgetting the second argument
+
+  ## Examples
+
+      iex> [1, 2, 3]
+      ...> |> following([3, 4, 5])
+      ...> |> following([5, 6, 7])
+      [
+        1, 1, 1, 1, 1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2, 2, 2, 2, 2,
+        3, 3, 3, 3, 3, 3, 3, 3, 3
+      ]
+
+      iex> {1, 2, 3} |> following({4, 5, 6}) |> following({7, 8, 9})
+      {12, 15, 3}
+
+  """
+  @spec following(Apply.t(), Apply.t()) :: Apply.t()
+  def following(wrapped_a, wrapped_b), do: lift(wrapped_a, wrapped_b, &Quark.constant/2)
+
+  @doc """
+  Extends `Functor.lift/2` to apply arguments to a binary function
+
+  ## Examples
+
+      iex> lift([1, 2], [3, 4], &+/2)
+      [4, 5, 5, 6]
+
+      iex> [1, 2]
+      ...> |> lift([3, 4], &*/2)
+      [3, 4, 6, 8]
+
+  """
+  @spec lift(Apply.t(), Apply.t(), fun()) :: Apply.t()
+  def lift(a, b, fun), do: a |> lift(fun) |> ap(b)
+
+  @doc """
+  Extends `lift` to apply arguments to a ternary function
+
+  ## Examples
+
+      iex> lift([1, 2], [3, 4], [5, 6], fn(a, b, c) -> a * b - c end)
+      [-2, -3, -1, -2, 1, 0, 3, 2]
+
+  """
+  @spec lift(Apply.t(), Apply.t(), Apply.t(), fun()) :: Apply.t()
+  def lift(a, b, c, fun) do
+    a
+    |> lift(fun)
+    |> ap(b)
+    |> ap(c)
+  end
+
+  @doc """
+  Extends `lift` to apply arguments to a quaternary function
+
+  ## Examples
+
+      iex> lift([1, 2], [3, 4], [5, 6], [7, 8], fn(a, b, c, d) -> a * b - c + d end)
+      [5, 6, 4, 5, 6, 7, 5, 6, 8, 9, 7, 8, 10, 11, 9, 10]
+
+  """
+  @spec lift(Apply.t(), Apply.t(), Apply.t(), Apply.t(), fun()) :: Apply.t()
+  def lift(a, b, c, d, fun), do: a |> lift(b, c, fun) |> ap(d)
 end
 
-# definst Witchcraft.Apply, for: Function do
-#   use Quark
-#   def ap(f, g) when is_function(g), do: fn x -> curry(f).(x).(curry(g).(x)) end
-# end
+definst Witchcraft.Apply, for: Function do
+  use Quark
+  def ap(f, g), do: fn x -> curry(f).(x).(curry(g).(x)) end
+end
 
 definst Witchcraft.Apply, for: List do
-  def ap(fun_list, list) when is_list(list) do
-    Witchcraft.Foldable.right_fold(fun_list, [], fn(fun, acc) ->
-      acc ++ Witchcraft.Functor.lift(list, fun)
+  def ap(fun_list, val_list) when is_list(val_list) do
+    Enum.flat_map(fun_list, fn(fun) ->
+      Enum.map(val_list, fun)
     end)
   end
 end
 
-# definst Witchcraft.Apply, for: Tuple do
-#   def ap(fun_tuple, arg_tuple) when is_tuple(arg_tuple) do
-#     fun_tuple
-#     |> Tuple.to_list
-#     |> Witchcraft.Apply.ap(Tuple.to_list(arg_tuple))
-#     |> List.to_tuple
-#   end
-# end
+# Contents must be semigroups
+definst Witchcraft.Apply, for: Tuple do
+  import TypeClass.Property.Generator, only: [generate: 1]
+  use Witchcraft.Semigroup
+
+  custom_generator(_) do
+    {generate(""), generate(1), generate(0), generate(""), generate(""), generate("")}
+  end
+
+  def ap({a, fun}, {y, z}), do: {a <> y, fun.(z)}
+  def ap({a, b, fun}, {x, y, z}), do: {a <> x, b <> y, fun.(z)}
+  def ap({a, b, c, fun}, {w, x, y, z}), do: {a <> w, b <> x, c <> y, fun.(z)}
+  def ap({a, b, c, d, fun}, {v, w, x, y, z}) do
+    {
+      a <> v,
+      b <> w,
+      c <> x,
+      d <> y,
+      fun.(z)
+    }
+  end
+
+  def ap(tuple_a, tuple_b) when tuple_size(tuple_a) == tuple_size(tuple_b) do
+    last_index = tuple_size(tuple_a) - 1
+
+    tuple_a
+    |> Tuple.to_list()
+    |> Enum.zip(Tuple.to_list(tuple_b))
+    |> Enum.with_index()
+    |> Enum.map(fn
+      {{fun,  arg},   ^last_index} -> fun.(arg)
+      {{left, right}, _}           -> left <> right
+    end)
+    |> List.to_tuple()
+  end
+end
