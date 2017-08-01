@@ -1,29 +1,20 @@
 ![](https://github.com/expede/witchcraft/raw/master/brand/Wordmark/PNG/WC-wordmark-lrg@2x.png)
 
 `Witchcraft` is a library providing common algebraic and categorical abstractions to Elixir.
-(Monoids, functors, monads, arrows, and categories)
+Monoids, functors, monads, arrows, categories, and more.
 
 [![Build Status](https://travis-ci.org/expede/witchcraft.svg?branch=master)](https://travis-ci.org/expede/witchcraft) [![Inline docs](http://inch-ci.org/github/expede/witchcraft.svg?branch=master)](http://inch-ci.org/github/expede/witchcraft) [![Deps Status](https://beta.hexfaktor.org/badge/all/github/expede/witchcraft.svg)](https://beta.hexfaktor.org/github/expede/witchcraft) [![hex.pm version](https://img.shields.io/hexpm/v/witchcraft.svg?style=flat)](https://hex.pm/packages/witchcraft) [![API Docs](https://img.shields.io/badge/api-docs-yellow.svg?style=flat)](http://hexdocs.pm/witchcraft/) [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/expede/witchcraft/blob/master/LICENSE)
 
-A big thank you to [Brandon Labbé](https://dribbble.com/brandonlabbe) for creating the logo to this project
 
 # README
 ## Table of Contents
 - [Quick Start](#quick-start)
+- [Operators](#operators)
 - [Values](#values)
-  - [Beginner Friendliness](#beginner-friendliness)
-  - [Consistency](#consistency)
-    - [Language](#language)
-    - [Concept](#concept)
-  - [Pedagogy](#pedagogy)
-  - [Pragmatism](#pragmatism)
-  - [Compatibility](#compatibility)
-  - [Testing](#testing)
 - [Differences from Haskell](#differences-from-haskell)
-  - [Naming](#naming)
-  - [Hierarchy](#hierarchy)
+- [Credits](#credits)
 
-# Quick Start
+## Quick Start
 
 ```
 def deps do
@@ -44,7 +35,7 @@ Quark    TypeClass
 * [TypeClass](https://hex.pm/packages/type_class): Used internally to generate type classes
 * [Algae](https://hex.pm/packages/algae): Algebraic data types that implement Witchcraft type classes
 
-# Hierarchy
+## Hierarchy
 
 ```
 
@@ -115,33 +106,53 @@ Each structure is provided a set of rules that it must obey. For convenience, `W
 includes property tests to ensure that datatypes that you write are easily property testable
 for adherence to their laws. Full compatibility with QuickCheck is coming soon.
 
-# Differences from [Haskell](https://www.haskell.org)
-## Naming
-Some functions have been renamed for clarity, generality, or style.
+## Differences from [Haskell](https://www.haskell.org)
+
+Here is a table of common differences from Haskell
 
 | Prelude + Control (Haskell) | Witchcraft (Elixir)   |
 |-----------------------------|-----------------------|
-| `<>`                        | `<|>`                 |
-| `fmap`                      | `lift`                |
-| `liftA`                     | `lift`                |
-| `liftA2`                    | `lift`                |
-| `liftA3`                    | `lift`                |
-| `liftM`                     | `lift`                |
-| `liftM2`                    | `lift`                |
-| `liftM3`                    | `lift`                |
-| `apply`                     | `seq`                 |
-| `<*>`                       | `<<~` (reverse `~>>`) |
-| `*>`                        | `seq_second`          |
-| `<*`                        | `seq_first`           |
-| `pure`                      | `wrap`                |
-| `return`                    | `wrap`                |
-| `<$>`                       | `<~` (reverse `~>`)   |
-| `>>`                        | `seq_first`           |
-| `>>=`                       | `>>>`                 |
-| `=<<`                       | `<<<`                 |
+| `flip ($)`                  | `|>/2`                |
+| `.`                         | `<|>/2`               |
+| `<<<`                       | `<|>/2`               |
+| `>>>`                       | `<~>/2`               |
+| `<>`                        | `<>/2`                |
+| `fmap`                      | `lift/2`              |
+| `liftA`                     | `lift/2`              |
+| `liftA2`                    | `lift/3`              |
+| `liftA3`                    | `lift/4`              |
+| `liftM`                     | `lift/2`              |
+| `liftM2`                    | `lift/3`              |
+| `liftM3`                    | `lift/4`              |
+| `ap`                        | `ap/2`                |
+| `<*>`                       | `<<~/2`               |
+| `<**>`                      | `~>>/2`               |
+| `*>`                        | `then/2`              |
+| `<*`                        | `following/2`         |
+| `pure`                      | `of/2`                |
+| `return`                    | `of/2`                |
+| `<$>`                       | `<~/2`                |
+| `flip (<$>)`                | `~>/2`                |
+| `>>`                        | `then/2`              |
+| `>>=`                       | `>>>/2`               |
+| `=<<`                       | `<<</2`               |
+| `***`                       | `^^^/2`               |
+| `&&&`                       | `&&&/2`               |
 
-## Hierarchy
-Having a clean slate, we have been able to use a very clean of typeclasses. Strictly,
-all `Applicative`s are `Functor`s, and all `Monad`s are `Applicative`s. This grants
-us the ability to reuse functions in their child classes. For example, `pure` can
-be used for `return`, `liftA*` is the same as `liftM*`, and so on (see chart above).
+### Hierarchy
+Having a clean slate, we have been able to use a clean of typeclasses. This is largely
+taken from the [Fantasy Land Specification](https://github.com/fantasyland/fantasy-land)
+and Edward Kmett's [semigroupoids](https://hackage.haskell.org/package/semigroupoids) package.
+
+As usual, all `Applicative`s are `Functor`s, and all `Monad`s are `Applicative`s.
+This grants us the ability to reuse functions in their child classes.
+For example, `of` can be used for both `pure` and `return`, `lift/*` can handle
+both `liftA*` and `liftM*`, and so on.
+
+## Credits
+
+### Logo
+A big thank you to [Brandon Labbé](https://dribbble.com/brandonlabbe) for creating the logo to this project
+
+### Sponsor
+Robot Overlord sponsors much of the development of Witchcraft by providing developer time.
