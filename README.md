@@ -138,7 +138,7 @@ use Witchcraft.Foldable, override_kernel: false
 | Functor      | `lift`           | `~>`     |
 |              | `pipe_ap`        | `~>>`    |
 |              | `chain`          | `>>>`    |
-|              | `reverse_lift`   | `<~`     |
+|              | `over`           | `<~`     |
 |              | `ap`             | `<<~`    |
 |              | `reverse_chain`  | `<<<`    |
 | Semigroupoid | `compose`        | `<\|>`   |
