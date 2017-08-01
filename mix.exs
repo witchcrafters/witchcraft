@@ -7,7 +7,7 @@ defmodule Witchcraft.Mixfile do
       name: "Witchcraft",
       description: "Common algebras (monoids, functors, monads, &c)",
 
-      version: "1.0.0-beta",
+      version: "1.0.0-beta.2",
       elixir:  "~> 1.5",
 
       package: [
