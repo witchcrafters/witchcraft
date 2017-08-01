@@ -48,6 +48,7 @@ defclass Witchcraft.Functor do
         %{a: 200, b: "[1, 2, 3]"}
 
     """
+    @spec map(Functor.t(), (any() -> any())) :: Functor.t()
     def map(wrapped, fun)
   end
 
@@ -74,6 +75,25 @@ defclass Witchcraft.Functor do
   end
 
   @doc ~S"""
+  `map` with its arguments flipped.
+
+  ## Examples
+
+      iex> reverse_map(fn x -> x + 1 end, [1, 2, 3])
+      [2, 3, 4]
+
+      iex> fn
+      ...>   int when is_integer(int) -> int * 100
+      ...>   value -> inspect(value)
+      ...> end
+      ...> |> reverse_map(%{a: 2, b: [1, 2, 3]})
+      %{a: 200, b: "[1, 2, 3]"}
+
+  """
+  @spec reverse_map((any() -> any()), Functor.t()) :: Functor.t()
+  def reverse_map(fun, wrapped), do: map(wrapped, fun)
+
+  @doc ~S"""
   `map/2` but with the function automatically curried
 
   ## Examples
@@ -95,6 +115,18 @@ defclass Witchcraft.Functor do
   """
   @spec lift(Functor.t(), fun()) :: Functor.t()
   def lift(wrapped, fun), do: Functor.map(wrapped, curry(fun))
+
+  @doc """
+  `lift/2` but with arguments flipped.
+
+  ## Examples
+
+      iex> fn x -> x + 1 end |> over([1, 2, 3])
+      [2, 3, 4]
+
+  """
+  @spec over(fun(), Functor.t()) :: Functor.t()
+  def over(fun, wrapped), do: lift(wrapped, fun)
 
   @doc ~S"""
   Operator alias for `lift/2`
@@ -151,6 +183,96 @@ defclass Witchcraft.Functor do
   """
   @spec replace(Functor.t(), any()) :: Functor.t()
   def replace(wrapped, replace_with), do: wrapped ~> &constant(replace_with, &1)
+
+  @doc """
+  `map` a function over a data structure, with each mapping occuring asynchronously.
+
+  Especially helpful when each application take a long time.
+
+  ## Examples
+
+      iex> async_map([1, 2, 3], fn x -> x * 10 end)
+      [10, 20, 30]
+
+      0..10_000
+      |> Enum.to_list()
+      |> async_map(fn x ->
+        Process.sleep(500)
+        x * 10
+      end)
+      #=> [0, 10, ...] in around a second
+
+  """
+  @spec async_map(Functor.t(), (any() -> any())) :: Functor.t()
+  def async_map(functor, fun) do
+    functor
+    |> Functor.map(fn(item) ->
+      Task.async(fn ->
+        fun.(item)
+      end)
+    end)
+    |> Functor.map(&Task.await/1)
+  end
+
+  @doc """
+  `async_map/2` with arguments flipped.
+
+  ## Examples
+
+      iex> fn x -> x * 10 end
+      ...> |> async_reverse_map([1, 2, 3])
+      [10, 20, 30]
+
+      fn x ->
+        Process.sleep(500)
+        x * 10
+      end
+      |> async_reverse_map(Enumto_list(0..10_000))
+      #=> [0, 10, ...] in around a second
+
+  """
+  @spec async_reverse_map((any() -> any()), Functor.t()) :: Functor.t()
+  def async_reverse_map(fun, functor), do: async_map(functor, fun)
+
+  @doc """
+  The same as `async_map/2`, except with the mapping function curried
+
+  ## Examples
+
+      iex> async_lift([1, 2, 3], fn x -> x * 10 end)
+      [10, 20, 30]
+
+      0..10_000
+      |> Enum.to_list()
+      |> async_lift(fn x ->
+        Process.sleep(500)
+        x * 10
+      end)
+      #=> [0, 10, ...] in around a second
+
+  """
+  @spec async_lift(Functor.t(), fun()) :: Functor.t()
+  def async_lift(functor, fun), do: async_map(functor, curry(fun))
+
+  @doc """
+  `async_lift/2` with arguments flipped.
+
+  ## Examples
+
+      iex> fn x -> x * 10 end
+      ...> |> async_over([1, 2, 3])
+      [10, 20, 30]
+
+      fn x ->
+        Process.sleep(500)
+        x * 10
+      end
+      |> async_over(Enumto_list(0..10_000))
+      #=> [0, 10, ...] in around a second
+
+  """
+  @spec async_over(fun(), Functor.t()) :: Functor.t()
+  def async_over(fun, functor), do: async_map(functor, fun)
 end
 
 definst Witchcraft.Functor, for: Function do
