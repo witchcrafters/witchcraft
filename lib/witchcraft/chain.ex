@@ -115,6 +115,14 @@ defclass Witchcraft.Chain do
   defalias bind(chainable, binder), as: :chain
 
   @doc """
+  An alias for `async_chain/2`.
+
+  Provided as a convenience for those coming from other languages.
+  """
+  @spec async_bind(Chain.t(), Chain.link()) :: Chain.t()
+  defalias async_bind(chainable, binder), as: :async_chain
+
+  @doc """
   Operator alias for `chain/2`.
 
   Extends the `~>` / `~>>` heirarchy with one more level of power / abstraction
