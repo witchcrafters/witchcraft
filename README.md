@@ -143,11 +143,10 @@ end
 ```
 
 All classes have properties that your instance must conform to at compile time.
-`mix` will alert you to any failing properties by name when compiling,
-and will refuse to compile without them. Sometimes it is not possible to write
-an instance that will pass the check, and you can either write a
-[custom generator](https://hexdocs.pm/type_class/readme.html#custom_generator-1)
-for that instance,  or [force](https://hexdocs.pm/type_class/readme.html#force_type_instance-true)
+`mix` will alert you to any failing properties by name, and will refuse to compile
+without them. Sometimes it is not possible to write an instance that will pass the check,
+and you can either write a [custom generator](https://hexdocs.pm/type_class/readme.html#custom_generator-1)
+for that instance, or [force](https://hexdocs.pm/type_class/readme.html#force_type_instance-true)
 the instance. If you must resort to forcing the instance, please write a test
 of the property for some specific case to be reasonably sure that it will be compatible
 with the rest of the library.
