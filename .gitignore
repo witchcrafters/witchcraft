@@ -6,3 +6,4 @@ erl_crash.dump
 *.ez
 *.beam
 .DS_Store
+/docs/all.json
