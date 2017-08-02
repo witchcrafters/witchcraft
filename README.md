@@ -133,7 +133,7 @@ use Witchcraft.Foldable, override_kernel: false
 How to make your custom struct compatible with `Witchcraft`:
 
 1. Read the [`TypeClass` README](https://hexdocs.pm/type_class/readme.html)
-2. Implement the [TypeClass data generator protocol](https://hexdocs.pm/type_class/TypeClass.Property.Generator.html#content) for your struct
+2. Implement the [`TypeClass` data generator protocol](https://hexdocs.pm/type_class/TypeClass.Property.Generator.html#content) for your struct
 3. Use [`definst`](https://hexdocs.pm/type_class/TypeClass.html#definst/3) ("define instance") instead of `defimpl`:
 
 ```elixir
