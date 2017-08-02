@@ -42,11 +42,11 @@ Quark    TypeClass
      Algae
 ```
 
-| Name | Description |
-|-----:|-------------|
-| [`Quark`](https://hex.pm/packages/quark) | Standard combinators (`id`, `compose`, &c) |
-| [`TypeClass`](https://hex.pm/packages/type_class) | Used internally to generate type classes |
-| [`Algae`](https://hex.pm/packages/algae) | Algebraic data types that implement `Witchcraft` type classes |
+| Name                                              | Description                                                   |
+|--------------------------------------------------:|---------------------------------------------------------------|
+| [`Quark`](https://hex.pm/packages/quark)          | Standard combinators (`id`, `compose`, &c)                    |
+| [`TypeClass`](https://hex.pm/packages/type_class) | Used internally to generate type classes                      |
+| [`Algae`](https://hex.pm/packages/algae)          | Algebraic data types that implement `Witchcraft` type classes |
 
 ## Values
 
