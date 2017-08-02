@@ -72,7 +72,7 @@
 #   end
 
 #   @doc """
-#   Partially apply `of/2`, generally as a way to bring many values into the same context
+#   Partially apply `of/2`, generally as a way to bring many values into the same context.
 
 #   ## Examples
 
@@ -85,7 +85,7 @@
 #   def of(sample), do: fn to_wrap -> of(sample, to_wrap) end
 
 #   @doc """
-#   Alias for `of/2`, for cases that this helps legibility or style
+#   Alias for `of/2`, for cases that this helps legibility or style.
 
 #   ## Example
 
@@ -100,7 +100,7 @@
 #   defalias wrap(sample, to_wrap), as: :of
 
 #   @doc """
-#   Alias for `of/2`, for cases that this helps legibility or style
+#   Alias for `of/2`, for cases that this helps legibility or style.
 
 #   ## Example
 
@@ -113,6 +113,39 @@
 #   """
 #   @spec pure(Applicative.t(), any()) :: Applicative.t()
 #   defalias pure(sample, to_wrap), as: :of
+
+#   @doc """
+#   `of/2` with arguments reversed.
+
+#   ## Example
+
+#       iex> to(42, {"ohai", "thar"})
+#       {"", 42}
+
+#       iex> 42 |> to([])
+#       [42]
+
+#       42 |> to(%Algae.Id{})
+#       #=> %Algae.Id{id: 42}
+
+#   """
+#   @spec to(any(), Applicative.t()) :: Applicative.t()
+#   def to(to_wrap, sample), do: of(sample, to_wrap)
+
+#   @doc """
+#   Prime a value to be brought into other data types
+
+#   ## Example
+
+#       iex> make = to(42)
+#       ...> make.({"ohai", "thar"})
+#       {"", 42}
+#       ...> make.([])
+#       [42]
+
+#   """
+#   @spec to(any()) :: (Applicative.t() -> Applicative.t())
+#   def to(to_wrap), do: fn type -> of(type, to_wrap) end
 
 #   @doc """
 #   Alias for `of/2`, for cases that this helps legibility or style

@@ -2,8 +2,9 @@ import TypeClass
 
 defclass Witchcraft.Apply do
   @moduledoc """
-  An extension of `Witchcraft.Functor`, `Apply` provides a way to map functions
-  to their arguments when both are wrapped in the same kind of container.
+  An extension of `Witchcraft.Functor`, `Apply` provides a way to _apply_ arguments
+  to functions when both are wrapped in the same kind of container. This can be
+  seen as running function application "in a context".
 
   For a nice, illustrated introduction,
   see [Functors, Applicatives, And Monads In Pictures](http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html).
@@ -43,7 +44,16 @@ defclass Witchcraft.Apply do
       iex> ap([fn x -> x + 1 end, fn y -> y * 10 end], [1, 2, 3])
       [2, 3, 4, 10, 20, 30]
 
+      iex> [100, 200]
+      ...> |> Witchcraft.Functor.lift(fn(x, y, z) -> x * y / z end)
+      ...> |> provide([5, 2])
+      ...> |> provide([100, 50])
+      [5.0, 10.0, 2.0, 4.0, 10.0, 20.0, 4.0, 8.0]
+      # ↓                          ↓
+      # 100 * 5 / 100          200 * 5 / 50
+
       iex> import Witchcraft.Functor
+      ...>
       ...> [100, 200]
       ...> ~> fn(x, y, z) ->
       ...>   x * y / z
@@ -70,14 +80,12 @@ defclass Witchcraft.Apply do
        Apply   [ap/2]
   """
 
-  extend Witchcraft.Functor
-
   alias __MODULE__
-  alias Witchcraft.Functor
-
-  import Witchcraft.Functor, only: [lift: 2]
-
   use Quark
+
+  alias Witchcraft.Functor
+  extend Witchcraft.Functor
+  use Witchcraft.Functor
 
   @type t   :: any()
   @type fun :: any()
@@ -91,25 +99,18 @@ defclass Witchcraft.Apply do
 
   where do
     @doc """
-    Map/apply arguments to functions, when both are wrapped in the same
+    Pipe arguments to functions, when both are wrapped in the same
     type of data structure.
 
     ## Examples
 
-        iex> ap([fn x -> x + 1 end, fn y -> y * 10 end], [1, 2, 3])
-        [2, 3, 4, 10, 20, 30]
-
-        iex> [100, 200]
-        ...> |> Witchcraft.Functor.lift(fn(x, y, z) -> x * y / z end)
-        ...> |> ap([5, 2])
-        ...> |> ap([100, 50])
-        [5.0, 10.0, 2.0, 4.0, 10.0, 20.0, 4.0, 8.0]
-        # ↓                          ↓
-        # 100 * 5 / 100          200 * 5 / 50
+        iex> [1, 2, 3]
+        ...> |> convey([fn x -> x + 1 end, fn y -> y * 10 end])
+        [2, 10, 3, 20, 4, 30]
 
     """
-    @spec ap(Apply.t(), Apply.fun()) :: Apply.t()
-    def ap(wrapped_args, wrapped_funs)
+    @spec convey(Apply.t(), Apply.fun()) :: Apply.t()
+    def convey(wrapped_args, wrapped_funs)
   end
 
   properties do
@@ -121,32 +122,61 @@ defclass Witchcraft.Apply do
       fs = data |> generate() |> Functor.replace(fn x -> x <> x end)
       gs = data |> generate() |> Functor.replace(fn y -> y <> "foo" end)
 
-      left  = Apply.ap(Apply.ap(as, gs), fs)
+      left  = Apply.convey(Apply.convey(as, gs), fs)
 
       right =
         fs
         |> Functor.lift(&compose/2)
-        |> fn x -> Apply.ap(gs, x) end.()
-        |> fn y -> Apply.ap(as, y) end.()
+        |> fn x -> Apply.convey(gs, x) end.()
+        |> fn y -> Apply.convey(as, y) end.()
 
       equal?(left, right)
     end
   end
 
   @doc """
-  Pipe-ordered application. NOT just a flipped version of `ap/2`.
+  Alias for `convey/2`.
 
-  This isn't just a flipped `ap` in order to get correct effect sequencing.
+  Why "hose"?
+
+  * Pipes (`|>`) are application with arguments flipped
+  * `ap/2` is like function application "in a context"
+  * The opposite of `ap` is a contextual pipe
+  * `hose`s are a kind of flexible pipe
+
+  Q.E.D.
+
+  ![](http://s2.quickmeme.com/img/fd/fd0baf5ada879021c32129fc7dea679bd7666e708df8ca8ca536da601ea3d29e.jpg)
 
   ## Examples
 
       iex> [1, 2, 3]
-      ...> |> reverse_ap([fn x -> x + 1 end, fn y -> y * 10 end])
+      ...> |> hose([fn x -> x + 1 end, fn y -> y * 10 end])
       [2, 10, 3, 20, 4, 30]
 
   """
-  @spec reverse_ap(Apply.fun(), Apply.t()) :: Apply.t()
-  def reverse_ap(wrapped_funs, wrapped), do: ap(wrapped, wrapped_funs)
+  @spec hose(Apply.t(), Apply.fun()) :: Apply.t()
+  def hose(wrapped_args, wrapped_funs), do: convey(wrapped_args, wrapped_funs)
+
+  @doc """
+  `convey/2` with arguments reversed.
+
+  ## Examples
+
+      iex> ap([fn x -> x + 1 end, fn y -> y * 10 end], [1, 2, 3])
+      [2, 3, 4, 10, 20, 30]
+
+      iex> [100, 200]
+      ...> |> Witchcraft.Functor.lift(fn(x, y, z) -> x * y / z end)
+      ...> |> ap([5, 2])
+      ...> |> ap([100, 50])
+      [5.0, 10.0, 2.0, 4.0, 10.0, 20.0, 4.0, 8.0]
+      # ↓                          ↓
+      # 100 * 5 / 100          200 * 5 / 50
+
+  """
+  @spec ap(Apply.fun(), Apply.t()) :: Apply.t()
+  def ap(wrapped_funs, wrapped), do: convey(wrapped, wrapped_funs)
 
   @doc """
   Operator alias for `ap/2`
@@ -172,7 +202,7 @@ defclass Witchcraft.Apply do
       [5, 6, 4, 5, 6, 7, 5, 6, 8, 9, 7, 8, 10, 11, 9, 10]
 
   """
-  defalias wrapped_funs <<~ wrapped, as: :curried_reverse_ap
+  defalias wrapped_funs <<~ wrapped, as: :provide
 
   @doc """
   Operator alias for `reverse_ap/2`, moving in the pipe direction
@@ -191,7 +221,7 @@ defclass Witchcraft.Apply do
       [5.0, 10.0, 2.0, 4.0, 10.0, 20.0, 4.0, 8.0]
 
   """
-  defalias wrapped ~>> wrapped_funs, as: :curried_ap
+  defalias wrapped ~>> wrapped_funs, as: :supply
 
   @doc """
   Same as `ap/2`, but with all functions curried
@@ -199,16 +229,16 @@ defclass Witchcraft.Apply do
   ## Examples
 
       iex> [&+/2, &*/2]
-      ...> |> curried_ap([1, 2, 3])
-      ...> |> ap([4, 5, 6])
+      ...> |> supply([1, 2, 3])
+      ...> |> convey([4, 5, 6])
       [5, 6, 7, 6, 7, 8, 7, 8, 9, 4, 5, 6, 8, 10, 12, 12, 15, 18]
 
   """
-  @spec curried_ap(Apply.t(), Apply.fun()) :: Apply.t()
-  def curried_ap(wrapped_args, wrapped_funs) do
+  @spec supply(Apply.t(), Apply.fun()) :: Apply.t()
+  def supply(wrapped_args, wrapped_funs) do
     wrapped_funs
     |> Functor.map(&curry/1)
-    |> Apply.reverse_ap(wrapped_args)
+    |> Apply.ap(wrapped_args)
   end
 
   @doc """
@@ -217,14 +247,12 @@ defclass Witchcraft.Apply do
   ## Examples
 
       iex> [1, 2, 3]
-      ...> |> curried_reverse_ap([fn x -> x + 1 end, fn y -> y * 10 end])
+      ...> |> provide([fn x -> x + 1 end, fn y -> y * 10 end])
       [2, 3, 4, 10, 20, 30]
 
   """
-  @spec curried_reverse_ap(Apply.fun(), Apply.t()) :: Apply.t()
-  def curried_reverse_ap(wrapped_funs, wrapped_args) do
-    curried_ap(wrapped_args, wrapped_funs)
-  end
+  @spec provide(Apply.fun(), Apply.t()) :: Apply.t()
+  def provide(funs, args), do: supply(args, funs)
 
   @doc """
   Sequence actions, replacing the first/previous values with the last argument
@@ -292,7 +320,7 @@ defclass Witchcraft.Apply do
 
   """
   @spec lift(Apply.t(), Apply.t(), fun()) :: Apply.t()
-  def lift(a, b, fun), do: a |> lift(fun) |> reverse_ap(b) # pass(b)?
+  def lift(a, b, fun), do: a |> lift(fun) |> ap(b)
 
   @doc """
   Extends `lift` to apply arguments to a ternary function
@@ -307,8 +335,8 @@ defclass Witchcraft.Apply do
   def lift(a, b, c, fun) do
     a
     |> lift(fun)
-    |> reverse_ap(b)
-    |> reverse_ap(c)
+    |> ap(b)
+    |> ap(c)
   end
 
   @doc """
@@ -321,18 +349,71 @@ defclass Witchcraft.Apply do
 
   """
   @spec lift(Apply.t(), Apply.t(), Apply.t(), Apply.t(), fun()) :: Apply.t()
-  def lift(a, b, c, d, fun), do: a |> lift(b, c, fun) |> reverse_ap(d)
+  def lift(a, b, c, d, fun), do: a |> lift(b, c, fun) |> ap(d)
+
+  @doc """
+  Extends `over` to apply arguments to a binary function
+
+  ## Examples
+
+      iex> over(&+/2, [1, 2], [3, 4])
+      [4, 5, 5, 6]
+
+      iex> &*/2
+      ...> |> over([1, 2], [3, 4])
+      [3, 4, 6, 8]
+
+  """
+  @spec over(fun(), Apply.t(), Apply.t()) :: Apply.t()
+  def over(fun, a, b), do: lift(a, b, fun)
+
+  @doc """
+  Extends `over` to apply arguments to a ternary function
+
+  ## Examples
+
+      iex> fn(a, b, c) -> a * b - c end
+      iex> |> over([1, 2], [3, 4], [5, 6])
+      [-2, -3, -1, -2, 1, 0, 3, 2]
+
+  """
+  @spec over(fun(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
+  def over(fun, a, b, c), do: lift(a, b, c, fun)
+
+  @doc """
+  Extends `over` to apply arguments to a ternary function
+
+  ## Examples
+
+      iex> fn(a, b, c) -> a * b - c end
+      ...> |> over([1, 2], [3, 4], [5, 6])
+      [-2, -3, -1, -2, 1, 0, 3, 2]
+
+  """
+  @spec over(fun(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
+  def over(fun, a, b, c, fun), do: lift(a, b, c, fun)
+
+  @doc """
+  Extends `lift` to apply arguments to a quaternary function
+
+  ## Examples
+
+      iex> fn(a, b, c, d) -> a * b - c + d end
+      ...> |> over([1, 2], [3, 4], [5, 6], [7, 8])
+      [5, 6, 4, 5, 6, 7, 5, 6, 8, 9, 7, 8, 10, 11, 9, 10]
+
+  """
+  @spec over(fun(), Apply.t(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
+  def over(fun, a, b, c, d), do: lift(a, b, c, d, fun)
 end
 
 definst Witchcraft.Apply, for: Function do
   use Quark
-  def ap(g, f), do: fn x -> curry(f).(x).(curry(g).(x)) end
+  def convey(g, f), do: fn x -> curry(f).(x).(curry(g).(x)) end
 end
 
 definst Witchcraft.Apply, for: List do
-  @force_type_instance true
-
-  def ap(val_list, fun_list) when is_list(fun_list) do
+  def convey(val_list, fun_list) when is_list(fun_list) do
     Enum.flat_map(fun_list, fn(fun) ->
       Enum.map(val_list, fun)
     end)
@@ -348,10 +429,10 @@ definst Witchcraft.Apply, for: Tuple do
     {generate(""), generate(1), generate(0), generate(""), generate(""), generate("")}
   end
 
-  def ap({v, w},          {a,          fun}), do: {a <> v, fun.(w)}
-  def ap({v, w, x},       {a, b,       fun}), do: {a <> v, b <> w, fun.(x)}
-  def ap({v, w, x, y},    {a, b, c,    fun}), do: {a <> v, b <> w, c <> x, fun.(y)}
-  def ap({v, w, x, y, z}, {a, b, c, d, fun}) do
+  def convey({v, w},          {a,          fun}), do: {a <> v, fun.(w)}
+  def convey({v, w, x},       {a, b,       fun}), do: {a <> v, b <> w, fun.(x)}
+  def convey({v, w, x, y},    {a, b, c,    fun}), do: {a <> v, b <> w, c <> x, fun.(y)}
+  def convey({v, w, x, y, z}, {a, b, c, d, fun}) do
     {
       a <> v,
       b <> w,
@@ -361,7 +442,7 @@ definst Witchcraft.Apply, for: Tuple do
     }
   end
 
-  def ap(tuple_b, tuple_a) when tuple_size(tuple_a) == tuple_size(tuple_b) do
+  def convey(tuple_b, tuple_a) when tuple_size(tuple_a) == tuple_size(tuple_b) do
     last_index = tuple_size(tuple_a) - 1
 
     tuple_a

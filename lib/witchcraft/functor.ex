@@ -79,19 +79,19 @@ defclass Witchcraft.Functor do
 
   ## Examples
 
-      iex> reverse_map(fn x -> x + 1 end, [1, 2, 3])
+      iex> across(fn x -> x + 1 end, [1, 2, 3])
       [2, 3, 4]
 
       iex> fn
       ...>   int when is_integer(int) -> int * 100
       ...>   value -> inspect(value)
       ...> end
-      ...> |> reverse_map(%{a: 2, b: [1, 2, 3]})
+      ...> |> across(%{a: 2, b: [1, 2, 3]})
       %{a: 200, b: "[1, 2, 3]"}
 
   """
-  @spec reverse_map((any() -> any()), Functor.t()) :: Functor.t()
-  def reverse_map(fun, wrapped), do: map(wrapped, fun)
+  @spec across((any() -> any()), Functor.t()) :: Functor.t()
+  def across(fun, wrapped), do: map(wrapped, fun)
 
   @doc ~S"""
   `map/2` but with the function automatically curried
@@ -220,19 +220,19 @@ defclass Witchcraft.Functor do
   ## Examples
 
       iex> fn x -> x * 10 end
-      ...> |> async_reverse_map([1, 2, 3])
+      ...> |> async_across([1, 2, 3])
       [10, 20, 30]
 
       fn x ->
         Process.sleep(500)
         x * 10
       end
-      |> async_reverse_map(Enumto_list(0..10_000))
+      |> async_across(Enumto_list(0..10_000))
       #=> [0, 10, ...] in around a second
 
   """
-  @spec async_reverse_map((any() -> any()), Functor.t()) :: Functor.t()
-  def async_reverse_map(fun, functor), do: async_map(functor, fun)
+  @spec async_across((any() -> any()), Functor.t()) :: Functor.t()
+  def async_across(fun, functor), do: async_map(functor, fun)
 
   @doc """
   The same as `async_map/2`, except with the mapping function curried

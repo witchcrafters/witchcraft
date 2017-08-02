@@ -2,7 +2,7 @@
 
 # defclass Witchcraft.Traversable do
 #   @moduledoc """
-#   Walk across a data structure from left to right,
+#   Walk through a data structure from left to right,
 #   running some action on each element in turn.
 
 #   Similar to applicatives, it can be used to do things like collecting some effect
@@ -157,20 +157,20 @@
 
 #   ## Examples
 
-#       iex> fn x -> {x, x * 2, x * 10} end |> across([1, 2, 3])
+#       iex> fn x -> {x, x * 2, x * 10} end |> through([1, 2, 3])
 #       {6, 12, [10, 20, 30]}
 
-#       iex> fn x -> [x] end |> across({1, 2, 3})
+#       iex> fn x -> [x] end |> through({1, 2, 3})
 #       [{1, 2, 3}]
 
-#       iex> fn x -> [x, x * 5, x * 10] end |> across({1, 2, 3})
+#       iex> fn x -> [x, x * 5, x * 10] end |> through({1, 2, 3})
 #       [
 #         {1, 2, 3},
 #         {1, 2, 15},
 #         {1, 2, 30}
 #       ]
 
-#       iex> fn x -> [x, x * 5, x * 10] end |> across([1, 2, 3])
+#       iex> fn x -> [x, x * 5, x * 10] end |> through([1, 2, 3])
 #       [
 #         #
 #         [1, 2,  3], [1, 2,  15], [1, 2,  30],
@@ -187,8 +187,8 @@
 #       ]
 
 #   """
-#   @spec across(Traversable.link(), Traversable.t()) :: Traversable.t()
-#   def across(link, traversable), do: traverse(traversable, link)
+#   @spec through(Traversable.link(), Traversable.t()) :: Traversable.t()
+#   def through(link, traversable), do: traverse(traversable, link)
 
 #   @doc """
 #   `traverse` actions over data, but ignore the results.
@@ -228,7 +228,7 @@
 #   ## Examples
 
 #       iex> fn x -> [x, x * 5, x * 10] end
-#       ...> |> then_across([1, 2, 3])
+#       ...> |> then_through([1, 2, 3])
 #       [
 #           #
 #           %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
@@ -246,7 +246,7 @@
 
 #   """
 #   @spec then_traverse(Traversable.link(), Traversable.t()) :: Applicative.t()
-#   def then_across(link, traversable), do: then_traverse(traversable, link)
+#   def then_through(link, traversable), do: then_traverse(traversable, link)
 
 #   @doc """
 #   Run each action/effect in sequence (from left to right),
