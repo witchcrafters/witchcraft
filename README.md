@@ -135,7 +135,7 @@ use Witchcraft.Foldable, override_kernel: false
 |              | `nonequivalent?` | `!=`     |
 | Ord          | `greater_than?`  | `>`      |
 |              | `lesser_than?`   | `<`      |
-| Monoid       | `append`         | `<>`     |
+| Semigroup    | `append`         | `<>`     |
 | Functor      | `lift`           | `~>`     |
 |              | `convey`         | `~>>`    |
 |              | `chain`          | `>>>`    |
@@ -196,7 +196,7 @@ projects such as this one, but targeted at Javascript. It does not come with its
 own implementation, but provides a [helpful chart](https://github.com/fantasyland/fantasy-land/raw/master/figures/dependencies.png)
 of class hierarchies.
 
-In many ways, [Scalaz](https://github.com/scalaz/scalaz), and later [cats](http://typelevel.org/cats/),
+In many ways, [`Scalaz`](https://github.com/scalaz/scalaz), and later [`cats`](http://typelevel.org/cats/),
 were the first widely-used port of categorical & algebraic ideas to
 a mainstream language. While dismissed by some as "[Haskell fan fiction](https://twitter.com/plt_hulk/status/341292374355501056)",
 it showed that we can write our own Haskell fanfic in all sorts of languages.
@@ -205,13 +205,13 @@ Obviously the [Haskell Prelude](https://hackage.haskell.org/package/base-4.10.0.
 deserves mention. Haskell has inspired so many programmers to write clean,
 declaritive, functional code based on principled abstractions. We'll skip
 the love letter to [SPJ](https://en.wikipedia.org/wiki/Simon_Peyton_Jones),
-the Glasgow team, and the original committee.
+the Glasgow team, and the original Haskell committee.
 
-[classy-prelude/mono-travresable](https://github.com/snoyberg/mono-traversable)
+[`classy-prelude`/`mono-travresable`](https://github.com/snoyberg/mono-traversable)
 have also made a lot of progress towards a base library that incorporates modern ideas
 in a clean package, and was an inspiration to taking a similar approach with Witchraft.
 
-The [semigroupoids](https://hackage.haskell.org/package/semigroupoids) library
+The [`semigroupoids`](https://hackage.haskell.org/package/semigroupoids) library
 from the eminent [Edward Kmett](https://github.com/ekmett) provided many
 refernce implementations and is helping set the future expansion of
 the foldable class lineage in Witchcraft.
