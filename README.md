@@ -99,7 +99,7 @@ Semigroupoid  Semigroup  Setoid   Foldable   Functor -----------┐
 
 Having a clean slate, we have been able to use a clean of typeclasses. This is largely
 taken from the [Fantasy Land Specification](https://github.com/fantasyland/fantasy-land)
-and Edward Kmett's [semigroupoids](https://hackage.haskell.org/package/semigroupoids) package.
+and Edward Kmett's [`semigroupoids`](https://hackage.haskell.org/package/semigroupoids) package.
 
 As usual, all `Applicative`s are `Functor`s, and all `Monad`s are `Applicative`s.
 This grants us the ability to reuse functions in their child classes.
