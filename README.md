@@ -221,7 +221,7 @@ recommend [Conceptual Mathematics](http://www.cambridge.org/catalogue/catalogue.
 [Category Theory for the Sciences](https://mitpress.mit.edu/books/category-theory-sciences),
 and [Categories for the Working Mathematician](https://en.wikipedia.org/wiki/Categories_for_the_Working_Mathematician).
 Reading these books probably won't change your code overnight. Some people call it
-["general abstract nonsense"](https://en.wikipedia.org/wiki/Abstract_nonsense)
+"[general abstract nonsense](https://en.wikipedia.org/wiki/Abstract_nonsense)"
 for a reason. That said, it does provide a nice framework for thinking about
 these abstract ideas, and is a recommended pusuit for all that are curious.
 
