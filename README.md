@@ -1,7 +1,7 @@
 ![](https://github.com/expede/witchcraft/raw/master/brand/Wordmark/PNG/WC-wordmark-lrg@2x.png)
 
 `Witchcraft` is a library providing common algebraic and categorical abstractions to Elixir.
-Monoids, functors, monads, arrows, categories, and more.
+Monoids, functors, monads, arrows, categories, and other dark magic.
 
 [![Build Status](https://travis-ci.org/expede/witchcraft.svg?branch=master)](https://travis-ci.org/expede/witchcraft) [![Inline docs](http://inch-ci.org/github/expede/witchcraft.svg?branch=master)](http://inch-ci.org/github/expede/witchcraft) [![Deps Status](https://beta.hexfaktor.org/badge/all/github/expede/witchcraft.svg)](https://beta.hexfaktor.org/github/expede/witchcraft) [![hex.pm version](https://img.shields.io/hexpm/v/witchcraft.svg?style=flat)](https://hex.pm/packages/witchcraft) [![API Docs](https://img.shields.io/badge/api-docs-yellow.svg?style=flat)](http://hexdocs.pm/witchcraft/) [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/expede/witchcraft/blob/master/LICENSE)
 
@@ -16,6 +16,7 @@ Monoids, functors, monads, arrows, categories, and more.
 * [Type Class Hierarchy](#type-class-hierarchy)
 * [Operators](#operators)
 * [Haskell Translation Table](#haskell-translation-table)
+* [Prior Art and Further Reading](#prior-art-and-further-reading)
 * [Credits](#credits)
 
 ## Quick Start
@@ -134,9 +135,9 @@ use Witchcraft.Foldable, override_kernel: false
 |              | `nonequivalent?` | `!=`     |
 | Ord          | `greater_than?`  | `>`      |
 |              | `lesser_than?`   | `<`      |
-| Monoid       | `append`         | `<>`     |
+| Semigroup    | `append`         | `<>`     |
 | Functor      | `lift`           | `~>`     |
-|              | `pipe_ap`        | `~>>`    |
+|              | `convey`         | `~>>`    |
 |              | `chain`          | `>>>`    |
 |              | `over`           | `<~`     |
 |              | `ap`             | `<<~`    |
@@ -149,34 +150,81 @@ use Witchcraft.Foldable, override_kernel: false
 
 ## Haskell Translation Table
 
-| Haskell Prelude | Witchcraft    |
-|----------------:|:--------------|
-| `flip ($)`      | `\|>/2`       |
-| `.`             | `<\|>/2`      |
-| `<<<`           | `<\|>/2`      |
-| `>>>`           | `<~>/2`       |
-| `<>`            | `<>/2`        |
-| `<$>`           | `<~/2`        |
-| `flip (<$>)`    | `~>/2`        |
-| `fmap`          | `lift/2`      |
-| `liftA`         | `lift/2`      |
-| `liftA2`        | `lift/3`      |
-| `liftA3`        | `lift/4`      |
-| `liftM`         | `lift/2`      |
-| `liftM2`        | `lift/3`      |
-| `liftM3`        | `lift/4`      |
-| `ap`            | `ap/2`        |
-| `<*>`           | `<<~/2`       |
-| `<**>`          | `~>>/2`       |
-| `*>`            | `then/2`      |
-| `<*`            | `following/2` |
-| `pure`          | `of/2`        |
-| `return`        | `of/2`        |
-| `>>`            | `then/2`      |
-| `>>=`           | `>>>/2`       |
-| `=<<`           | `<<</2`       |
-| `***`           | `^^^/2`       |
-| `&&&`           | `&&&/2`       |
+| Haskell Prelude | Witchcraft         |
+|----------------:|:-------------------|
+| `flip ($)`      | `\|>/2` (`Kernel`) |
+| `.`             | `<\|>/2`           |
+| `<<<`           | `<\|>/2`           |
+| `>>>`           | `<~>/2`            |
+| `<>`            | `<>/2`             |
+| `<$>`           | `<~/2`             |
+| `flip (<$>)`    | `~>/2`             |
+| `fmap`          | `lift/2`           |
+| `liftA`         | `lift/2`           |
+| `liftA2`        | `lift/3`           |
+| `liftA3`        | `lift/4`           |
+| `liftM`         | `lift/2`           |
+| `liftM2`        | `lift/3`           |
+| `liftM3`        | `lift/4`           |
+| `ap`            | `ap/2`             |
+| `<*>`           | `<<~/2`            |
+| `<**>`          | `~>>/2`            |
+| `*>`            | `then/2`           |
+| `<*`            | `following/2`      |
+| `pure`          | `of/2`             |
+| `return`        | `of/2`             |
+| `>>`            | `then/2`           |
+| `>>=`           | `>>>/2`            |
+| `=<<`           | `<<</2`            |
+| `***`           | `^^^/2`            |
+| `&&&`           | `&&&/2`            |
+
+## Prior Art and Futher Reading
+
+This library draws heavy inspiration from mathematics, other laguages,
+other Elixir libraries. We would be a shame not to mention them here.
+There is much, much more out there, but these are the our highlights and inspirations.
+
+The [`Monad`](https://hexdocs.pm/monad/Monad.html) library predates `Witchcraft`
+by several years. This library proved that it is entirely possible
+to bring do-notation to Elixir. It takers a very different approach:
+it is very up-front that it has a very loose definition of what it means for
+something to be a "monad", and relies on `behaviour`s rather than ad-hoc polymorphism.
+
+[The Fantasy Land Spec](https://github.com/fantasyland/fantasy-land) is a spec for
+projects such as this one, but targeted at Javascript. It does not come with its
+own implementation, but provides a [helpful chart](https://github.com/fantasyland/fantasy-land/raw/master/figures/dependencies.png)
+of class hierarchies.
+
+In many ways, [`Scalaz`](https://github.com/scalaz/scalaz), and later [`cats`](http://typelevel.org/cats/),
+were the first widely-used port of categorical & algebraic ideas to
+a mainstream language. While dismissed by some as "[Haskell fan fiction](https://twitter.com/plt_hulk/status/341292374355501056)",
+it showed that we can write our own Haskell fanfic in all sorts of languages.
+
+Obviously the Haskell [`Prelude`](https://hackage.haskell.org/package/base-4.10.0.0/docs/Prelude.html)
+deserves mention. Haskell has inspired so many programmers to write clean,
+declaritive, functional code based on principled abstractions. We'll spare you
+the love letter to [SPJ](https://en.wikipedia.org/wiki/Simon_Peyton_Jones),
+the Glasgow team, and the original Haskell committee, but we're deeply appreciative
+of how they pushed the state of the art forward.
+
+[`classy-prelude`/`mono-traversable`](https://github.com/snoyberg/mono-traversable)
+have also made a lot of progress towards a base library that incorporates modern ideas
+in a clean package, and was an inspiration to taking a similar approach with Witchraft.
+
+The [`semigroupoids`](https://hackage.haskell.org/package/semigroupoids) library
+from the eminent [Edward Kmett](https://github.com/ekmett) provided many
+refernce implementations and is helping set the future expansion of
+the foldable class lineage in Witchcraft.
+
+Interested in learning more of the underlying ideas? The maintainers can hearily
+recommend [Conceptual Mathematics](http://www.cambridge.org/catalogue/catalogue.asp?isbn=9780521719162),
+[Category Theory for the Sciences](https://mitpress.mit.edu/books/category-theory-sciences),
+and [Categories for the Working Mathematician](https://en.wikipedia.org/wiki/Categories_for_the_Working_Mathematician).
+Reading these books probably won't change your code overnight. Some people call it
+"[general abstract nonsense](https://en.wikipedia.org/wiki/Abstract_nonsense)"
+for a reason. That said, it does provide a nice framework for thinking about
+these abstract ideas, and is a recommended pusuit for all that are curious.
 
 ## Credits
 

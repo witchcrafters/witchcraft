@@ -14,7 +14,7 @@ defclass Witchcraft.Category do
   An instance of `Witchcraft.Category` must also implement `Witchcraft.Semigroupoid`,
   and define `Witchcraft.Category.identity/1`.
 
-      Semigroupoid  [compose/2]
+      Semigroupoid  [compose/2, apply/2]
           ↓
        Category     [identity/1]
   """

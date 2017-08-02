@@ -29,7 +29,7 @@ defclass Witchcraft.Arrow do
   An instance of `Witchcraft.Arrow` must also implement `Witchcraft.Category`,
   and define `Witchcraft.Arrow.arrowize/2`.
 
-      Semigroupoid  [compose/2]
+      Semigroupoid  [compose/2, apply/2]
           ↓
        Category     [identity/1]
           ↓

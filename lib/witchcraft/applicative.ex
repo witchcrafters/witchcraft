@@ -20,7 +20,7 @@ defclass Witchcraft.Applicative do
 
          Functor    [map/2]
             ↓
-          Apply     [ap/2]
+          Apply     [convey/2]
             ↓
        Applicative  [of/2]
   """
@@ -62,7 +62,7 @@ defclass Witchcraft.Applicative do
         ...>
         ...> []
         ...> |> of(&+/2)
-        ...> |> curried_ap([1, 2, 3])
+        ...> |> provide([1, 2, 3])
         ...> |> ap(of([], 42))
         [43, 44, 45]
 
@@ -72,12 +72,13 @@ defclass Witchcraft.Applicative do
   end
 
   @doc """
-  Partially apply `of/2`, generally as a way to bring many values into the same context
+  Partially apply `of/2`, generally as a way to bring many values into the same context.
 
   ## Examples
 
-      iex> to_tuple = of({"very example", "much wow"})
-      ...> [to_tuple.(42), to_tuple.("hello"), to_tuple.([1, 2, 3])]
+      iex> {"very example", "much wow"}
+      ...> |> of()
+      ...> |> Witchcraft.Functor.across([42, "hello", [1, 2, 3]])
       [{"", 42}, {"", "hello"}, {"", [1, 2, 3]}]
 
   """
@@ -85,7 +86,7 @@ defclass Witchcraft.Applicative do
   def of(sample), do: fn to_wrap -> of(sample, to_wrap) end
 
   @doc """
-  Alias for `of/2`, for cases that this helps legibility or style
+  Alias for `of/2`, for cases that this helps legibility or style.
 
   ## Example
 
@@ -100,7 +101,7 @@ defclass Witchcraft.Applicative do
   defalias wrap(sample, to_wrap), as: :of
 
   @doc """
-  Alias for `of/2`, for cases that this helps legibility or style
+  Alias for `of/2`, for cases that this helps legibility or style.
 
   ## Example
 
@@ -113,6 +114,39 @@ defclass Witchcraft.Applicative do
   """
   @spec pure(Applicative.t(), any()) :: Applicative.t()
   defalias pure(sample, to_wrap), as: :of
+
+  @doc """
+  `of/2` with arguments reversed.
+
+  ## Example
+
+      iex> to(42, {"ohai", "thar"})
+      {"", 42}
+
+      iex> 42 |> to([])
+      [42]
+
+      42 |> to(%Algae.Id{})
+      #=> %Algae.Id{id: 42}
+
+  """
+  @spec to(any(), Applicative.t()) :: Applicative.t()
+  def to(to_wrap, sample), do: of(sample, to_wrap)
+
+  @doc """
+  Prime a value to be brought into other data types
+
+  ## Example
+
+      iex> make = to(42)
+      ...> make.({"ohai", "thar"})
+      {"", 42}
+      ...> make.([])
+      [42]
+
+  """
+  @spec to(any()) :: (Applicative.t() -> Applicative.t())
+  def to(to_wrap), do: fn type -> of(type, to_wrap) end
 
   @doc """
   Alias for `of/2`, for cases that this helps legibility or style

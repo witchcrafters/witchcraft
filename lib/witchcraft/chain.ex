@@ -30,13 +30,14 @@ defclass Witchcraft.Chain do
 
       Functor  [map/2]
          ↓
-       Apply   [ap/2]
+       Apply   [convey/2]
          ↓
        Chain   [chain/2]
   """
 
   alias __MODULE__
   extend Witchcraft.Apply
+  use Witchcraft.Apply
 
   @type t :: any()
   @type link :: (any() -> Chain.t())
@@ -89,16 +90,21 @@ defclass Witchcraft.Chain do
   end
 
   @doc """
-  `chain/2` but with the arguments flipped
+  `chain/2` but with the arguments flipped.
 
   ## Examples
 
-      iex> reverse_chain(fn x -> [x, x] end, [1, 2, 3])
+      iex> draw(fn x -> [x, x] end, [1, 2, 3])
       [1, 1, 2, 2, 3, 3]
 
+      iex> (fn y -> [y * 5, y * 10] end)
+      ...> |> draw((fn x -> [x, x] end)
+      ...> |> draw([1, 2, 3])) # note the "extra" closing paren
+      [5, 10, 5, 10, 10, 20, 10, 20, 15, 30, 15, 30]
+
   """
-  @spec reverse_chain(Chain.link(), Chain.t()) :: Chain.t()
-  def reverse_chain(chain_fun, chainable), do: chain(chainable, chain_fun)
+  @spec draw(Chain.link(), Chain.t()) :: Chain.t()
+  def draw(chain_fun, chainable), do: chain(chainable, chain_fun)
 
   @doc """
   An alias for `chain/2`.
@@ -109,15 +115,15 @@ defclass Witchcraft.Chain do
   defalias bind(chainable, binder), as: :chain
 
   @doc """
-  An alias for `reverse_chain/2`.
+  An alias for `async_chain/2`.
 
   Provided as a convenience for those coming from other languages.
   """
-  @spec reverse_bind(Chain.t(), Chain.link()) :: Chain.t()
-  defalias reverse_bind(chainable, binder), as: :reverse_chain
+  @spec async_bind(Chain.t(), Chain.link()) :: Chain.t()
+  defalias async_bind(chainable, binder), as: :async_chain
 
   @doc """
-  Operator alias for `chain/2`
+  Operator alias for `chain/2`.
 
   Extends the `~>` / `~>>` heirarchy with one more level of power / abstraction
 
@@ -136,7 +142,7 @@ defclass Witchcraft.Chain do
   defalias chainable >>> chain_fun, as: :chain
 
   @doc """
-  Operator alias for `reverse_chain/2`
+  Operator alias for `draw/2`
 
   Extends the `<~` / `<<~` heirarchy with one more level of power / abstraction
 
@@ -152,7 +158,7 @@ defclass Witchcraft.Chain do
 
   """
   @spec Chain.t() <<< Chain.link() :: Chain.t()
-  defalias chain_fun <<< chainable, as: :reverse_chain
+  defalias chain_fun <<< chainable, as: :draw
 
   @doc """
   Join together one nested level of a data structure that contains itself
@@ -254,7 +260,7 @@ defclass Witchcraft.Chain do
     fn data -> action_f.(data) >>> action_g end
   end
 
-  @doc ~S"""
+  @doc """
   `do` notation sugar
 
   Sequences chainable actions. Note that each line must be of the same type.
@@ -393,10 +399,15 @@ defclass Witchcraft.Chain do
   nested functions (especially when the chain is very long).
 
   """
-  # credo:disable-for-lines:31 Credo.Check.Refactor.Nesting
   defmacro chain(do: input) do
+    Witchcraft.Chain.do_notation(input, &Witchcraft.Chain.chain/2)
+  end
+
+  @doc false
+  # credo:disable-for-lines:31 Credo.Check.Refactor.Nesting
+  def do_notation(input, chainer) do
     input
-    |> Chain.AST.normalize()
+    |> normalize()
     |> Enum.reverse()
     |> Witchcraft.Foldable.right_fold(fn
       ({:<-, _, [{left_sym, left_ctx, _}, right]}, acc) ->
@@ -405,14 +416,14 @@ defclass Witchcraft.Chain do
         case acc do
           {:fn, _, _} ->
             quote do
-              Witchcraft.Chain.chain(unquote(right), fn unquote(left) ->
+              unquote(chainer).(unquote(right), fn unquote(left) ->
                 unquote(acc).(unquote(left))
               end)
             end
 
           acc ->
             quote do
-              Witchcraft.Chain.chain(unquote(right), fn unquote(left) ->
+              unquote(chainer).(unquote(right), fn unquote(left) ->
                 unquote(acc)
               end)
             end
@@ -426,6 +437,11 @@ defclass Witchcraft.Chain do
         quote do: Witchcraft.Apply.then(unquote(ast), unquote(acc))
     end)
   end
+
+  @doc false
+  def normalize({:__block__, _, inner}), do: inner
+  def normalize(single) when is_list(single), do: [single]
+  def normalize(plain), do: List.wrap(plain)
 
   properties do
     def associativity(data) do

@@ -32,7 +32,7 @@ defclass Witchcraft.Foldable do
 
   require Foldable.EmptyError
 
-  use Witchcraft.Monad
+  use Witchcraft.Applicative
   use Quark
 
   @type t :: any()
