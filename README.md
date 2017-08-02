@@ -16,7 +16,7 @@ Monoids, functors, monads, arrows, categories, and other dark magic.
 * [Type Class Hierarchy](#type-class-hierarchy)
 * [Operators](#operators)
 * [Haskell Translation Table](#haskell-translation-table)
-* [Prior Art & Further Reading](#prior-art-further-reading)
+* [Prior Art and Further Reading](#prior-art-and-further-reading)
 * [Credits](#credits)
 
 ## Quick Start
@@ -179,7 +179,7 @@ use Witchcraft.Foldable, override_kernel: false
 | `***`           | `^^^/2`            |
 | `&&&`           | `&&&/2`            |
 
-## Prior Art & Futher Reading
+## Prior Art and Futher Reading
 
 This library draws heavy inspiration from mathematics, other laguages,
 other Elixir libraries. We would be a shame not to mention them here.
