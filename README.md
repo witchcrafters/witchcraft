@@ -125,7 +125,7 @@ Some modules override `Kernel` operators and functions. While this is generally 
 if you would like to skip all overrides, pass `override_kernel: false` as an option
 
 ```elixir
-use Witchcraft.Foldable, override_kernel: false
+use Witchcraft, override_kernel: false
 ```
 
 ## Writing Class Instances
