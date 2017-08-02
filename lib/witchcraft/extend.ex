@@ -283,6 +283,7 @@ defclass Witchcraft.Extend do
   def compose_colink(g, f), do: fn x -> x |> curried_extend(f) |> g.() end
 
   @doc """
+  `pipe_colink/2` with functions curried.
 
   ## Examples
 

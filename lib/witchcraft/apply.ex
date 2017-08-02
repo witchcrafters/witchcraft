@@ -70,6 +70,39 @@ defclass Witchcraft.Apply do
           <<~ %Algae.Maybe.Just{just: 99}
       #=> %Algae.Maybe.Nothing{}
 
+  ## `convey` vs `ap`
+
+  Purely for consistency. In Elixir, we like to conceptually think of a "subject"
+  being piped through a series of transformations. This places the function argument
+  as the second argument. In `Witchcraft.Functor`, this was of little consequence.
+  However, in `Apply`, we're essentially running superpowered function application.
+  `ap` is short for `apply`, as to not conflict with `Kernel.apply/2`, and is meant
+  to respect a similar API, with the function as the first argument. This also reads
+  nicely when piped, as it becomes `[funs] |> ap([args1]) |> ap([args2])`,
+  which is similar in structure to `fun.(arg2).(arg1)`.
+
+  With potentially multiple functions being applied over potentially
+  many arguments, we need to worry about ordering. `convey` not only flips
+  the order of arguments, but also who is in control of ordering.
+  `convey` typically runs each function over all arguments (`first_fun ⬸ all_args`),
+  and `ap` runs all functions for each element (`first_arg ⬸ all_funs`).
+  This may change the order of results, and is a feature, not a bug.
+
+      iex> [1, 2, 3]
+      ...> |> convey([&(&1 + 1), &(&1 * 10)])
+      [
+        2, 10, # [(1 + 1), (1 * 10)]
+        3, 20, # [(2 + 1), (2 * 10)]
+        4, 30  # [(3 + 1), (3 * 10)]
+      ]
+
+      iex> [&(&1 + 1), &(&1 * 10)]
+      ...> |> ap([1, 2, 3])
+      [
+        2,  3,  4, # [(1 + 1),  (2 + 1),  (3 + 1)]
+        10, 20, 30 # [(1 * 10), (2 * 10), (3 * 10)]
+      ]
+
   ## Type Class
 
   An instance of `Witchcraft.Apply` must also implement `Witchcraft.Functor`,

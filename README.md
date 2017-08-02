@@ -137,7 +137,7 @@ use Witchcraft.Foldable, override_kernel: false
 |              | `lesser_than?`   | `<`      |
 | Monoid       | `append`         | `<>`     |
 | Functor      | `lift`           | `~>`     |
-|              | `pipe_ap`        | `~>>`    |
+|              | `convey`         | `~>>`    |
 |              | `chain`          | `>>>`    |
 |              | `over`           | `<~`     |
 |              | `ap`             | `<<~`    |
