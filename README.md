@@ -14,7 +14,7 @@ Monoids, functors, monads, arrows, categories, and other dark magic.
 * [Library Family](#library-family)
 * [Values](#values)
 * [Type Class Hierarchy](#type-class-hierarchy)
-* [Implementing Classes](#implementing-classes)
+* [Writing Class Instances](#writing-class-instances)
 * [Operators](#operators)
 * [Haskell Translation Table](#haskell-translation-table)
 * [Prior Art and Further Reading](#prior-art-and-further-reading)
