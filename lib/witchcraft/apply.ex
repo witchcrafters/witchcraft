@@ -159,12 +159,21 @@ defclass Witchcraft.Apply do
   def hose(wrapped_args, wrapped_funs), do: convey(wrapped_args, wrapped_funs)
 
   @doc """
-  `convey/2` with arguments reversed.
+  Reverse arguments and sequencing of `convey/2`.
+
+  Conceptually this makes operations happen in
+  a different order than `convey/2`, with the left-side arguments (functions) being
+  run on all right-side arguments, in that order. We're altering the _sequencing_
+  of function applications.
 
   ## Examples
 
       iex> ap([fn x -> x + 1 end, fn y -> y * 10 end], [1, 2, 3])
       [2, 3, 4, 10, 20, 30]
+
+      # For comparison
+      iex> convey([1, 2, 3], [fn x -> x + 1 end, fn y -> y * 10 end])
+      [2, 10, 3, 20, 4, 30]
 
       iex> [100, 200]
       ...> |> Witchcraft.Functor.lift(fn(x, y, z) -> x * y / z end)
@@ -176,7 +185,9 @@ defclass Witchcraft.Apply do
 
   """
   @spec ap(Apply.fun(), Apply.t()) :: Apply.t()
-  def ap(wrapped_funs, wrapped), do: convey(wrapped, wrapped_funs)
+  def ap(wrapped_funs, wrapped) do
+    lift(wrapped, wrapped_funs, fn(arg, fun) -> fun.(arg) end)
+  end
 
   @doc """
   Operator alias for `ap/2`
@@ -210,7 +221,7 @@ defclass Witchcraft.Apply do
   ## Examples
 
       iex> [1, 2, 3] ~>> [fn x -> x + 1 end, fn y -> y * 10 end]
-      [2, 3, 4, 10, 20, 30]
+      [2, 10, 3, 20, 4, 30]
 
       iex> import Witchcraft.Functor
       ...>
@@ -224,35 +235,31 @@ defclass Witchcraft.Apply do
   defalias wrapped ~>> wrapped_funs, as: :supply
 
   @doc """
-  Same as `ap/2`, but with all functions curried
-
-  ## Examples
-
-      iex> [&+/2, &*/2]
-      ...> |> supply([1, 2, 3])
-      ...> |> convey([4, 5, 6])
-      [5, 6, 7, 6, 7, 8, 7, 8, 9, 4, 5, 6, 8, 10, 12, 12, 15, 18]
-
-  """
-  @spec supply(Apply.t(), Apply.fun()) :: Apply.t()
-  def supply(wrapped_args, wrapped_funs) do
-    wrapped_funs
-    |> Functor.map(&curry/1)
-    |> Apply.ap(wrapped_args)
-  end
-
-  @doc """
-  Same as `reverse_ap/2`, but with all functions curried
+  Same as `convey/2`, but with all functions curried.
 
   ## Examples
 
       iex> [1, 2, 3]
-      ...> |> provide([fn x -> x + 1 end, fn y -> y * 10 end])
-      [2, 3, 4, 10, 20, 30]
+      ...> |> supply([fn x -> x + 1 end, fn y -> y * 10 end])
+      [2, 10, 3, 20, 4, 30]
+
+  """
+  @spec supply(Apply.t(), Apply.fun()) :: Apply.t()
+  def supply(args, funs), do: convey(args, Functor.map(funs, &curry/1))
+
+  @doc """
+  Same as `ap/2`, but with all functions curried.
+
+  ## Examples
+
+      iex> [&+/2, &*/2]
+      ...> |> provide([1, 2, 3])
+      ...> |> ap([4, 5, 6])
+      [5, 6, 7, 6, 7, 8, 7, 8, 9, 4, 5, 6, 8, 10, 12, 12, 15, 18]
 
   """
   @spec provide(Apply.fun(), Apply.t()) :: Apply.t()
-  def provide(funs, args), do: supply(args, funs)
+  def provide(funs, args), do: funs |> Functor.map(&curry/1) |> ap(args)
 
   @doc """
   Sequence actions, replacing the first/previous values with the last argument
@@ -281,7 +288,7 @@ defclass Witchcraft.Apply do
 
   """
   @spec then(Apply.t(), Apply.t()) :: Apply.t()
-  def then(wrapped_a, wrapped_b), do: lift(wrapped_a, wrapped_b, &Quark.constant(&2, &1))
+  def then(wrapped_a, wrapped_b), do: over(&Quark.constant(&2, &1), wrapped_a, wrapped_b)
 
   @doc """
   Sequence actions, replacing the last argument with the first argument's values
@@ -304,7 +311,7 @@ defclass Witchcraft.Apply do
 
   """
   @spec following(Apply.t(), Apply.t()) :: Apply.t()
-  def following(wrapped_a, wrapped_b), do: lift(wrapped_a, wrapped_b, &Quark.constant/2)
+  def following(wrapped_a, wrapped_b), do: lift(wrapped_b, wrapped_a, &Quark.constant(&2, &1))
 
   @doc """
   Extends `Functor.lift/2` to apply arguments to a binary function
@@ -316,11 +323,15 @@ defclass Witchcraft.Apply do
 
       iex> [1, 2]
       ...> |> lift([3, 4], &*/2)
-      [3, 4, 6, 8]
+      [3, 6, 4, 8]
 
   """
   @spec lift(Apply.t(), Apply.t(), fun()) :: Apply.t()
-  def lift(a, b, fun), do: a |> lift(fun) |> ap(b)
+  def lift(a, b, fun) do
+    a
+    |> lift(fun)
+    |> fn f -> convey(b, f) end.()
+  end
 
   @doc """
   Extends `lift` to apply arguments to a ternary function
@@ -328,16 +339,11 @@ defclass Witchcraft.Apply do
   ## Examples
 
       iex> lift([1, 2], [3, 4], [5, 6], fn(a, b, c) -> a * b - c end)
-      [-2, -3, -1, -2, 1, 0, 3, 2]
+      [-2, -3, 1, 0, -1, -2, 3, 2]
 
   """
   @spec lift(Apply.t(), Apply.t(), Apply.t(), fun()) :: Apply.t()
-  def lift(a, b, c, fun) do
-    a
-    |> lift(fun)
-    |> ap(b)
-    |> ap(c)
-  end
+  def lift(a, b, c, fun), do: a |> lift(b, fun) |> ap(c)
 
   @doc """
   Extends `lift` to apply arguments to a quaternary function
@@ -345,7 +351,7 @@ defclass Witchcraft.Apply do
   ## Examples
 
       iex> lift([1, 2], [3, 4], [5, 6], [7, 8], fn(a, b, c, d) -> a * b - c + d end)
-      [5, 6, 4, 5, 6, 7, 5, 6, 8, 9, 7, 8, 10, 11, 9, 10]
+      [5, 6, 4, 5, 8, 9, 7, 8, 6, 7, 5, 6, 10, 11, 9, 10]
 
   """
   @spec lift(Apply.t(), Apply.t(), Apply.t(), Apply.t(), fun()) :: Apply.t()
@@ -359,13 +365,13 @@ defclass Witchcraft.Apply do
       iex> over(&+/2, [1, 2], [3, 4])
       [4, 5, 5, 6]
 
-      iex> &*/2
+      iex> (&*/2)
       ...> |> over([1, 2], [3, 4])
       [3, 4, 6, 8]
 
   """
   @spec over(fun(), Apply.t(), Apply.t()) :: Apply.t()
-  def over(fun, a, b), do: lift(a, b, fun)
+  def over(fun, a, b), do: a |> lift(fun) |> ap(b)
 
   @doc """
   Extends `over` to apply arguments to a ternary function
@@ -378,7 +384,7 @@ defclass Witchcraft.Apply do
 
   """
   @spec over(fun(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
-  def over(fun, a, b, c), do: lift(a, b, c, fun)
+  def over(fun, a, b, c), do: fun |> over(a, b) |> ap(c)
 
   @doc """
   Extends `over` to apply arguments to a ternary function
@@ -391,20 +397,7 @@ defclass Witchcraft.Apply do
 
   """
   @spec over(fun(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
-  def over(fun, a, b, c, fun), do: lift(a, b, c, fun)
-
-  @doc """
-  Extends `lift` to apply arguments to a quaternary function
-
-  ## Examples
-
-      iex> fn(a, b, c, d) -> a * b - c + d end
-      ...> |> over([1, 2], [3, 4], [5, 6], [7, 8])
-      [5, 6, 4, 5, 6, 7, 5, 6, 8, 9, 7, 8, 10, 11, 9, 10]
-
-  """
-  @spec over(fun(), Apply.t(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
-  def over(fun, a, b, c, d), do: lift(a, b, c, d, fun)
+  def over(fun, a, b, c, d), do: fun |> over(a, b, c) |> ap(d)
 end
 
 definst Witchcraft.Apply, for: Function do
@@ -414,8 +407,8 @@ end
 
 definst Witchcraft.Apply, for: List do
   def convey(val_list, fun_list) when is_list(fun_list) do
-    Enum.flat_map(fun_list, fn(fun) ->
-      Enum.map(val_list, fun)
+    Enum.flat_map(val_list, fn(val) ->
+      Enum.map(fun_list, fn fun -> fun.(val) end)
     end)
   end
 end
