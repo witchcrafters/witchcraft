@@ -39,6 +39,9 @@ defclass Witchcraft.Monad do
   extend Witchcraft.Applicative
   extend Witchcraft.Chain
 
+  use Witchcraft.Applicative
+  use Witchcraft.Chain
+
   defmacro __using__(opts \\ []) do
     quote do
       use Witchcraft.Applicative, unquote(opts)
@@ -68,6 +71,94 @@ defclass Witchcraft.Monad do
       equal?(a, left)
     end
   end
+
+  @doc """
+  Asynchronous variant of `Witchcraft.Chain.chain/2`.
+
+  Note that _each_ `async_chain` call awaits that step's completion. This is a
+  feature not a bug, since `chain` can introduce dependencies between nested links.
+  However, this means that the async features on only really useful on larger data sets,
+  because otherwise we're just sparking tasks and immediaetly waiting a single application.
+
+  ## Examples
+
+      iex> async_chain([1, 2, 3], fn x -> [x, x] end)
+      [1, 1, 2, 2, 3, 3]
+
+      iex> async_chain([1, 2, 3], fn x ->
+      ...>   async_chain([x + 1], fn y ->
+      ...>     [x * y]
+      ...>   end)
+      ...> end)
+      [2, 6, 12]
+
+      0..10_000
+      |> Enum.to_list()
+      |> async_chain(fn x ->
+        async_chain([x + 1], fn y ->
+          Process.sleep(500)
+          [x * y]
+        end)
+      end)
+      #=> [0, 2, 6, 12, 20, 30, 42, ...] in around a second
+
+  """
+  @spec async_chain(Chain.t(), Chain.link()) :: Chain.t()
+  def async_chain(chainable, link) do
+    chainable
+    |> chain(fn x ->
+      # credo:disable-for-lines:3 Credo.Check.Refactor.PipeChainStart
+      fn -> link.(x) end
+      |> Task.async()
+      |> to(chainable)
+    end)
+    |> chain(&Task.await/1)
+  end
+
+  @doc "Alias for `async_chain/2`"
+  @spec async_chain(Chain.t(), Chain.link()) :: Chain.t()
+  def async_bind(chainable, link), do: async_chain(chainable, link)
+
+  @doc """
+  Asynchronous variant of `Witchcraft.Chain.draw/2`.
+
+  Note that _each_ `async_draw` call awaits that step's completion. This is a
+  feature not a bug, since `chain` can introduce dependencies between nested links.
+  However, this means that the async features on only really useful on larger data sets,
+  because otherwise we're just sparking tasks and immediaetly waiting a single application.
+
+  ## Examples
+
+      iex> async_draw(fn x -> [x, x] end, [1, 2, 3])
+      [1, 1, 2, 2, 3, 3]
+
+      iex> (fn y -> [y * 5, y * 10] end)
+      ...> |> async_draw(fn x -> [x, x] end
+      ...> |> async_draw([1, 2, 3])) # note the "extra" closing paren
+      [5, 10, 5, 10, 10, 20, 10, 20, 15, 30, 15, 30]
+
+      iex> fn x ->
+      ...>   fn y ->
+      ...>     [x * y]
+      ...>   end
+      ...>   |> async_draw([x + 1])
+      ...> end
+      ...> |> async_draw([1, 2, 3])
+      [2, 6, 12]
+
+      fn x ->
+        fn y ->
+          Process.sleep(500)
+          [x * y]
+        end
+        |> async_draw([x + 1])
+      end
+      |> async_draw(Enum.to_list(0..10_000))
+      [0, 2, 6, 12, ...] # in under a second
+
+  """
+  @spec async_draw(Chain.t(), Chain.link()) :: Chain.t()
+  def async_draw(link, chainable), do: async_chain(chainable, link)
 
   @doc ~S"""
   do-notation enhanced with a `return` operation.
@@ -124,17 +215,78 @@ defclass Witchcraft.Monad do
 
   """
   defmacro monad(sample, do: input) do
-    returnized =
-      input
-      |> Macro.prewalk(fn
-        {:return, _ctx, [inner]} ->
-          quote do: Witchcraft.Applicative.pure(unquote(sample), unquote(inner))
+    returnized = desugar_return(input, sample)
+    Witchcraft.Chain.do_notation(returnized, &Witchcraft.Chain.chain/2)
+  end
 
-        ast ->
-          ast
-      end)
+  @doc ~S"""
+  Variant of `monad/2` where each step internally occurs asynchonously, but lines
+  run strictly one after another.
 
-    quote do: Witchcraft.Chain.chain(do: unquote(returnized))
+  ## Examples
+
+      iex> async [] do
+      ...>   [1, 2, 3]
+      ...> end
+      [1, 2, 3]
+
+      iex> async [] do
+      ...>   [1, 2, 3]
+      ...>   [4, 5, 6]
+      ...>   [7, 8, 9]
+      ...> end
+      [
+      7, 8, 9,
+      7, 8, 9,
+      7, 8, 9,
+      7, 8, 9,
+      7, 8, 9,
+      7, 8, 9,
+      7, 8, 9,
+      7, 8, 9,
+      7, 8, 9
+      ]
+
+      iex> async [] do
+      ...>   Witchcraft.Applicative.of([], 1)
+      ...> end
+      [1]
+
+      iex> async [] do
+      ...>  a <- [1,2,3]
+      ...>  b <- [4,5,6]
+      ...>  return(a * b)
+      ...> end
+      [
+      4, 8,  12,
+      5, 10, 15,
+      6, 12, 18
+      ]
+
+      iex> async [] do
+      ...>   a <- return 1
+      ...>   b <- return 2
+      ...>   return(a + b)
+      ...> end
+      [3]
+
+  """
+  defmacro async(sample, do: input) do
+    returnized = desugar_return(input, sample)
+    Witchcraft.Chain.do_notation(returnized, &Witchcraft.Monad.async_bind/2)
+  end
+
+  @doc false
+  # Convert `return`s to `of`s in the correct monadic context
+  def desugar_return(ast, sample) do
+    ast
+    |> Macro.prewalk(fn
+      {:return, _ctx, [inner]} ->
+        quote do: Witchcraft.Applicative.of(unquote(sample), unquote(inner))
+
+      ast ->
+        ast
+    end)
   end
 end
 
