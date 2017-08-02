@@ -14,6 +14,7 @@ Monoids, functors, monads, arrows, categories, and other dark magic.
 * [Library Family](#library-family)
 * [Values](#values)
 * [Type Class Hierarchy](#type-class-hierarchy)
+* [Implementing Classes](#implementing-classes)
 * [Operators](#operators)
 * [Haskell Translation Table](#haskell-translation-table)
 * [Prior Art and Further Reading](#prior-art-and-further-reading)
@@ -126,6 +127,32 @@ if you would like to skip all overrides, pass `override_kernel: false` as an opt
 ```elixir
 use Witchcraft.Foldable, override_kernel: false
 ```
+
+## Writing Class Instances
+
+How to make your custom struct compatible with `Witchcraft`:
+
+1. Read the [`TypeClass` README](https://hexdocs.pm/type_class/readme.html)
+2. Implement the [TypeClass data generator protocol](https://hexdocs.pm/type_class/TypeClass.Property.Generator.html#content) for your struct
+3. Use `definst` ("define instance") instead of `defimpl`:
+
+```elixir
+definst Witchcraft.Functor, for: Algae.Id do
+  def map(%{id: data}, fun), do: %Algae.Id{id: fun.(data)}
+end
+```
+
+All classes have properties that your instance must conform to at compile time.
+`mix` will alert you to any failing properties by name when compiling.
+`mix` will refuse to compile without them. Sometimes it is not possible to write
+an instance that will pass the check, and you can either write a
+[custom generator](https://hexdocs.pm/type_class/readme.html#custom_generator-1)
+for that instance,  or [force](https://hexdocs.pm/type_class/readme.html#force_type_instance-true)
+the instance. If you must resort to forcing the instance, please write a test to
+of the property for some specific case to be reasonably sure that it will be compatible
+with the rest of the library.
+
+More reference instances are available in [`Algae`](https://github.com/expede/algae).
 
 ## Operators
 
