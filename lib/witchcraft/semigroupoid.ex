@@ -48,7 +48,12 @@ defclass Witchcraft.Semigroupoid do
     def compose(morphism_a, morphism_b)
 
     @doc """
-    Express how to apply a function to actual arguments, or "run the morphism"
+    Express how to apply arguments to the _very end_ of a semigroupoid,
+    or "run the morphism". This should not be used to inject values part way
+    though a composition chain.
+
+    It is provided here to remain idiomatic with Elixir, and to make
+    prop testing _possible_.
 
     ## Examples
 
