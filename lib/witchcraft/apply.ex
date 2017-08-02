@@ -223,6 +223,76 @@ defclass Witchcraft.Apply do
   end
 
   @doc """
+  Async version of `convey/2`
+
+  ## Examples
+
+      iex> [1, 2, 3]
+      ...> |> async_convey([fn x -> x + 1 end, fn y -> y * 10 end])
+      [2, 10, 3, 20, 4, 30]
+
+      0..10_000
+      |> Enum.to_list()
+      |> async_convey([
+        fn x ->
+          Process.sleep(500)
+          x + 1
+        end,
+        fn y ->
+          Process.sleep(500)
+          y * 10
+        end
+      ])
+      #=> [1, 0, 2, 10, 3, 30, ...] in around a second
+
+  """
+  @spec async_convey(Apply.t(), Apply.fun()) :: Apply.t()
+  def async_convey(wrapped_args, wrapped_funs) do
+    wrapped_args
+    |> convey(lift(wrapped_funs, fn(fun, arg) ->
+      Task.async(fn ->
+        fun.(arg)
+      end)
+    end))
+    |> map(&Task.await/1)
+  end
+
+  @doc """
+  Async version of `ap/2`
+
+  ## Examples
+
+      iex> [fn x -> x + 1 end, fn y -> y * 10 end]
+      ...> |> async_ap([1, 2, 3])
+      [2, 3, 4, 10, 20, 30]
+
+      [
+        fn x ->
+          Process.sleep(500)
+          x + 1
+        end,
+        fn y ->
+          Process.sleep(500)
+          y * 10
+        end
+      ]
+      |> async_ap(Enum.to_list(0..10_000))
+      #=> [1, 2, 3, 4, ...] in around a second
+
+  """
+  @spec async_ap(Apply.fun(), Apply.t()) :: Apply.t()
+  def async_ap(wrapped_funs, wrapped_args) do
+    wrapped_funs
+    |> lift(fn(fun, arg) ->
+      Task.async(fn ->
+        fun.(arg)
+      end)
+    end)
+    |> ap(wrapped_args)
+    |> map(&Task.await/1)
+  end
+
+  @doc """
   Operator alias for `ap/2`
 
   Moves against the pipe direction, but in the order of normal function application
@@ -391,6 +461,50 @@ defclass Witchcraft.Apply do
   def lift(a, b, c, d, fun), do: a |> lift(b, c, fun) |> ap(d)
 
   @doc """
+  Extends `Functor.async_lift/2` to apply arguments to a binary function
+
+  ## Examples
+
+      iex> async_lift([1, 2], [3, 4], &+/2)
+      [4, 5, 5, 6]
+
+      iex> [1, 2]
+      ...> |> async_lift([3, 4], &*/2)
+      [3, 6, 4, 8]
+
+  """
+  @spec async_lift(Apply.t(), Apply.t(), fun()) :: Apply.t()
+  def async_lift(a, b, fun) do
+    a
+    |> async_lift(fun)
+    |> fn f -> async_convey(b, f) end.()
+  end
+
+  @doc """
+  Extends `async_lift` to apply arguments to a ternary function
+
+  ## Examples
+
+      iex> async_lift([1, 2], [3, 4], [5, 6], fn(a, b, c) -> a * b - c end)
+      [-2, -3, 1, 0, -1, -2, 3, 2]
+
+  """
+  @spec async_lift(Apply.t(), Apply.t(), Apply.t(), fun()) :: Apply.t()
+  def async_lift(a, b, c, fun), do: a |> async_lift(b, fun) |> async_ap(c)
+
+  @doc """
+  Extends `async_lift` to apply arguments to a quaternary function
+
+  ## Examples
+
+      iex> async_lift([1, 2], [3, 4], [5, 6], [7, 8], fn(a, b, c, d) -> a * b - c + d end)
+      [5, 6, 4, 5, 8, 9, 7, 8, 6, 7, 5, 6, 10, 11, 9, 10]
+
+  """
+  @spec async_lift(Apply.t(), Apply.t(), Apply.t(), Apply.t(), fun()) :: Apply.t()
+  def async_lift(a, b, c, d, fun), do: a |> async_lift(b, c, fun) |> async_ap(d)
+
+  @doc """
   Extends `over` to apply arguments to a binary function
 
   ## Examples
@@ -431,6 +545,48 @@ defclass Witchcraft.Apply do
   """
   @spec over(fun(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
   def over(fun, a, b, c, d), do: fun |> over(a, b, c) |> ap(d)
+
+  @doc """
+  Extends `async_over` to apply arguments to a binary function
+
+  ## Examples
+
+      iex> async_over(&+/2, [1, 2], [3, 4])
+      [4, 5, 5, 6]
+
+      iex> (&*/2)
+      ...> |> async_over([1, 2], [3, 4])
+      [3, 4, 6, 8]
+
+  """
+  @spec async_over(fun(), Apply.t(), Apply.t()) :: Apply.t()
+  def async_over(fun, a, b), do: a |> lift(fun) |> async_ap(b)
+
+  @doc """
+  Extends `async_over` to apply arguments to a ternary function
+
+  ## Examples
+
+      iex> fn(a, b, c) -> a * b - c end
+      iex> |> async_over([1, 2], [3, 4], [5, 6])
+      [-2, -3, -1, -2, 1, 0, 3, 2]
+
+  """
+  @spec async_over(fun(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
+  def async_over(fun, a, b, c), do: fun |> async_over(a, b) |> async_ap(c)
+
+  @doc """
+  Extends `async_over` to apply arguments to a ternary function
+
+  ## Examples
+
+      iex> fn(a, b, c) -> a * b - c end
+      ...> |> async_over([1, 2], [3, 4], [5, 6])
+      [-2, -3, -1, -2, 1, 0, 3, 2]
+
+  """
+  @spec async_over(fun(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
+  def async_over(fun, a, b, c, d), do: fun |> async_over(a, b, c) |> async_ap(d)
 end
 
 definst Witchcraft.Apply, for: Function do
