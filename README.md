@@ -203,9 +203,10 @@ it showed that we can write our own Haskell fanfic in all sorts of languages.
 
 Obviously the Haskell [`Prelude`](https://hackage.haskell.org/package/base-4.10.0.0/docs/Prelude.html)
 deserves mention. Haskell has inspired so many programmers to write clean,
-declaritive, functional code based on principled abstractions. We'll skip
+declaritive, functional code based on principled abstractions. We'll spare you
 the love letter to [SPJ](https://en.wikipedia.org/wiki/Simon_Peyton_Jones),
-the Glasgow team, and the original Haskell committee.
+the Glasgow team, and the original Haskell committee, but we're deeply appreciative
+of how they pushed the state of the art forward.
 
 [`classy-prelude`/`mono-traversable`](https://github.com/snoyberg/mono-traversable)
 have also made a lot of progress towards a base library that incorporates modern ideas
