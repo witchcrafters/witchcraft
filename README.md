@@ -201,7 +201,7 @@ were the first widely-used port of categorical & algebraic ideas to
 a mainstream language. While dismissed by some as "[Haskell fan fiction](https://twitter.com/plt_hulk/status/341292374355501056)",
 it showed that we can write our own Haskell fanfic in all sorts of languages.
 
-Obviously the [Haskell Prelude](https://hackage.haskell.org/package/base-4.10.0.0/docs/Prelude.html)
+Obviously the [Haskell `Prelude`](https://hackage.haskell.org/package/base-4.10.0.0/docs/Prelude.html)
 deserves mention. Haskell has inspired so many programmers to write clean,
 declaritive, functional code based on principled abstractions. We'll skip
 the love letter to [SPJ](https://en.wikipedia.org/wiki/Simon_Peyton_Jones),
