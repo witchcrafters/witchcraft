@@ -207,7 +207,7 @@ declaritive, functional code based on principled abstractions. We'll skip
 the love letter to [SPJ](https://en.wikipedia.org/wiki/Simon_Peyton_Jones),
 the Glasgow team, and the original Haskell committee.
 
-[`classy-prelude`/`mono-travresable`](https://github.com/snoyberg/mono-traversable)
+[`classy-prelude`/`mono-traversable`](https://github.com/snoyberg/mono-traversable)
 have also made a lot of progress towards a base library that incorporates modern ideas
 in a clean package, and was an inspiration to taking a similar approach with Witchraft.
 
