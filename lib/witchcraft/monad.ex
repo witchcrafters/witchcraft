@@ -39,14 +39,33 @@ defclass Witchcraft.Monad do
   extend Witchcraft.Applicative
   extend Witchcraft.Chain
 
-  alias Witchcraft.Monad.AST
-  import Witchcraft.Chain
-
   defmacro __using__(opts \\ []) do
     quote do
       use Witchcraft.Applicative, unquote(opts)
       use Witchcraft.Chain,       unquote(opts)
       import unquote(__MODULE__), unquote(opts)
+    end
+  end
+
+  properties do
+    import Witchcraft.Applicative
+    import Witchcraft.Chain
+
+    def left_identity(data) do
+      a = generate(data)
+      f = &Witchcraft.Functor.replace(a, inspect(&1))
+
+      left  = a |> of(a) |> chain(f)
+      right = f.(a)
+
+      equal?(left, right)
+    end
+
+    def right_identity(data) do
+      a = generate(data)
+      left = a >>> &of(a, &1)
+
+      equal?(a, left)
     end
   end
 
@@ -105,38 +124,17 @@ defclass Witchcraft.Monad do
 
   """
   defmacro monad(sample, do: input) do
-    input
-    |> Witchcraft.Chain.normalize()
-    |> Macro.prewalk(fn
-      {:return, _ctx, [inner]} ->
-        quote do: Witchcraft.Applicative.pure(unquote(sample), unquote(inner))
+    returnized =
+      input
+      |> Macro.prewalk(fn
+        {:return, _ctx, [inner]} ->
+          quote do: Witchcraft.Applicative.pure(unquote(sample), unquote(inner))
 
-      ast ->
-        ast
-    end)
-    |> fn ast -> Witchcraft.Chain.chain(do: ast) end.()
-  end
+        ast ->
+          ast
+      end)
 
-  properties do
-    import Witchcraft.Applicative
-    import Witchcraft.Chain
-
-    def left_identity(data) do
-      a = generate(data)
-      f = &Witchcraft.Functor.replace(a, inspect(&1))
-
-      left  = a |> of(a) |> chain(f)
-      right = f.(a)
-
-      equal?(left, right)
-    end
-
-    def right_identity(data) do
-      a = generate(data)
-      left = a >>> &of(a, &1)
-
-      equal?(a, left)
-    end
+    quote do: Witchcraft.Chain.chain(do: unquote(returnized))
   end
 end
 
