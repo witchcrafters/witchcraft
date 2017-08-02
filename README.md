@@ -16,7 +16,7 @@ Monoids, functors, monads, arrows, categories, and more.
 * [Type Class Hierarchy](#type-class-hierarchy)
 * [Operators](#operators)
 * [Haskell Translation Table](#haskell-translation-table)
-* [Prior Art](#prior-art)
+* [Prior Art & Further Reading](#prior-art-further-reading)
 * [Credits](#credits)
 
 ## Quick Start
@@ -179,10 +179,11 @@ use Witchcraft.Foldable, override_kernel: false
 | `***`           | `^^^/2`            |
 | `&&&`           | `&&&/2`            |
 
-## Prior Art
+## Prior Art & Futher Reading
 
 This library draws heavy inspiration from mathematics, other laguages,
 other Elixir libraries. We would be a shame not to mention them here.
+There is much, much more out there, but these are the our highlights and inspirations.
 
 The [`Monad`](https://hexdocs.pm/monad/Monad.html) library predates `Witchcraft`
 by several years. This library proved that it is entirely possible
@@ -190,15 +191,39 @@ to bring do-notation to Elixir. It takers a very different approach:
 it is very up-front that it has a very loose definition of what it means for
 something to be a "monad", and relies on `behaviour`s rather than ad-hoc polymorphism.
 
-The Fantasy Land Spec
+[The Fantasy Land Spec](https://github.com/fantasyland/fantasy-land) is a spec for
+projects such as this one, but targeted at Javascript. It does not come with its
+own implementation, but provides a [helpful chart](https://github.com/fantasyland/fantasy-land/raw/master/figures/dependencies.png)
+of class hierarchies.
 
-Scalaz
+In many ways, [Scalaz](https://github.com/scalaz/scalaz), and later [cats](http://typelevel.org/cats/),
+were the first widely-used port of categorical & algebraic ideas to
+a mainstream language. While dismissed by some as "[Haskell fan fiction](https://twitter.com/plt_hulk/status/341292374355501056)",
+it showed that we can write our own Haskell fanfic in all sorts of languages.
 
-Swiftz
+Obviously the [Haskell Prelude](https://hackage.haskell.org/package/base-4.10.0.0/docs/Prelude.html)
+deserves mention. Haskell has inspired so many programmers to write clean,
+declaritive, functional code based on principled abstractions. We'll skip
+the love letter to [SPJ](https://en.wikipedia.org/wiki/Simon_Peyton_Jones),
+the Glasgow team, and the original committee.
 
-NICTA
+[classy-prelude/mono-travresable](https://github.com/snoyberg/mono-traversable)
+have also made a lot of progress towards a base library that incorporates modern ideas
+in a clean package, and was an inspiration to taking a similar approach with Witchraft.
 
+The [semigroupoids](https://hackage.haskell.org/package/semigroupoids) library
+from the eminent [Edward Kmett](https://github.com/ekmett) provided many
+refernce implementations and is helping set the future expansion of
+the foldable class lineage in Witchcraft.
 
+Interested in learning more of the underlying ideas? The maintainers can hearily
+recommend [Conceptual Mathematics](http://www.cambridge.org/catalogue/catalogue.asp?isbn=9780521719162),
+[Category Theory for the Sciences](https://mitpress.mit.edu/books/category-theory-sciences),
+and [Categories for the Working Mathematician](https://en.wikipedia.org/wiki/Categories_for_the_Working_Mathematician).
+Reading these books probably won't change your code overnight. Some people call it
+["general abstract nonsense"](https://en.wikipedia.org/wiki/Abstract_nonsense)
+for a reason. That said, it does provide a nice framework for thinking about
+these abstract ideas, and is a recommended pusuit for all that are curious.
 
 ## Credits
 
