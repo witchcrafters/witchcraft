@@ -396,7 +396,7 @@ defclass Witchcraft.Chain do
   # credo:disable-for-lines:31 Credo.Check.Refactor.Nesting
   defmacro chain(do: input) do
     input
-    |> Chain.AST.normalize()
+    |> normalize()
     |> Enum.reverse()
     |> Witchcraft.Foldable.right_fold(fn
       ({:<-, _, [{left_sym, left_ctx, _}, right]}, acc) ->
@@ -426,6 +426,11 @@ defclass Witchcraft.Chain do
         quote do: Witchcraft.Apply.then(unquote(ast), unquote(acc))
     end)
   end
+
+  @doc false
+  def normalize({:__block__, _, inner}), do: inner
+  def normalize(single) when is_list(single), do: [single]
+  def normalize(plain), do: List.wrap(plain)
 
   properties do
     def associativity(data) do

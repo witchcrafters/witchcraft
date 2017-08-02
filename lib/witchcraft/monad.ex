@@ -105,8 +105,16 @@ defclass Witchcraft.Monad do
 
   """
   defmacro monad(sample, do: input) do
-    preprocessed = AST.preprocess(input, sample)
-    quote do: Witchcraft.Chain.chain(do: unquote(preprocessed))
+    input
+    |> Witchcraft.Chain.normalize()
+    |> Macro.prewalk(fn
+      {:return, _ctx, [inner]} ->
+        quote do: Witchcraft.Applicative.pure(unquote(sample), unquote(inner))
+
+      ast ->
+        ast
+    end)
+    |> fn ast -> Witchcraft.Chain.chain(do: ast) end.()
   end
 
   properties do
