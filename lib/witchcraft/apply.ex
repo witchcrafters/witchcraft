@@ -73,11 +73,11 @@ defclass Witchcraft.Apply do
   ## Type Class
 
   An instance of `Witchcraft.Apply` must also implement `Witchcraft.Functor`,
-  and define `Witchcraft.Apply.ap/2`.
+  and define `Witchcraft.Apply.convey/2`.
 
       Functor  [map/2]
          ↓
-       Apply   [ap/2]
+       Apply   [convey/2]
   """
 
   alias __MODULE__

@@ -30,14 +30,14 @@ defmodule WitchcraftTest do
   # doctest Witchcraft.Foldable,    import: true
   # doctest Witchcraft.Traversable, import: true
 
-  # doctest Witchcraft.Functor,   import: true
+  doctest Witchcraft.Functor,   import: true
   # doctest Witchcraft.Bifunctor, import: true
 
   # doctest Witchcraft.Extend,  import: true
   # doctest Witchcraft.Comonad, import: true
 
   doctest Witchcraft.Apply,       import: true
-  # doctest Witchcraft.Applicative, import: true
+  doctest Witchcraft.Applicative, import: true
   # doctest Witchcraft.Chain,       import: true
   # doctest Witchcraft.Monad,       import: true
 end
