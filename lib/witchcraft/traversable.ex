@@ -151,7 +151,6 @@ defclass Witchcraft.Traversable do
     end
   end
 
-  # traverse with args flipped
   @doc """
   `traverse/2` with arguments reversed.
 
@@ -299,9 +298,10 @@ definst Witchcraft.Traversable, for: List do
   def traverse([], link), do: of(link.([]), [])
   def traverse(list = [head | _], link) do
     right_fold(list, of(link.(head), []), fn(x, acc) ->
-      lift(link.(x), acc, fn(link_head, link_tail) ->
-        [link_head | link_tail]
-      end)
+
+      # credo:disable-for-lines:2 Credo.Check.Refactor.PipeChainStart
+      fn(link_head, link_tail) -> [link_head | link_tail] end
+      |> over(link.(x), acc)
     end)
   end
 end
