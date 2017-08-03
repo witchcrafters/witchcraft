@@ -156,6 +156,10 @@ definst Witchcraft.Semigroup, for: Map do
   def append(a, b), do: Map.merge(a, b)
 end
 
+definst Witchcraft.Semigroup, for: MapSet do
+  def append(a, b), do: MapSet.union(a, b)
+end
+
 definst Witchcraft.Semigroup, for: Tuple do
   # credo:disable-for-lines:5 Credo.Check.Refactor.PipeChainStart
   custom_generator(_) do
