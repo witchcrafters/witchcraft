@@ -18,10 +18,14 @@ defmodule Witchcraft.Functor.FunctionBench do
 
   defp twice(f), do: fn x -> x |> f.() |> f.() end
 
-  ########
-  # Enum #
-  ########
+  ##########
+  # Simple #
+  ##########
 
+  bench "apply Functor",         do: map(&fun/1, &twice/1).(1)
+  bench "inline apply composed", do: fn x -> x |> fun() |> twice() end.(1)
+
+  bench "inline application", do: 1 |> fun() |> twice()
   bench "inline composition", do: fn x -> x |> fun() |> twice()  end
 
   bench "naive compose function" do
@@ -69,4 +73,28 @@ defmodule Witchcraft.Functor.FunctionBench do
 
   bench "~>/2", do: (&fun/1) ~> (&twice/1)
   bench "<~/2", do: (&twice/1) <~ (&fun/1)
+
+
+  ########################
+  # Expensive Operations #
+  ########################
+
+  defp expensive(x) do
+    Process.sleep(50)
+    x
+  end
+
+  # ---------- #
+  # Sequential #
+  # ---------- #
+
+  bench "$$$ map/2",  do: map(&fun/1,  &expensive/1)
+  bench "$$$ lift/2", do: lift(&fun/1, &expensive/1)
+
+  # ----- #
+  # Async #
+  # ----- #
+
+  bench "$$$ async_map/2",  do: async_map(&fun/1,  &expensive/1)
+  bench "$$$ async_lift/2", do: async_lift(&fun/1, &expensive/1)
 end

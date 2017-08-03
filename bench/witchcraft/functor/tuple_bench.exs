@@ -63,4 +63,30 @@ defmodule Witchcraft.Functor.TupleBench do
 
   bench "~>/2", do: @tuple ~> (&square/1)
   bench "<~/2", do: (&square/1) <~ @tuple
+
+
+  ########################
+  # Expensive Operations #
+  ########################
+
+  @small_tuple 0..100 |> Enum.to_list() |> List.to_tuple()
+
+  defp expensive(x) do
+    Process.sleep(50)
+    x
+  end
+
+  # ---------- #
+  # Sequential #
+  # ---------- #
+
+  bench "$$$ map/2",  do: map(@small_tuple,  &expensive/1)
+  bench "$$$ lift/2", do: lift(@small_tuple, &expensive/1)
+
+  # ----- #
+  # Async #
+  # ----- #
+
+  bench "$$$ async_map/2",  do: async_map(@small_tuple,  &expensive/1)
+  bench "$$$ async_lift/2", do: async_lift(@small_tuple, &expensive/1)
 end

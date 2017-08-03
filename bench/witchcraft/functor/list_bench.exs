@@ -63,4 +63,30 @@ defmodule Witchcraft.Functor.ListBench do
 
   bench "~>/2", do: @list ~> (&square/1)
   bench "<~/2", do: (&square/1) <~ @list
+
+
+  ########################
+  # Expensive Operations #
+  ########################
+
+  @small_list Enum.to_list(0..100)
+
+  defp expensive(x) do
+    Process.sleep(50)
+    x
+  end
+
+  # ---------- #
+  # Sequential #
+  # ---------- #
+
+  bench "$$$ map/2",  do: map(@small_list,  &expensive/1)
+  bench "$$$ lift/2", do: lift(@small_list, &expensive/1)
+
+  # ----- #
+  # Async #
+  # ----- #
+
+  bench "$$$ async_map/2",  do: async_map(@small_list,  &expensive/1)
+  bench "$$$ async_lift/2", do: async_lift(@small_list, &expensive/1)
 end

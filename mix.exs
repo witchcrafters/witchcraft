@@ -22,14 +22,14 @@ defmodule Witchcraft.Mixfile do
       aliases: ["quality": ["test", "credo --strict", "inch"]],
 
       deps: [
+        {:inch_ex, "~> 0.5",  only: [:dev, :docs, :test]},
+
         {:credo,      "~> 0.8", only: [:dev, :test]},
         {:benchfella, "~> 0.3", only: [:dev, :test]},
 
         {:dialyxir, "~> 0.3",  only: :dev},
         {:earmark,  "~> 1.2",  only: :dev},
         {:ex_doc,   "~> 0.15", only: :dev},
-
-        {:inch_ex, "~> 0.5",  only: [:dev, :docs, :test]},
 
         {:exceptional, "~> 2.1"},
         {:operator,    "~> 0.2"},
