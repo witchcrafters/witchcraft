@@ -54,6 +54,16 @@ defmodule Witchcraft.Monad.ListBench do
   # Async #
   # ----- #
 
+  bench "!!! Enum.flat_map/2" do
+    Enum.flat_map(@list_a, fn a ->
+      Process.sleep(50)
+      Enum.flat_map(@list_b, fn b ->
+        Process.sleep(50)
+        [a * b]
+      end)
+    end)
+  end
+
   bench "!!! chain/2" do
     chain(@list_a, fn a ->
       Process.sleep(50)
