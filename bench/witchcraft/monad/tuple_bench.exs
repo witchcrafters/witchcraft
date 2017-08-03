@@ -94,4 +94,39 @@ defmodule Witchcraft.Monad.TupleBench do
     end, @tuple_a)
   end
 
+  # -------- #
+  # Many Ops #
+  # -------- #
+
+  bench "$$$ monad/2" do
+    monad {0, 0} do
+      # @tuple_a
+      # @tuple_b
+      # @tuple_a
+      # @tuple_b
+      # @tuple_a
+      # @tuple_b
+
+      a <- @tuple_a
+      b <- @tuple_b
+
+      return(a * b)
+
+      # @tuple_b
+      # @tuple_a
+      # @tuple_b
+      # @tuple_a
+      # @tuple_b
+      # @tuple_a
+      # @tuple_b
+
+      # @tuple_a
+      # @tuple_b
+      # @tuple_a
+      # @tuple_b
+      # @tuple_a
+      # @tuple_b
+    end
+  end
+
 end
