@@ -7,3 +7,5 @@ erl_crash.dump
 *.beam
 .DS_Store
 /docs/all.json
+/bench/snapshots
+/bench/graphs
