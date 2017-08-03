@@ -91,7 +91,7 @@ class instance (given that it conforms to the properties).
 
 ```
 Semigroupoid  Semigroup  Setoid   Foldable   Functor -----------┐
-     ↓           ↓         ↓         ↓     ↙   ↓   ↘           |
+     ↓           ↓         ↓         ↓      ↙   ↓   ↘           |
   Category     Monoid     Ord    Traversable  Apply  Bifunctor  |
      ↓                                       ↙    ↘             ↓
    Arrow                            Applicative   Chain       Extend
@@ -207,7 +207,7 @@ More reference instances are available in [`Algae`](https://github.com/expede/al
 | `***`           | `^^^/2`            |
 | `&&&`           | `&&&/2`            |
 
-## Prior Art and Futher Reading
+## Prior Art and Further Reading
 
 This library draws heavy inspiration from mathematics, other laguages,
 other Elixir libraries. We would be a shame not to mention them here.
