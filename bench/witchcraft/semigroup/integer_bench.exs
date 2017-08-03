@@ -24,7 +24,7 @@ defmodule Witchcraft.Semigroup.IntegerBench do
   #############
 
   bench "append/2", do: append(@int_a, @int_b)
-  bench "repeat/2", do: repeat(@int_a, times: @int_b)
+  bench "repeat/2", do: repeat(@int_a, times: 100)
 
   # --------- #
   # Operators #
