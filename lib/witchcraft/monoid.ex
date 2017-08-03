@@ -113,3 +113,7 @@ definst Witchcraft.Monoid, for: Tuple do
 
   def empty(_), do: {}
 end
+
+definst Witchcraft.Monoid, for: MapSet do
+  def empty(_), do: MapSet.new()
+end
