@@ -458,11 +458,8 @@ definst Witchcraft.Chain, for: Function do
 end
 
 definst Witchcraft.Chain, for: List do
-  def chain(list, chain_fun) do
-    list
-    |> Witchcraft.Functor.lift(chain_fun)
-    |> Witchcraft.Semigroup.concat()
-  end
+  use Quark
+  def chain(list, chain_fun), do: Enum.flat_map(list, curry(chain_fun))
 end
 
 definst Witchcraft.Chain, for: Tuple do
