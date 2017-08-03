@@ -288,7 +288,7 @@ definst Witchcraft.Functor, for: Function do
       22
 
   """
-  def map(f, g), do: compose(g, f)
+  def map(f, g), do: fn x -> x |> f.() |> g.() end
 end
 
 definst Witchcraft.Functor, for: List do

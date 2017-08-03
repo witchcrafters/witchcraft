@@ -22,7 +22,13 @@ defmodule Witchcraft.Functor.FunctionBench do
   # Enum #
   ########
 
-  bench "fn  manual compose", do: fn x -> twice(&fun/1).(x) end
+  bench "inline composition", do: fn x -> x |> fun() |> twice()  end
+
+  bench "naive compose function" do
+    fn(f, g) ->
+      fn x -> x |> f.() |> g.() end
+    end.(&fun/1, &twice/1)
+  end
 
   ##############
   # Witchcraft #

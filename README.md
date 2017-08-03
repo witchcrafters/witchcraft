@@ -114,17 +114,23 @@ It is very common to want everything in a chain. You can import the entire chain
 with `use`. For example, you can import the entire library with:
 
 ```elixir
-use Witchcraft.Monad
+use Witchcraft
 ```
 
-Any options that you pass to `use` will be propagated all the way down the chain
+Or import a module plus all others that it depends on:
+
+```elixir
+use Witchcraft.Chain
+```
+
+Any options that you pass to `use` will be propagated all the way down the chain:
 
 ```elixir
 use Witchcraft.Monad, except: [~>: 2]
 ```
 
 Some modules override `Kernel` operators and functions. While this is generally safe,
-if you would like to skip all overrides, pass `override_kernel: false` as an option
+if you would like to skip all overrides, pass `override_kernel: false` as an option:
 
 ```elixir
 use Witchcraft, override_kernel: false
