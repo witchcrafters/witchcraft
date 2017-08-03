@@ -72,7 +72,11 @@ defclass Witchcraft.Apply do
 
   ## `convey` vs `ap`
 
-  Purely for consistency. In Elixir, we like to conceptually think of a "subject"
+  `convey` and `ap` essentially associate in opposite directions. For example,
+  large data is _usually_ more efficient with `ap`, and large numbers of
+  functions are _usually_ more efficient with `convey`.
+
+  It's also more consistent consistency. In Elixir, we like to think of a "subject"
   being piped through a series of transformations. This places the function argument
   as the second argument. In `Witchcraft.Functor`, this was of little consequence.
   However, in `Apply`, we're essentially running superpowered function application.

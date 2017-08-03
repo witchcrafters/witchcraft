@@ -10,7 +10,7 @@ defmodule Witchcraft.Category.FunctionBench do
   # Data Types #
   # ---------- #
 
-  def f(x), do: "#{inspect x}/#{inspect x}"
+  defp f(x), do: "#{inspect x}/#{inspect x}"
 
   ################
   # Semigroupoid #
