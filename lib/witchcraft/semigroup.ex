@@ -136,6 +136,10 @@ definst Witchcraft.Semigroup, for: Function do
   def append(f, g) when is_function(g), do: Quark.compose(g, f)
 end
 
+definst Witchcraft.Semigroup, for: Witchcraft.Unit do
+  def append(_, _), do: %Witchcraft.Unit{}
+end
+
 definst Witchcraft.Semigroup, for: Integer do
   def append(a, b), do: a + b
 end
@@ -175,8 +179,4 @@ definst Witchcraft.Semigroup, for: Tuple do
     |> Enum.map(fn({x, y}) -> Witchcraft.Semigroup.append(x, y) end)
     |> List.to_tuple()
   end
-end
-
-definst Witchcraft.Semigroup, for: Witchcraft.Unit do
-  def append(_, _), do: %Witchcraft.Unit{}
 end

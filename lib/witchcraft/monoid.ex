@@ -119,5 +119,6 @@ definst Witchcraft.Monoid, for: MapSet do
 end
 
 definst Witchcraft.Monoid, for: Witchcraft.Unit do
+  require Witchcraft.Semigroup
   def empty(_), do: %Witchcraft.Unit{}
 end

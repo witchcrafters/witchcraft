@@ -2,7 +2,10 @@ import TypeClass
 
 defclass Witchcraft.Foldable do
   @moduledoc """
-  Data that can be folded over to change its structure by altering or combining elements
+  Data that can be folded over to change its structure by altering or combining elements.
+
+  Unlike `Witchcraft.Functors`s, the end result will not respect the original structure
+  unless you build it back up manually.
 
   ## Examples
 
@@ -94,13 +97,13 @@ defclass Witchcraft.Foldable do
 
       left =
         foldable
-        |> Foldable.right_fold(seed, f)
+        |> Witchcraft.Foldable.right_fold(seed, f)
         |> g.()
 
       right =
         foldable
         |> g.()
-        |> Witchcraft.Foldable.right_fold(fn(x, acc) -> f.((g.(acc)), x) end)
+        |> Witchcraft.Foldable.right_fold(seed, fn(x, acc) -> f.((g.(x)), acc) end)
 
       equal?(left, right)
     end
@@ -251,12 +254,13 @@ defclass Witchcraft.Foldable do
       [1, 2, 3]
 
       iex> to_list(%{a: 1, b: 2, c: 3})
-      [c: 3, b: 2, a: 1]
+      [1, 2, 3]
 
   """
   @spec to_list(Foldable.t()) :: [any()]
   def to_list(list)   when is_list(list),        do: list
   def to_list(tuple)  when is_tuple(tuple),      do: Tuple.to_list(tuple)
+  def to_list(map)    when is_map(map),          do: Map.values(map)
   def to_list(string) when is_bitstring(string), do: String.to_charlist(string)
   def to_list(foldable), do: right_fold(foldable, [], fn(x, acc) -> [x | acc] end)
 
@@ -311,13 +315,28 @@ defclass Witchcraft.Foldable do
       false
 
       iex> member?(%{a: 1, b: 2}, 2)
-      false
-
-      iex> member?(%{a: 1, b: 2}, {:b, 2})
       true
+
+      iex> member?(%{a: 1, b: 2}, 99)
+      false
 
   """
   @spec member?(Foldable.t(), any()) :: boolean()
+  def member?(list, target) when is_list(list), do: Enum.member?(list, target)
+  def member?(map, target)  when is_map(map), do: map |> Map.values() |> Enum.member?(target)
+
+  def member?(tuple, target) when is_tuple(tuple) do
+    tuple
+    |> Tuple.to_list()
+    |> Enum.member?(target)
+  end
+
+  def member?(string, target) when is_bitstring(string) do
+    string
+    |> String.to_charlist()
+    |> Enum.member?(target)
+  end
+
   def member?(foldable, target) do
     right_fold(foldable, false, fn(focus, acc) -> acc or (focus == target) end)
   end
