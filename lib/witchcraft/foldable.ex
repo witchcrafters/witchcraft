@@ -437,6 +437,21 @@ defclass Witchcraft.Foldable do
   """
   def min(foldable), do: min(foldable, by: &Ord.compare/2)
 
+  @doc """
+  Get a random element from a foldable structure.
+
+  ## Examples
+
+      random([1, 2, 3])
+      #=> 1
+
+      random([1, 2, 3])
+      #=> 3
+
+      random(%BinaryTree{left: %Empty{}, node: 2, right: %BinaryTree{node: 1}})
+      1
+
+  """
   @spec random(Foldable.t()) :: any() | Foldable.EmptyError.t()
   def random(foldable) do
     foldable
