@@ -144,10 +144,25 @@ defclass Witchcraft.Foldable do
       ...> sum.([4, 5, 6])
       15
 
-      iex> left_fold([1, 2, 3], [], fn(x, acc) -> [x | acc] end)
+      iex> left_fold([1, 2, 3], [], fn(acc, x) -> [x | acc] end)
+      [3, 2, 1]
+
+      iex> left_fold({1, 2, 3}, [], fn(acc, x) -> [x | acc] end)
+      [3, 2, 1]
+
+      iex> left_fold([1, 2, 3], [4, 5, 6], fn(acc, x) -> [x | acc] end)
+      [3, 2, 1, 4, 5, 6]
+
+  Note the reducer argument order versus `right_fold/3`
+
+      iex> right_fold([1, 2, 3], [], fn(acc, x) -> [acc | x] end)
+      [1, 2, 3]
+
+      iex> left_fold([1, 2, 3], [], fn(acc, x) -> [acc | x] end)
       [[[[] | 1] | 2] | 3]
 
   """
+  @spec left_fold(Foldable.t(), any(), ((any(), any()) -> any())) :: any()
   def left_fold(foldable, seed, folder) do
     right_fold(foldable, &Quark.id/1, fn(b, g) ->
       fn(x) ->
@@ -169,10 +184,19 @@ defclass Witchcraft.Foldable do
       iex> left_fold([100, 2, 5], &//2)
       10.0 # ((100 / 2) / 5)
 
-      iex> left_fold([1 | [2 | [3]]], fn(x, acc) -> [x | acc] end)
-      [[1 | 2] | 3]
+      iex> left_fold([1, 2, 3], [], fn(acc, x) -> [x | acc] end)
+      [3, 2, 1]
+
+  Note the reducer argument order versus `right_fold/2`
+
+      iex> right_fold([100, 20, 10], &//2)
+      200.0
+
+      iex> left_fold([100, 20, 10], &//2)
+      0.5
 
   """
+  @spec left_fold(Foldable.t(), ((any(), any()) -> any())) :: any()
   def left_fold(foldable, folder) do
     [x | xs] = to_list(foldable)
     left_fold(xs, x, folder)
