@@ -45,15 +45,17 @@ defclass Witchcraft.Foldable do
 
     if Access.get(opts, :override_kernel, true) do
       quote do
-        import Kernel,               unquote(new_opts)
-        import Witchcraft.Semigroup, unquote(opts)
-        import Witchcraft.Ord,       unquote(opts)
+        use Witchcraft.Semigroup, unquote(opts)
+        use Witchcraft.Ord,       unquote(opts)
+
+        import Kernel,            unquote(new_opts)
         import unquote(__MODULE__),  unquote(opts)
       end
     else
       quote do
-        import Witchcraft.Semigroup, unquote(opts)
-        import Witchcraft.Ord,       unquote(opts)
+        use Witchcraft.Semigroup, unquote(opts)
+        use Witchcraft.Ord,       unquote(opts)
+
         import unquote(__MODULE__),  unquote(new_opts)
       end
     end
@@ -467,7 +469,7 @@ defclass Witchcraft.Foldable do
 
   ## Examples
 
-      iex> concat([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+      iex> flatten([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
       [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
       %BinaryTree{
@@ -477,12 +479,12 @@ defclass Witchcraft.Foldable do
           right: [6]
         }
       }
-      |> concat()
+      |> flatten()
       #=> [1, 2, 3, 4, 5, 6]
 
   """
-  @spec concat(Foldable.t()) :: [any()]
-  def concat(contained_lists) do
+  @spec flatten(Foldable.t()) :: [any()]
+  def flatten(contained_lists) do
     right_fold(contained_lists, [], &Semigroup.append/2)
   end
 
@@ -492,7 +494,7 @@ defclass Witchcraft.Foldable do
 
   ## Examples
 
-      iex> concat_map([1, 2, 3, 4, 5, 6], fn x -> [x, x] end)
+      iex> flat_map([1, 2, 3, 4, 5, 6], fn x -> [x, x] end)
       [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
 
       %BinaryTree{
@@ -502,17 +504,17 @@ defclass Witchcraft.Foldable do
           right: 3
         }
       }
-      |> concat_map(fn x -> [x, x] end)
+      |> flat_map(fn x -> [x, x] end)
       #=> [1, 1, 2, 2, 3, 3]
 
   """
-  @spec concat_map(Foldable.t(), (any() -> [any()])) :: [any()]
-  def concat_map(foldable, mapper) do
+  @spec flat_map(Foldable.t(), (any() -> [any()])) :: [any()]
+  def flat_map(foldable, mapper) do
     foldable
     |> right_fold([], fn(inner_focus, acc) ->
       [mapper.(inner_focus) | acc]
     end)
-    |> concat()
+    |> flatten()
   end
 
   @doc """
