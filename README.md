@@ -24,7 +24,7 @@ Monoids, functors, monads, arrows, categories, and other dark magic right at you
 
 ```elixir
 def deps do
-  [{:witchcraft, "1.0.0-beta"}]
+  [{:witchcraft, "1.0.0-beta.4"}]
 end
 
 # ...
@@ -110,8 +110,8 @@ both `liftA*` and `liftM*`, and so on.
 
 ### Import Chains
 
-It is very common to want everything in a chain. You can import the entire chain
-with `use`. For example, you can import the entire library with:
+It is very common to want to import a class and all of its dependencies.
+You can do this with `use`. For example, you can import the entire library with:
 
 ```elixir
 use Witchcraft
@@ -216,7 +216,7 @@ More reference instances are available in [`Algae`](https://github.com/expede/al
 ## Prior Art and Further Reading
 
 This library draws heavy inspiration from mathematics, other laguages,
-other Elixir libraries. We would be a shame not to mention them here.
+and other Elixir libraries. We would be a shame not to mention them here.
 There is much, much more out there, but these are the our highlights and inspirations.
 
 The [`Monad`](https://hexdocs.pm/monad/Monad.html) library predates `Witchcraft`

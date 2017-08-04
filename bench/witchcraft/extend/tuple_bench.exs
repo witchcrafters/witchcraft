@@ -21,8 +21,8 @@ defmodule Witchcraft.Extend.TupleBench do
   bench "extend/2",         do: extend(@tuple, fn t -> elem(t, 0) + 1 end)
   bench "curried_extend/2", do: curried_extend(@tuple, fn t -> elem(t, 0) + 1 end)
 
-  bench "reverse_extend/2",         do: reverse_extend(fn t -> elem(t, 0) + 1 end, @tuple)
-  bench "reverse_curried_extend/2", do: reverse_curried_extend(fn t -> elem(t, 0) + 1 end, @tuple)
+  bench "peel/2",         do: peel(fn t -> elem(t, 0) + 1 end, @tuple)
+  bench "curried_peel/2", do: curried_peel(fn t -> elem(t, 0) + 1 end, @tuple)
 
   bench "compose_colink/2",      do: compose_colink(fn t -> elem(t, 0) + 1 end, fn t -> elem(t, 1) * 10 end)
   bench "pipe_compose_colink/2", do: pipe_compose_colink(fn t -> elem(t, 0) * 10 end, fn t -> elem(t, 2) + 1 end)

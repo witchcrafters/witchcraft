@@ -168,11 +168,15 @@ definst Witchcraft.Semigroup, for: Tuple do
     |> List.to_tuple()
   end
 
-  def append(tuple_a, tuple_b) when tuple_size(tuple_a) == tuple_size(tuple_b) do
+  def append(tuple_a, tuple_b) do
     tuple_a
     |> Tuple.to_list()
     |> Enum.zip(Tuple.to_list(tuple_b))
     |> Enum.map(fn({x, y}) -> Witchcraft.Semigroup.append(x, y) end)
     |> List.to_tuple()
   end
+end
+
+definst Witchcraft.Semigroup, for: Witchcraft.Unit do
+  def append(_, _), do: %Witchcraft.Unit{}
 end

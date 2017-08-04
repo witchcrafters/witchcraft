@@ -24,8 +24,8 @@ defmodule Witchcraft.Extend.FunctionBench do
   bench "extend/2",         do: extend(&fun/1, &twice/1)
   bench "curried_extend/2", do: curried_extend(&fun/1, &twice/1)
 
-  bench "reverse_extend/2",         do: reverse_extend(&twice/1, &fun/1)
-  bench "reverse_curried_extend/2", do: reverse_curried_extend(&twice/1, &fun/1)
+  bench "peel/2",         do: peel(&twice/1, &fun/1)
+  bench "curried_peel/2", do: curried_peel(&twice/1, &fun/1)
 
   bench "compose_colink/2",      do: compose_colink(&twice/1, &thrice/1)
   bench "pipe_compose_colink/2", do: pipe_compose_colink(&thrice/1, &twice/1)

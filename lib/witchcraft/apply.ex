@@ -628,12 +628,12 @@ definst Witchcraft.Apply, for: Tuple do
     }
   end
 
-  def convey(tuple_b, tuple_a) when tuple_size(tuple_a) == tuple_size(tuple_b) do
+  def convey(tuple_a, tuple_b) when tuple_size(tuple_a) == tuple_size(tuple_b) do
     last_index = tuple_size(tuple_a) - 1
 
-    tuple_a
+    tuple_b
     |> Tuple.to_list()
-    |> Enum.zip(Tuple.to_list(tuple_b))
+    |> Enum.zip(Tuple.to_list(tuple_a))
     |> Enum.with_index()
     |> Enum.map(fn
       {{fun,  arg},   ^last_index} -> fun.(arg)

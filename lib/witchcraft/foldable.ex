@@ -231,6 +231,9 @@ defclass Witchcraft.Foldable do
 
   """
   @spec to_list(Foldable.t()) :: [any()]
+  def to_list(list)   when is_list(list),        do: list
+  def to_list(tuple)  when is_tuple(tuple),      do: Tuple.to_list(tuple)
+  def to_list(string) when is_bitstring(string), do: String.to_charlist(string)
   def to_list(foldable), do: right_fold(foldable, [], fn(x, acc) -> [x | acc] end)
 
   @doc """
@@ -429,6 +432,9 @@ defclass Witchcraft.Foldable do
       iex> sum([1, 2, 3])
       6
 
+      iex> sum({1, 2, 3})
+      6
+
       %BinaryTree{
         left:  4,
         right: %BinaryTree{
@@ -448,6 +454,9 @@ defclass Witchcraft.Foldable do
   ## Examples
 
       iex> product([1, 2, 3])
+      6
+
+      iex> product({1, 2, 3})
       6
 
       %BinaryTree{
@@ -470,6 +479,9 @@ defclass Witchcraft.Foldable do
   ## Examples
 
       iex> flatten([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+      [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+      iex> flatten({[1, 2, 3], [4, 5, 6], [7, 8, 9]})
       [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
       %BinaryTree{
@@ -495,6 +507,9 @@ defclass Witchcraft.Foldable do
   ## Examples
 
       iex> flat_map([1, 2, 3, 4, 5, 6], fn x -> [x, x] end)
+      [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
+
+      iex> flat_map({1, 2, 3, 4, 5, 6}, fn x -> [x, x] end)
       [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
 
       %BinaryTree{
@@ -542,6 +557,9 @@ defclass Witchcraft.Foldable do
       iex> all?([true, true, false])
       false
 
+      iex> all?({true, true, false})
+      false
+
       %BinaryTree{
         left:  true,
         right: %BinaryTree{
@@ -586,6 +604,9 @@ defclass Witchcraft.Foldable do
   ## Examples
 
       iex> any? [true, true, false]
+      true
+
+      iex> any? {true, true, false}
       true
 
       %BinaryTree{
@@ -646,9 +667,31 @@ defclass Witchcraft.Foldable do
         %Witchcraft.Unit{}
       ]
 
+      iex> then_sequence({{1, 2, 3}, {4, 5, 6}})
+      {5, 7, %Witchcraft.Unit{}}
+
+      iex> then_sequence({[1, 2, 3], [4, 5, 6]})
+      [
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{}
+      ]
+
   """
   @spec then_sequence(Foldable.t()) :: Monad.t()
   def then_sequence(foldable_monad) do
-    right_fold(foldable_monad, of(foldable_monad, %Unit{}), &then/2)
+    seed =
+      foldable_monad
+      |> to_list()
+      |> hd()
+      |> of(%Unit{})
+
+    right_fold(foldable_monad, seed, &then/2)
   end
 end

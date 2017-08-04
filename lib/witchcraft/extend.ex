@@ -220,12 +220,12 @@ defclass Witchcraft.Extend do
   ## Examples
 
       iex> fn list -> List.first(list) * 10 end
-      ...> |> reverse_extend([1, 2, 3])
+      ...> |> peel([1, 2, 3])
       [10, 20, 30]
 
   """
-  @spec reverse_extend(Extend.colink(), Extend.t()) :: Extend.t()
-  def reverse_extend(colink, data), do: Extend.extend(data, colink)
+  @spec peel(Extend.colink(), Extend.t()) :: Extend.t()
+  def peel(colink, data), do: Extend.extend(data, colink)
 
   @doc """
   The same as `extend/2`, but with the colinking function curried.
@@ -247,12 +247,12 @@ defclass Witchcraft.Extend do
   ## Examples
 
       iex> fn(list) -> List.first(list) * 10 end
-      ...> |> reverse_curried_extend([1, 2, 3])
+      ...> |> curried_peel([1, 2, 3])
       [10, 20, 30]
 
   """
-  @spec reverse_curried_extend(Extend.t(), fun()) :: Extend.t()
-  def reverse_curried_extend(colink, data), do: curried_extend(data, colink)
+  @spec curried_peel(Extend.t(), fun()) :: Extend.t()
+  def curried_peel(colink, data), do: curried_extend(data, colink)
 
   @doc """
 
@@ -268,14 +268,14 @@ defclass Witchcraft.Extend do
       iex> fn xs -> List.first(xs) * 10 end
       ...> |> compose_colink(fn ys -> List.first(ys) - 10 end)
       ...> |> compose_colink(fn zs -> List.first(zs) * 50 end)
-      ...> |> reverse_extend([1, 2, 3])
+      ...> |> peel([1, 2, 3])
       [400, 900, 1400]
 
       iex> fn xs -> List.first(xs) * 10 end
       ...> |> compose_colink(fn ys -> List.first(ys) - 10 end)
       ...> |> compose_colink(fn zs -> List.first(zs) * 50 end)
       ...> |> compose_colink(fn zs -> List.first(zs) + 12 end)
-      ...> |> reverse_extend([1, 2, 3])
+      ...> |> peel([1, 2, 3])
       [6400, 6900, 7400]
 
   """
@@ -289,7 +289,7 @@ defclass Witchcraft.Extend do
 
       iex> fn xs -> List.first(xs) * 10 end
       ...> |> pipe_compose_colink(fn ys -> List.first(ys) - 2 end)
-      ...> |> reverse_extend([1, 2, 3])
+      ...> |> peel([1, 2, 3])
       [8, 18, 28]
 
       iex> composed =
@@ -304,7 +304,7 @@ defclass Witchcraft.Extend do
       ...> |> pipe_compose_colink(fn ys -> List.first(ys) - 2 end)
       ...> |> pipe_compose_colink(fn zs -> List.first(zs) * 5 end)
       ...> |> pipe_compose_colink(fn zs -> List.first(zs) + 1 end)
-      ...> |> reverse_extend([1, 2, 3])
+      ...> |> peel([1, 2, 3])
       [41, 91, 141]
 
   """

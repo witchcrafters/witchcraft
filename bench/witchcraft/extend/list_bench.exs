@@ -21,8 +21,8 @@ defmodule Witchcraft.Extend.ListBench do
   bench "extend/2",         do: extend(@list, fn [x | _] -> x + 1 end)
   bench "curried_extend/2", do: curried_extend(@list, fn [x | _] -> x + 1 end)
 
-  bench "reverse_extend/2",         do: reverse_extend(fn [x | _] -> x + 1 end, @list)
-  bench "reverse_curried_extend/2", do: reverse_curried_extend(fn [x | _] -> x + 1 end, @list)
+  bench "peel/2",         do: peel(fn [x | _] -> x + 1 end, @list)
+  bench "curried_peel/2", do: curried_peel(fn [x | _] -> x + 1 end, @list)
 
   bench "compose_colink/2",      do: compose_colink(fn [x | _] -> x + 1 end, fn [y | _] -> y * 10 end)
   bench "pipe_compose_colink/2", do: pipe_compose_colink(fn [y | _] -> y * 10 end, fn [x | _] -> x + 1 end)
