@@ -20,7 +20,7 @@ defclass Witchcraft.Traversable do
   """
 
   alias __MODULE__
-  alias Witchcraft.{Foldable, Unit}
+  alias Witchcraft.Foldable
 
   extend Witchcraft.Foldable
   extend Witchcraft.Functor
