@@ -73,13 +73,13 @@ defmodule Witchcraft.Foldable.TupleBench do
 
   bench "then_traverse/2" do
     @tuple
-    |> then_traverse(fn x -> Tuple.duplicate(x * 10, 11) end)
-    |> then_traverse(fn y -> Tuple.duplicate(y + 10, 11) end)
+    |> then_traverse(fn x -> Tuple.duplicate(x, 11) end)
+    |> then_traverse(fn y -> Tuple.duplicate(y, 11) end)
   end
 
   bench "then_through/2" do
-    fn y -> Tuple.duplicate(y + 10, 11) end
-    |> then_through(fn x -> Tuple.duplicate(x * 10, 11) end
+    fn y -> Tuple.duplicate(y, 11) end
+    |> then_through(fn x -> Tuple.duplicate(x, 11) end
     |> then_through(@tuple))
   end
 
@@ -146,13 +146,13 @@ defmodule Witchcraft.Foldable.TupleBench do
 
   bench "$$$ then_traverse/2" do
     @med_tuple
-    |> then_traverse(fn x -> Tuple.duplicate(x * 10, 251) end)
-    |> then_traverse(fn y -> Tuple.duplicate(y + 10, 251) end)
+    |> then_traverse(fn x -> Tuple.duplicate(x, 251) end)
+    |> then_traverse(fn y -> Tuple.duplicate(y, 251) end)
   end
 
   bench "$$$ then_through/2" do
-    fn y -> Tuple.duplicate(y + 10, 251) end
-    |> then_through(fn x -> Tuple.duplicate(x * 10, 251) end
+    fn y -> Tuple.duplicate(y, 251) end
+    |> then_through(fn x -> Tuple.duplicate(x, 251) end
     |> then_through(@med_tuple))
   end
 
