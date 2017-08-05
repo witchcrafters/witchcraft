@@ -120,20 +120,24 @@ use Witchcraft
 Or import a module plus all others that it depends on:
 
 ```elixir
-use Witchcraft.Chain
+use Witchcraft.Applicative
 ```
 
 Any options that you pass to `use` will be propagated all the way down the chain:
 
 ```elixir
-use Witchcraft.Monad, except: [~>: 2]
+use Witchcraft.Applicative, except: [~>: 2]
 ```
 
 Some modules override `Kernel` operators and functions. While this is generally safe,
 if you would like to skip all overrides, pass `override_kernel: false` as an option:
 
 ```elixir
-use Witchcraft, override_kernel: false
+use Witchcraft.Applicative, override_kernel: false
+
+# Or even
+
+use WItchcraft, override_kernel: false
 ```
 
 ## Writing Class Instances
@@ -267,5 +271,5 @@ A big thank you to [Brandon Labbé](https://dribbble.com/brandonlabbe) for creat
 the project logo.
 
 ### Sponsor
-[Robot Overlord](robotoverlord.io) sponsors much of the development of Witchcraft,
+[Robot Overlord](http://robotoverlord.io) sponsors much of the development of Witchcraft,
 and dogfoods the library in real-world applications.
