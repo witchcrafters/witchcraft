@@ -99,5 +99,7 @@ definst Witchcraft.Comonad, for: Tuple do
     {generate(nil), generate(nil)}
   end
 
-  def extract({_x, y}), do: y
+  def extract(tuple) when tuple_size(tuple) >= 1 do
+    elem(tuple, tuple_size(tuple) - 1)
+  end
 end

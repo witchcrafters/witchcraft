@@ -20,7 +20,7 @@ defclass Witchcraft.Traversable do
   """
 
   alias __MODULE__
-  alias Witchcraft.{Foldable, Unit}
+  alias Witchcraft.Foldable
 
   extend Witchcraft.Foldable
   extend Witchcraft.Functor
@@ -188,64 +188,6 @@ defclass Witchcraft.Traversable do
   """
   @spec through(Traversable.link(), Traversable.t()) :: Traversable.t()
   def through(link, traversable), do: traverse(traversable, link)
-
-  @doc """
-  `traverse` actions over data, but ignore the results.
-
-  ## Examples
-
-      iex> [1, 2, 3]
-      ...> |> then_traverse(fn x -> [x, x * 5, x * 10] end)
-      [
-          #
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          #
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          #
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{}
-      ]
-
-  """
-  @spec then_traverse(Traversable.t(), Traversable.link()) :: Applicative.t()
-  def then_traverse(traversable, link) do
-    right_fold(traversable, of(traversable, %Unit{}), fn(step, acc) ->
-      step
-      |> link.()
-      |> then(acc)
-    end)
-  end
-
-  @doc """
-  The same as `then_traverse`, but with the arguments flipped.
-
-  ## Examples
-
-      iex> fn x -> [x, x * 5, x * 10] end
-      ...> |> then_through([1, 2, 3])
-      [
-          #
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          #
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          #
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
-          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{}
-      ]
-
-  """
-  @spec then_traverse(Traversable.link(), Traversable.t()) :: Applicative.t()
-  def then_through(link, traversable), do: then_traverse(traversable, link)
 
   @doc """
   Run each action/effect in sequence (from left to right),

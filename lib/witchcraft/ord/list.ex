@@ -12,14 +12,11 @@ definst Witchcraft.Ord, for: List do
     |> Enum.to_list()
   end
 
-  def compare([], []), do: :equal
-  def compare(_a, []), do: :greater
-  def compare([], b) when is_list(b), do: :lesser
-
-  def compare([head_a | tail_a], [head_b | tail_b]) do
-    case Witchcraft.Ord.compare(head_a, head_b) do
-      :equal -> Witchcraft.Ord.compare(tail_a, tail_b)
-      order  -> order
+  def compare(list_a, list_b) do
+    cond do
+      list_a == list_b -> :equal
+      list_a < list_b  -> :lesser
+      true             -> :greater
     end
   end
 end

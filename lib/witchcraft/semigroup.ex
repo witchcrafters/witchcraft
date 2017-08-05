@@ -136,6 +136,10 @@ definst Witchcraft.Semigroup, for: Function do
   def append(f, g) when is_function(g), do: Quark.compose(g, f)
 end
 
+definst Witchcraft.Semigroup, for: Witchcraft.Unit do
+  def append(_, _), do: %Witchcraft.Unit{}
+end
+
 definst Witchcraft.Semigroup, for: Integer do
   def append(a, b), do: a + b
 end
@@ -156,6 +160,10 @@ definst Witchcraft.Semigroup, for: Map do
   def append(a, b), do: Map.merge(a, b)
 end
 
+definst Witchcraft.Semigroup, for: MapSet do
+  def append(a, b), do: MapSet.union(a, b)
+end
+
 definst Witchcraft.Semigroup, for: Tuple do
   # credo:disable-for-lines:5 Credo.Check.Refactor.PipeChainStart
   custom_generator(_) do
@@ -164,7 +172,7 @@ definst Witchcraft.Semigroup, for: Tuple do
     |> List.to_tuple()
   end
 
-  def append(tuple_a, tuple_b) when tuple_size(tuple_a) == tuple_size(tuple_b) do
+  def append(tuple_a, tuple_b) do
     tuple_a
     |> Tuple.to_list()
     |> Enum.zip(Tuple.to_list(tuple_b))

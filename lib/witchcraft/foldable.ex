@@ -2,7 +2,10 @@ import TypeClass
 
 defclass Witchcraft.Foldable do
   @moduledoc """
-  Data that can be folded over to change its structure by altering or combining elements
+  Data that can be folded over to change its structure by altering or combining elements.
+
+  Unlike `Witchcraft.Functors`s, the end result will not respect the original structure
+  unless you build it back up manually.
 
   ## Examples
 
@@ -25,7 +28,7 @@ defclass Witchcraft.Foldable do
   """
 
   alias __MODULE__
-  alias Witchcraft.{Ord, Monad, Monoid, Semigroup, Unit}
+  alias Witchcraft.{Apply, Ord, Monad, Monoid, Semigroup, Unit}
 
   import Kernel, except: [length: 1, max: 2, min: 2]
   import Exceptional.Safe, only: [safe: 1]
@@ -45,15 +48,17 @@ defclass Witchcraft.Foldable do
 
     if Access.get(opts, :override_kernel, true) do
       quote do
-        import Kernel,               unquote(new_opts)
-        import Witchcraft.Semigroup, unquote(opts)
-        import Witchcraft.Ord,       unquote(opts)
+        use Witchcraft.Semigroup, unquote(opts)
+        use Witchcraft.Ord,       unquote(opts)
+
+        import Kernel,            unquote(new_opts)
         import unquote(__MODULE__),  unquote(opts)
       end
     else
       quote do
-        import Witchcraft.Semigroup, unquote(opts)
-        import Witchcraft.Ord,       unquote(opts)
+        use Witchcraft.Semigroup, unquote(opts)
+        use Witchcraft.Ord,       unquote(opts)
+
         import unquote(__MODULE__),  unquote(new_opts)
       end
     end
@@ -92,13 +97,13 @@ defclass Witchcraft.Foldable do
 
       left =
         foldable
-        |> Foldable.right_fold(seed, f)
+        |> Witchcraft.Foldable.right_fold(seed, f)
         |> g.()
 
       right =
         foldable
         |> g.()
-        |> Witchcraft.Foldable.right_fold(fn(x, acc) -> f.((g.(acc)), x) end)
+        |> Witchcraft.Foldable.right_fold(seed, fn(x, acc) -> f.((g.(x)), acc) end)
 
       equal?(left, right)
     end
@@ -142,10 +147,25 @@ defclass Witchcraft.Foldable do
       ...> sum.([4, 5, 6])
       15
 
-      iex> left_fold([1, 2, 3], [], fn(x, acc) -> [x | acc] end)
+      iex> left_fold([1, 2, 3], [], fn(acc, x) -> [x | acc] end)
+      [3, 2, 1]
+
+      iex> left_fold({1, 2, 3}, [], fn(acc, x) -> [x | acc] end)
+      [3]
+
+      iex> left_fold([1, 2, 3], [4, 5, 6], fn(acc, x) -> [x | acc] end)
+      [3, 2, 1, 4, 5, 6]
+
+  Note the reducer argument order versus `right_fold/3`
+
+      iex> right_fold([1, 2, 3], [], fn(acc, x) -> [acc | x] end)
+      [1, 2, 3]
+
+      iex> left_fold([1, 2, 3], [], fn(acc, x) -> [acc | x] end)
       [[[[] | 1] | 2] | 3]
 
   """
+  @spec left_fold(Foldable.t(), any(), ((any(), any()) -> any())) :: any()
   def left_fold(foldable, seed, folder) do
     right_fold(foldable, &Quark.id/1, fn(b, g) ->
       fn(x) ->
@@ -167,10 +187,19 @@ defclass Witchcraft.Foldable do
       iex> left_fold([100, 2, 5], &//2)
       10.0 # ((100 / 2) / 5)
 
-      iex> left_fold([1 | [2 | [3]]], fn(x, acc) -> [x | acc] end)
-      [[1 | 2] | 3]
+      iex> left_fold([1, 2, 3], [], fn(acc, x) -> [x | acc] end)
+      [3, 2, 1]
+
+  Note the reducer argument order versus `right_fold/2`
+
+      iex> right_fold([100, 20, 10], &//2)
+      200.0
+
+      iex> left_fold([100, 20, 10], &//2)
+      0.5
 
   """
+  @spec left_fold(Foldable.t(), ((any(), any()) -> any())) :: any()
   def left_fold(foldable, folder) do
     [x | xs] = to_list(foldable)
     left_fold(xs, x, folder)
@@ -225,10 +254,14 @@ defclass Witchcraft.Foldable do
       [1, 2, 3]
 
       iex> to_list(%{a: 1, b: 2, c: 3})
-      [c: 3, b: 2, a: 1]
+      [1, 2, 3]
 
   """
   @spec to_list(Foldable.t()) :: [any()]
+  def to_list(list)   when is_list(list),        do: list
+  def to_list(tuple)  when is_tuple(tuple),      do: Tuple.to_list(tuple)
+  def to_list(map)    when is_map(map),          do: Map.values(map)
+  def to_list(string) when is_bitstring(string), do: String.to_charlist(string)
   def to_list(foldable), do: right_fold(foldable, [], fn(x, acc) -> [x | acc] end)
 
   @doc """
@@ -282,13 +315,28 @@ defclass Witchcraft.Foldable do
       false
 
       iex> member?(%{a: 1, b: 2}, 2)
-      false
-
-      iex> member?(%{a: 1, b: 2}, {:b, 2})
       true
+
+      iex> member?(%{a: 1, b: 2}, 99)
+      false
 
   """
   @spec member?(Foldable.t(), any()) :: boolean()
+  def member?(list, target) when is_list(list), do: Enum.member?(list, target)
+  def member?(map, target)  when is_map(map), do: map |> Map.values() |> Enum.member?(target)
+
+  def member?(tuple, target) when is_tuple(tuple) do
+    tuple
+    |> Tuple.to_list()
+    |> Enum.member?(target)
+  end
+
+  def member?(string, target) when is_bitstring(string) do
+    string
+    |> String.to_charlist()
+    |> Enum.member?(target)
+  end
+
   def member?(foldable, target) do
     right_fold(foldable, false, fn(focus, acc) -> acc or (focus == target) end)
   end
@@ -408,6 +456,21 @@ defclass Witchcraft.Foldable do
   """
   def min(foldable), do: min(foldable, by: &Ord.compare/2)
 
+  @doc """
+  Get a random element from a foldable structure.
+
+  ## Examples
+
+      random([1, 2, 3])
+      #=> 1
+
+      random([1, 2, 3])
+      #=> 3
+
+      random(%BinaryTree{left: %Empty{}, node: 2, right: %BinaryTree{node: 1}})
+      1
+
+  """
   @spec random(Foldable.t()) :: any() | Foldable.EmptyError.t()
   def random(foldable) do
     foldable
@@ -426,6 +489,9 @@ defclass Witchcraft.Foldable do
 
       iex> sum([1, 2, 3])
       6
+
+      iex> sum({1, 2, 3})
+      3
 
       %BinaryTree{
         left:  4,
@@ -448,6 +514,9 @@ defclass Witchcraft.Foldable do
       iex> product([1, 2, 3])
       6
 
+      iex> product({1, 2, 3})
+      6
+
       %BinaryTree{
         left:  4,
         right: %BinaryTree{
@@ -467,8 +536,11 @@ defclass Witchcraft.Foldable do
 
   ## Examples
 
-      iex> concat([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+      iex> flatten([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
       [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+      iex> flatten({[1, 2, 3], [4, 5, 6], [7, 8, 9]})
+      [7, 8, 9]
 
       %BinaryTree{
         left:  [1, 2, 3],
@@ -477,12 +549,12 @@ defclass Witchcraft.Foldable do
           right: [6]
         }
       }
-      |> concat()
+      |> flatten()
       #=> [1, 2, 3, 4, 5, 6]
 
   """
-  @spec concat(Foldable.t()) :: [any()]
-  def concat(contained_lists) do
+  @spec flatten(Foldable.t()) :: [any()]
+  def flatten(contained_lists) do
     right_fold(contained_lists, [], &Semigroup.append/2)
   end
 
@@ -492,8 +564,11 @@ defclass Witchcraft.Foldable do
 
   ## Examples
 
-      iex> concat_map([1, 2, 3, 4, 5, 6], fn x -> [x, x] end)
+      iex> flat_map([1, 2, 3, 4, 5, 6], fn x -> [x, x] end)
       [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
+
+      iex> flat_map({1, 2, 3, 4, 5, 6}, fn x -> [x, x] end)
+      [6, 6]
 
       %BinaryTree{
         left:  1,
@@ -502,17 +577,17 @@ defclass Witchcraft.Foldable do
           right: 3
         }
       }
-      |> concat_map(fn x -> [x, x] end)
+      |> flat_map(fn x -> [x, x] end)
       #=> [1, 1, 2, 2, 3, 3]
 
   """
-  @spec concat_map(Foldable.t(), (any() -> [any()])) :: [any()]
-  def concat_map(foldable, mapper) do
+  @spec flat_map(Foldable.t(), (any() -> [any()])) :: [any()]
+  def flat_map(foldable, mapper) do
     foldable
     |> right_fold([], fn(inner_focus, acc) ->
       [mapper.(inner_focus) | acc]
     end)
-    |> concat()
+    |> flatten()
   end
 
   @doc """
@@ -538,6 +613,9 @@ defclass Witchcraft.Foldable do
   ## Examples
 
       iex> all?([true, true, false])
+      false
+
+      iex> all?({true, true, false})
       false
 
       %BinaryTree{
@@ -595,6 +673,14 @@ defclass Witchcraft.Foldable do
       } |> any?()
       #=> true
 
+  Not that the `Tuple` instance behaves somewhat conterintuitively
+
+      iex> any? {true, true, false}
+      false
+
+      iex> any? {true, false, true}
+      true
+
   """
   @spec any?(Foldable.t()) :: boolean()
   def any?(foldable_bools), do: right_fold(foldable_bools, false, &or/2)
@@ -644,9 +730,87 @@ defclass Witchcraft.Foldable do
         %Witchcraft.Unit{}
       ]
 
+      iex> then_sequence({{1, 2, 3}, {4, 5, 6}})
+      {4, 5, %Witchcraft.Unit{}}
+
+      iex> then_sequence({[1, 2, 3], [4, 5, 6]})
+      [
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{},
+        %Witchcraft.Unit{}
+      ]
+
   """
   @spec then_sequence(Foldable.t()) :: Monad.t()
   def then_sequence(foldable_monad) do
-    right_fold(foldable_monad, of(foldable_monad, %Unit{}), &then/2)
+    seed =
+      foldable_monad
+      |> to_list()
+      |> hd()
+      |> of(%Unit{})
+
+    right_fold(foldable_monad, seed, &then/2)
   end
+
+  @doc """
+  `traverse` actions over data, but ignore the results.
+
+  Not a typo: this is in the correct module, since it doens't depend directly
+  on `Witchcraft.Traversable`, but behaves in a similar manner.
+
+  ## Examples
+
+      iex> [1, 2, 3]
+      ...> |> then_traverse(fn x -> [x, x * 5, x * 10] end)
+      [
+          #
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          #
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          #
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{}
+      ]
+
+  """
+  @spec then_traverse(Foldable.t(), Apply.fun()) :: Apply.t()
+  def then_traverse(foldable, fun) do
+    right_fold(foldable, of(foldable, %Unit{}), fn(step, acc) ->
+      step
+      |> fun.()
+      |> then(acc)
+    end)
+  end
+
+  @doc """
+  The same as `then_traverse`, but with the arguments flipped.
+
+  ## Examples
+
+      iex> fn x -> [x, x * 5, x * 10] end
+      ...> |> then_through([1, 2, 3])
+      [
+          #
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          #
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          #
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{}
+      ]
+
+  """
+  @spec then_traverse(Apply.fun(), Foldable.t()) :: Apply.t()
+  def then_through(fun, traversable), do: then_traverse(traversable, fun)
+
 end

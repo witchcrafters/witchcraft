@@ -288,7 +288,7 @@ definst Witchcraft.Functor, for: Function do
       22
 
   """
-  def map(f, g), do: compose(g, f)
+  def map(f, g), do: Quark.compose(g, f)
 end
 
 definst Witchcraft.Functor, for: List do

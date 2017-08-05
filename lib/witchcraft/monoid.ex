@@ -111,5 +111,14 @@ definst Witchcraft.Monoid, for: Tuple do
     {}
   end
 
-  def empty(_), do: {}
+  def empty(sample), do: Witchcraft.Functor.map(sample, &Witchcraft.Monoid.empty/1)
+end
+
+definst Witchcraft.Monoid, for: MapSet do
+  def empty(_), do: MapSet.new()
+end
+
+definst Witchcraft.Monoid, for: Witchcraft.Unit do
+  require Witchcraft.Semigroup
+  def empty(_), do: %Witchcraft.Unit{}
 end

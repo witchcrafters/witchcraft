@@ -1,7 +1,7 @@
 ![](https://github.com/expede/witchcraft/raw/master/brand/Wordmark/PNG/WC-wordmark-lrg@2x.png)
 
 `Witchcraft` is a library providing common algebraic and categorical abstractions to Elixir.
-Monoids, functors, monads, arrows, categories, and other dark magic.
+Monoids, functors, monads, arrows, categories, and other dark magic right at your fingertips.
 
 [![Build Status](https://travis-ci.org/expede/witchcraft.svg?branch=master)](https://travis-ci.org/expede/witchcraft) [![Inline docs](http://inch-ci.org/github/expede/witchcraft.svg?branch=master)](http://inch-ci.org/github/expede/witchcraft) [![Deps Status](https://beta.hexfaktor.org/badge/all/github/expede/witchcraft.svg)](https://beta.hexfaktor.org/github/expede/witchcraft) [![hex.pm version](https://img.shields.io/hexpm/v/witchcraft.svg?style=flat)](https://hex.pm/packages/witchcraft) [![API Docs](https://img.shields.io/badge/api-docs-yellow.svg?style=flat)](http://hexdocs.pm/witchcraft/) [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/expede/witchcraft/blob/master/LICENSE)
 
@@ -24,7 +24,7 @@ Monoids, functors, monads, arrows, categories, and other dark magic.
 
 ```elixir
 def deps do
-  [{:witchcraft, "1.0.0-beta"}]
+  [{:witchcraft, "1.0.0-beta.4"}]
 end
 
 # ...
@@ -110,21 +110,27 @@ both `liftA*` and `liftM*`, and so on.
 
 ### Import Chains
 
-It is very common to want everything in a chain. You can import the entire chain
-with `use`. For example, you can import the entire library with:
+It is very common to want to import a class and all of its dependencies.
+You can do this with `use`. For example, you can import the entire library with:
 
 ```elixir
-use Witchcraft.Monad
+use Witchcraft
 ```
 
-Any options that you pass to `use` will be propagated all the way down the chain
+Or import a module plus all others that it depends on:
+
+```elixir
+use Witchcraft.Chain
+```
+
+Any options that you pass to `use` will be propagated all the way down the chain:
 
 ```elixir
 use Witchcraft.Monad, except: [~>: 2]
 ```
 
 Some modules override `Kernel` operators and functions. While this is generally safe,
-if you would like to skip all overrides, pass `override_kernel: false` as an option
+if you would like to skip all overrides, pass `override_kernel: false` as an option:
 
 ```elixir
 use Witchcraft, override_kernel: false
@@ -210,7 +216,7 @@ More reference instances are available in [`Algae`](https://github.com/expede/al
 ## Prior Art and Further Reading
 
 This library draws heavy inspiration from mathematics, other laguages,
-other Elixir libraries. We would be a shame not to mention them here.
+and other Elixir libraries. We would be a shame not to mention them here.
 There is much, much more out there, but these are the our highlights and inspirations.
 
 The [`Monad`](https://hexdocs.pm/monad/Monad.html) library predates `Witchcraft`

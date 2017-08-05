@@ -16,3 +16,7 @@ defmodule Witchcraft.Unit do
   @spec new() :: t()
   def new, do: %Unit{}
 end
+
+defimpl TypeClass.Property.Generator, for: Witchcraft.Unit do
+  def generate(_), do: %Witchcraft.Unit{}
+end

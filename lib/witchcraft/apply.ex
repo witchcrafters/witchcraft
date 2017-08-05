@@ -72,7 +72,11 @@ defclass Witchcraft.Apply do
 
   ## `convey` vs `ap`
 
-  Purely for consistency. In Elixir, we like to conceptually think of a "subject"
+  `convey` and `ap` essentially associate in opposite directions. For example,
+  large data is _usually_ more efficient with `ap`, and large numbers of
+  functions are _usually_ more efficient with `convey`.
+
+  It's also more consistent consistency. In Elixir, we like to think of a "subject"
   being piped through a series of transformations. This places the function argument
   as the second argument. In `Witchcraft.Functor`, this was of little consequence.
   However, in `Apply`, we're essentially running superpowered function application.
@@ -611,9 +615,9 @@ definst Witchcraft.Apply, for: Tuple do
     {generate(""), generate(1), generate(0), generate(""), generate(""), generate("")}
   end
 
-  def convey({v, w},          {a,          fun}), do: {a <> v, fun.(w)}
-  def convey({v, w, x},       {a, b,       fun}), do: {a <> v, b <> w, fun.(x)}
-  def convey({v, w, x, y},    {a, b, c,    fun}), do: {a <> v, b <> w, c <> x, fun.(y)}
+  def convey({v, w},          {a,          fun}), do: {v <> a, fun.(w)}
+  def convey({v, w, x},       {a, b,       fun}), do: {v <> a, w <> b, fun.(x)}
+  def convey({v, w, x, y},    {a, b, c,    fun}), do: {v <> a, w <> b, x <> c, fun.(y)}
   def convey({v, w, x, y, z}, {a, b, c, d, fun}) do
     {
       a <> v,
@@ -624,7 +628,7 @@ definst Witchcraft.Apply, for: Tuple do
     }
   end
 
-  def convey(tuple_b, tuple_a) when tuple_size(tuple_a) == tuple_size(tuple_b) do
+  def convey(tuple_a, tuple_b) when tuple_size(tuple_a) == tuple_size(tuple_b) do
     last_index = tuple_size(tuple_a) - 1
 
     tuple_a
@@ -632,7 +636,7 @@ definst Witchcraft.Apply, for: Tuple do
     |> Enum.zip(Tuple.to_list(tuple_b))
     |> Enum.with_index()
     |> Enum.map(fn
-      {{fun,  arg},   ^last_index} -> fun.(arg)
+      {{arg,  fun},   ^last_index} -> fun.(arg)
       {{left, right}, _}           -> left <> right
     end)
     |> List.to_tuple()
