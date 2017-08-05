@@ -28,7 +28,7 @@ defclass Witchcraft.Foldable do
   """
 
   alias __MODULE__
-  alias Witchcraft.{Ord, Monad, Monoid, Semigroup, Unit}
+  alias Witchcraft.{Apply, Ord, Monad, Monoid, Semigroup, Unit}
 
   import Kernel, except: [length: 1, max: 2, min: 2]
   import Exceptional.Safe, only: [safe: 1]
@@ -151,7 +151,7 @@ defclass Witchcraft.Foldable do
       [3, 2, 1]
 
       iex> left_fold({1, 2, 3}, [], fn(acc, x) -> [x | acc] end)
-      [3, 2, 1]
+      [3]
 
       iex> left_fold([1, 2, 3], [4, 5, 6], fn(acc, x) -> [x | acc] end)
       [3, 2, 1, 4, 5, 6]
@@ -491,7 +491,7 @@ defclass Witchcraft.Foldable do
       6
 
       iex> sum({1, 2, 3})
-      6
+      3
 
       %BinaryTree{
         left:  4,
@@ -540,7 +540,7 @@ defclass Witchcraft.Foldable do
       [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
       iex> flatten({[1, 2, 3], [4, 5, 6], [7, 8, 9]})
-      [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      [7, 8, 9]
 
       %BinaryTree{
         left:  [1, 2, 3],
@@ -568,7 +568,7 @@ defclass Witchcraft.Foldable do
       [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
 
       iex> flat_map({1, 2, 3, 4, 5, 6}, fn x -> [x, x] end)
-      [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]
+      [6, 6]
 
       %BinaryTree{
         left:  1,
@@ -664,9 +664,6 @@ defclass Witchcraft.Foldable do
       iex> any? [true, true, false]
       true
 
-      iex> any? {true, true, false}
-      true
-
       %BinaryTree{
         left:  true,
         right: %BinaryTree{
@@ -675,6 +672,14 @@ defclass Witchcraft.Foldable do
         }
       } |> any?()
       #=> true
+
+  Not that the `Tuple` instance behaves somewhat conterintuitively
+
+      iex> any? {true, true, false}
+      false
+
+      iex> any? {true, false, true}
+      true
 
   """
   @spec any?(Foldable.t()) :: boolean()
@@ -726,16 +731,10 @@ defclass Witchcraft.Foldable do
       ]
 
       iex> then_sequence({{1, 2, 3}, {4, 5, 6}})
-      {5, 7, %Witchcraft.Unit{}}
+      {4, 5, %Witchcraft.Unit{}}
 
       iex> then_sequence({[1, 2, 3], [4, 5, 6]})
       [
-        %Witchcraft.Unit{},
-        %Witchcraft.Unit{},
-        %Witchcraft.Unit{},
-        %Witchcraft.Unit{},
-        %Witchcraft.Unit{},
-        %Witchcraft.Unit{},
         %Witchcraft.Unit{},
         %Witchcraft.Unit{},
         %Witchcraft.Unit{}
@@ -752,4 +751,66 @@ defclass Witchcraft.Foldable do
 
     right_fold(foldable_monad, seed, &then/2)
   end
+
+  @doc """
+  `traverse` actions over data, but ignore the results.
+
+  Not a typo: this is in the correct module, since it doens't depend directly
+  on `Witchcraft.Traversable`, but behaves in a similar manner.
+
+  ## Examples
+
+      iex> [1, 2, 3]
+      ...> |> then_traverse(fn x -> [x, x * 5, x * 10] end)
+      [
+          #
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          #
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          #
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{}
+      ]
+
+  """
+  @spec then_traverse(Foldable.t(), Apply.fun()) :: Apply.t()
+  def then_traverse(foldable, fun) do
+    right_fold(foldable, of(foldable, %Unit{}), fn(step, acc) ->
+      step
+      |> fun.()
+      |> then(acc)
+    end)
+  end
+
+  @doc """
+  The same as `then_traverse`, but with the arguments flipped.
+
+  ## Examples
+
+      iex> fn x -> [x, x * 5, x * 10] end
+      ...> |> then_through([1, 2, 3])
+      [
+          #
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          #
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          #
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{},
+          %Witchcraft.Unit{}, %Witchcraft.Unit{}, %Witchcraft.Unit{}
+      ]
+
+  """
+  @spec then_traverse(Apply.fun(), Foldable.t()) :: Apply.t()
+  def then_through(fun, traversable), do: then_traverse(traversable, fun)
+
 end

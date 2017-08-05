@@ -104,6 +104,16 @@ defmodule Witchcraft.Foldable.ListBench do
   bench "Enum.to_list/1", do: Enum.to_list(@list)
   bench "to_list/1",      do: to_list(@list)
 
+  bench "then_traverse/2" do
+    @list
+    |> then_traverse(fn x -> [x + 1] end)
+    |> then_traverse(fn y -> [y, y] end)
+  end
+
+  bench "then_through/2" do
+    fn y -> [y, y] end |> then_through(fn x -> [x + 1] end |> then_through(@list))
+  end
+
   # ---------- #
   # Large Data #
   # ---------- #
@@ -201,5 +211,15 @@ defmodule Witchcraft.Foldable.ListBench do
 
   bench "$$$ Enum.to_list/1", do: Enum.to_list(@big_list)
   bench "$$$ to_list/1",      do: to_list(@big_list)
+
+  bench "$$$ then_traverse/2" do
+    @big_list
+    |> then_traverse(fn x -> [x + 1] end)
+    |> then_traverse(fn y -> [y, y] end)
+  end
+
+  bench "$$$ then_through/2" do
+    fn y -> [y, y] end |> then_through(fn x -> [x + 1] end |> then_through(@big_list))
+  end
 
 end

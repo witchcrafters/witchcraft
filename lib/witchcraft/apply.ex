@@ -615,9 +615,9 @@ definst Witchcraft.Apply, for: Tuple do
     {generate(""), generate(1), generate(0), generate(""), generate(""), generate("")}
   end
 
-  def convey({v, w},          {a,          fun}), do: {a <> v, fun.(w)}
-  def convey({v, w, x},       {a, b,       fun}), do: {a <> v, b <> w, fun.(x)}
-  def convey({v, w, x, y},    {a, b, c,    fun}), do: {a <> v, b <> w, c <> x, fun.(y)}
+  def convey({v, w},          {a,          fun}), do: {v <> a, fun.(w)}
+  def convey({v, w, x},       {a, b,       fun}), do: {v <> a, w <> b, fun.(x)}
+  def convey({v, w, x, y},    {a, b, c,    fun}), do: {v <> a, w <> b, x <> c, fun.(y)}
   def convey({v, w, x, y, z}, {a, b, c, d, fun}) do
     {
       a <> v,
@@ -631,12 +631,12 @@ definst Witchcraft.Apply, for: Tuple do
   def convey(tuple_a, tuple_b) when tuple_size(tuple_a) == tuple_size(tuple_b) do
     last_index = tuple_size(tuple_a) - 1
 
-    tuple_b
+    tuple_a
     |> Tuple.to_list()
-    |> Enum.zip(Tuple.to_list(tuple_a))
+    |> Enum.zip(Tuple.to_list(tuple_b))
     |> Enum.with_index()
     |> Enum.map(fn
-      {{fun,  arg},   ^last_index} -> fun.(arg)
+      {{arg,  fun},   ^last_index} -> fun.(arg)
       {{left, right}, _}           -> left <> right
     end)
     |> List.to_tuple()

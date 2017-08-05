@@ -71,6 +71,18 @@ defmodule Witchcraft.Foldable.TupleBench do
   bench "Tuple.to_list/1", do: Tuple.to_list(@tuple)
   bench "to_list/1", do: to_list(@tuple)
 
+  bench "then_traverse/2" do
+    @tuple
+    |> then_traverse(fn x -> Tuple.duplicate(x * 10, 11) end)
+    |> then_traverse(fn y -> Tuple.duplicate(y + 10, 11) end)
+  end
+
+  bench "then_through/2" do
+    fn y -> Tuple.duplicate(y + 10, 11) end
+    |> then_through(fn x -> Tuple.duplicate(x * 10, 11) end
+    |> then_through(@tuple))
+  end
+
   # ---------- #
   # Large Data #
   # ---------- #
@@ -131,5 +143,17 @@ defmodule Witchcraft.Foldable.TupleBench do
   bench "$$$ then_sequence/1", do: then_sequence(@nested)
 
   bench "$$$ to_list/1", do: to_list(@big_tuple)
+
+  bench "$$$ then_traverse/2" do
+    @med_tuple
+    |> then_traverse(fn x -> Tuple.duplicate(x * 10, 251) end)
+    |> then_traverse(fn y -> Tuple.duplicate(y + 10, 251) end)
+  end
+
+  bench "$$$ then_through/2" do
+    fn y -> Tuple.duplicate(y + 10, 251) end
+    |> then_through(fn x -> Tuple.duplicate(x * 10, 251) end
+    |> then_through(@med_tuple))
+  end
 
 end
