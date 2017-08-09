@@ -413,31 +413,21 @@ defclass Witchcraft.Chain do
   @doc false
   # credo:disable-for-lines:31 Credo.Check.Refactor.Nesting
   def do_notation(input, chainer) do
-    IO.puts ">>>>>>>>>>>>>>>>>"
-
     input
     |> normalize()
-    |> IO.inspect()
-    # |> Enum.reverse()
+    |> Enum.reverse()
     |> Witchcraft.Foldable.left_fold(fn
-      (drawing = {:<-, _, [assign = {left_sym, left_ctx, _}, value]}, continue) ->
-        IO.puts "DRAWING:"
-        IO.inspect drawing
-
-        IO.puts "ASSIGN:"
-        IO.inspect assign
-
-        IO.puts "VALUE:"
-        IO.inspect value
-
-        IO.puts "RIGHT:"
-        IO.inspect continue
-
+      (continue, {:let, _, [{:=, _, [assign, value]}]}) ->
         quote do
-          unquote(value) >>> fn unquote(assign) -> unquote(continue) end
+          unquote(value) |> fn unquote(assign) -> unquote(continue) end.()
         end
 
-      (value, continue) ->
+      (continue, {:<-, _, [assign, value]}) ->
+        quote do
+          unquote(value) >>> (fn unquote(assign) -> unquote(continue) end)
+        end
+
+      (continue, value) ->
         quote do
           unquote(value) >>> fn _ -> unquote(continue) end
         end
