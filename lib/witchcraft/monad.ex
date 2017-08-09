@@ -201,9 +201,9 @@ defclass Witchcraft.Monad do
       ...>  return(a * b)
       ...> end
       [
-        4, 8,  12,
-        5, 10, 15,
-        6, 12, 18
+        4,  5,  6,
+        8,  10, 12,
+        12, 15, 18
       ]
 
       iex> monad [] do
@@ -258,9 +258,9 @@ defclass Witchcraft.Monad do
       ...>  return(a * b)
       ...> end
       [
-      4, 8,  12,
-      5, 10, 15,
-      6, 12, 18
+        4,  5,  6,
+        8,  10, 12,
+        12, 15, 18
       ]
 
       iex> async [] do

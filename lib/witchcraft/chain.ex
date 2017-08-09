@@ -289,9 +289,9 @@ defclass Witchcraft.Chain do
       ...>   [a * b]
       ...> end
       [
-        4, 8,  12,
-        5, 10, 15,
-        6, 12, 18
+        4,  5,  6,
+        8,  10, 12,
+        12, 15, 18
       ]
 
   Normal functions are fine within the `do` as well, as long as each line
@@ -329,7 +329,8 @@ defclass Witchcraft.Chain do
 
   ## `let` bindings
 
-  `let`s allow you to hold static values inside a do-block, much like normal assignment
+  `let`s allow you to hold static or intermediate values inside a
+  do-block, much like normal assignment
 
       iex> chain do
       ...>   let a = 4
@@ -337,16 +338,13 @@ defclass Witchcraft.Chain do
       ...> end
       [4]
 
-  This is somewhat limited, though, as values drawn from a chianable structure
-  with `<-` are not in scope when desugared. For example, this is not possible
-  due to the recursive binding on `x`:
-
-      chain do
-        x <- [1, 2, 3]
-        y <- [4, 5, 6]
-        let will_fail = x + 1
-        [y * will_fail]
-      end
+      iex> chain do
+      ...>   a <- [1, 2]
+      ...>   b <- [3, 4]
+      ...>   let [h | _] = [a * b]
+      ...>   [h, h, h]
+      ...> end
+      [3, 3, 3, 4, 4, 4, 6, 6, 6, 8, 8, 8]
 
   ## Desugaring
 
@@ -421,10 +419,17 @@ defclass Witchcraft.Chain do
         quote do: unquote(value) |> fn unquote(assign) -> unquote(continue) end.()
 
       (continue, {:<-, _, [assign, value]}) ->
-        quote do: unquote(value) >>> (fn unquote(assign) -> unquote(continue) end)
+        quote do
+          import Witchcraft.Chain, only: [>>>: 2]
+
+          unquote(value) >>> (fn unquote(assign) -> unquote(continue) end)
+        end
 
       (continue, value) ->
-        quote do: unquote(value) >>> fn _ -> unquote(continue) end
+        quote do
+          import Witchcraft.Chain, only: [>>>: 2]
+          unquote(value) >>> fn _ -> unquote(continue) end
+        end
     end)
   end
 

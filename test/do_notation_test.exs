@@ -21,6 +21,17 @@ defmodule Witchcraft.DoNotationTest do
     assert done == [4, 5, 6, 4, 5, 6, 4, 5, 6]
   end
 
+  test "return from multiple draws" do
+    done =
+      chain do
+        a <- [1, 2, 3]
+        b <- [4, 5, 6]
+        [a * b]
+      end
+
+    assert done == [4, 5, 6, 8, 10, 12, 12, 15, 18]
+  end
+
   test "draw one line and immedietly use it" do
     done =
       chain do
