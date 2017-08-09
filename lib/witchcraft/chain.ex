@@ -373,35 +373,37 @@ defclass Witchcraft.Chain do
 
   For instance
 
-      chain do
-        a <- [1, 2, 3]
-        b <- [4, 5, 6]
-        [a * b]
-      end
+      iex> chain do
+      ...>   a <- [1, 2, 3]
+      ...>   b <- [4, 5, 6]
+      ...>   [a * b]
+      ...> end
+      [4, 5, 6, 8, 10, 12, 12, 15, 18]
 
   desugars to this
 
-      [1, 2, 3] >>> fn a ->
-        [4, 5, 6] >>> fn b ->
-          [a + b]
-        end
-      end
+      iex> [1, 2, 3] >>> fn a ->
+      ...>   [4, 5, 6] >>> fn b ->
+      ...>     [a * b]
+      ...>   end
+      ...> end
+      [4, 5, 6, 8, 10, 12, 12, 15, 18]
 
   but is often much cleaner to read in do-notation, as it cleans up all of the
   nested functions (especially when the chain is very long).
 
   You can also use values recursively:
 
-      chain do
-        a <- [1, 2, 3]
-        b <- [a, a * 10, a * 100]
-        [a + 1, b + 1]
-      end
-      [
-        2, 2, 2, 11, 2, 101,
-        3, 3, 3, 21, 3, 201,
-        4, 4, 4, 31, 4, 301
-      ]
+      # iex> chain do
+      # ...>   a <- [1, 2, 3]
+      # ...>   b <- [a, a * 10, a * 100]
+      # ...>   [a + 1, b + 1]
+      # ...> end
+      # [
+      #   2, 2, 2, 11, 2, 101,
+      #   3, 3, 3, 21, 3, 201,
+      #   4, 4, 4, 31, 4, 301
+      # ]
 
   """
   defmacro chain(do: input) do
@@ -411,35 +413,34 @@ defclass Witchcraft.Chain do
   @doc false
   # credo:disable-for-lines:31 Credo.Check.Refactor.Nesting
   def do_notation(input, chainer) do
+    IO.puts ">>>>>>>>>>>>>>>>>"
+
     input
     |> normalize()
-    |> Enum.reverse()
-    |> Witchcraft.Foldable.right_fold(fn
-      ({:<-, _, [{left_sym, left_ctx, _}, right]}, acc) ->
-        left = {left_sym, left_ctx, nil}
+    |> IO.inspect()
+    # |> Enum.reverse()
+    |> Witchcraft.Foldable.left_fold(fn
+      (drawing = {:<-, _, [assign = {left_sym, left_ctx, _}, value]}, continue) ->
+        IO.puts "DRAWING:"
+        IO.inspect drawing
 
-        case acc do
-          {:fn, _, _} ->
-            quote do
-              unquote(chainer).(unquote(right), fn unquote(left) ->
-                unquote(acc).(unquote(left))
-              end)
-            end
+        IO.puts "ASSIGN:"
+        IO.inspect assign
 
-          acc ->
-            quote do
-              unquote(chainer).(unquote(right), fn unquote(left) ->
-                unquote(acc)
-              end)
-            end
+        IO.puts "VALUE:"
+        IO.inspect value
+
+        IO.puts "RIGHT:"
+        IO.inspect continue
+
+        quote do
+          unquote(value) >>> fn unquote(assign) -> unquote(continue) end
         end
 
-      ({:let, _, [{:=, _, [{var_name, var_ctx, _}, value]}]}, acc) ->
-        left = {var_name, var_ctx, nil}
-        quote do: fn unquote(left) -> unquote(acc) end.(unquote(value))
-
-      (ast, acc) ->
-        quote do: Witchcraft.Apply.then(unquote(ast), unquote(acc))
+      (value, continue) ->
+        quote do
+          unquote(value) >>> fn _ -> unquote(continue) end
+        end
     end)
   end
 
