@@ -390,6 +390,19 @@ defclass Witchcraft.Chain do
   but is often much cleaner to read in do-notation, as it cleans up all of the
   nested functions (especially when the chain is very long).
 
+  You can also use values recursively:
+
+      chain do
+        a <- [1, 2, 3]
+        b <- [a, a * 10, a * 100]
+        [a + 1, b + 1]
+      end
+      [
+        2, 2, 2, 11, 2, 101,
+        3, 3, 3, 21, 3, 201,
+        4, 4, 4, 31, 4, 301
+      ]
+
   """
   defmacro chain(do: input) do
     Witchcraft.Chain.do_notation(input, &Witchcraft.Chain.chain/2)
