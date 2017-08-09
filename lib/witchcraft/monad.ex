@@ -196,6 +196,11 @@ defclass Witchcraft.Monad do
       [1]
 
       iex> monad [] do
+      ...>   return 1
+      ...> end
+      [1]
+
+      iex> monad [] do
       ...>  a <- [1,2,3]
       ...>  b <- [4,5,6]
       ...>  return(a * b)
