@@ -289,9 +289,9 @@ defclass Witchcraft.Chain do
       ...>   [a * b]
       ...> end
       [
-        4, 8,  12,
-        5, 10, 15,
-        6, 12, 18
+        4,  5,  6,
+        8,  10, 12,
+        12, 15, 18
       ]
 
   Normal functions are fine within the `do` as well, as long as each line
@@ -329,7 +329,8 @@ defclass Witchcraft.Chain do
 
   ## `let` bindings
 
-  `let`s allow you to hold static values inside a do-block, much like normal assignment
+  `let`s allow you to hold static or intermediate values inside a
+  do-block, much like normal assignment
 
       iex> chain do
       ...>   let a = 4
@@ -337,16 +338,13 @@ defclass Witchcraft.Chain do
       ...> end
       [4]
 
-  This is somewhat limited, though, as values drawn from a chianable structure
-  with `<-` are not in scope when desugared. For example, this is not possible
-  due to the recursive binding on `x`:
-
-      chain do
-        x <- [1, 2, 3]
-        y <- [4, 5, 6]
-        let will_fail = x + 1
-        [y * will_fail]
-      end
+      iex> chain do
+      ...>   a <- [1, 2]
+      ...>   b <- [3, 4]
+      ...>   let [h | _] = [a * b]
+      ...>   [h, h, h]
+      ...> end
+      [3, 3, 3, 4, 4, 4, 6, 6, 6, 8, 8, 8]
 
   ## Desugaring
 
@@ -373,22 +371,37 @@ defclass Witchcraft.Chain do
 
   For instance
 
-      chain do
-        a <- [1, 2, 3]
-        b <- [4, 5, 6]
-        [a * b]
-      end
+      iex> chain do
+      ...>   a <- [1, 2, 3]
+      ...>   b <- [4, 5, 6]
+      ...>   [a * b]
+      ...> end
+      [4, 5, 6, 8, 10, 12, 12, 15, 18]
 
   desugars to this
 
-      [1, 2, 3] >>> fn a ->
-        [4, 5, 6] >>> fn b ->
-          [a + b]
-        end
-      end
+      iex> [1, 2, 3] >>> fn a ->
+      ...>   [4, 5, 6] >>> fn b ->
+      ...>     [a * b]
+      ...>   end
+      ...> end
+      [4, 5, 6, 8, 10, 12, 12, 15, 18]
 
   but is often much cleaner to read in do-notation, as it cleans up all of the
   nested functions (especially when the chain is very long).
+
+  You can also use values recursively:
+
+      # iex> chain do
+      # ...>   a <- [1, 2, 3]
+      # ...>   b <- [a, a * 10, a * 100]
+      # ...>   [a + 1, b + 1]
+      # ...> end
+      # [
+      #   2, 2, 2, 11, 2, 101,
+      #   3, 3, 3, 21, 3, 201,
+      #   4, 4, 4, 31, 4, 301
+      # ]
 
   """
   defmacro chain(do: input) do
@@ -401,32 +414,22 @@ defclass Witchcraft.Chain do
     input
     |> normalize()
     |> Enum.reverse()
-    |> Witchcraft.Foldable.right_fold(fn
-      ({:<-, _, [{left_sym, left_ctx, _}, right]}, acc) ->
-        left = {left_sym, left_ctx, nil}
+    |> Witchcraft.Foldable.left_fold(fn
+      (continue, {:let, _, [{:=, _, [assign, value]}]}) ->
+        quote do: unquote(value) |> fn unquote(assign) -> unquote(continue) end.()
 
-        case acc do
-          {:fn, _, _} ->
-            quote do
-              unquote(chainer).(unquote(right), fn unquote(left) ->
-                unquote(acc).(unquote(left))
-              end)
-            end
+      (continue, {:<-, _, [assign, value]}) ->
+        quote do
+          import Witchcraft.Chain, only: [>>>: 2]
 
-          acc ->
-            quote do
-              unquote(chainer).(unquote(right), fn unquote(left) ->
-                unquote(acc)
-              end)
-            end
+          unquote(value) >>> (fn unquote(assign) -> unquote(continue) end)
         end
 
-      ({:let, _, [{:=, _, [{var_name, var_ctx, _}, value]}]}, acc) ->
-        left = {var_name, var_ctx, nil}
-        quote do: fn unquote(left) -> unquote(acc) end.(unquote(value))
-
-      (ast, acc) ->
-        quote do: Witchcraft.Apply.then(unquote(ast), unquote(acc))
+      (continue, value) ->
+        quote do
+          import Witchcraft.Chain, only: [>>>: 2]
+          unquote(value) >>> fn _ -> unquote(continue) end
+        end
     end)
   end
 
