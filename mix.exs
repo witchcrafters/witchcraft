@@ -5,7 +5,7 @@ defmodule Witchcraft.Mixfile do
     [
       app:  :witchcraft,
       name: "Witchcraft",
-      description: "Common algebras (monoids, functors, monads, &c)",
+      description: "Monads and other dark magic (monoids, functors, traversables, &c)",
 
       version: "1.0.0-rc.0",
       elixir:  "~> 1.5",
