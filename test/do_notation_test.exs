@@ -102,7 +102,7 @@ defmodule Witchcraft.DoNotationTest do
     assert done == [1.0, 10.0, 100.0, 2.0, 20.0, 100.0, 3.0, 30.0, 100.0]
   end
 
-  test "destructiring let" do
+  test "destructuring let" do
     done =
       chain do
         a <- [1, 2]
@@ -112,5 +112,45 @@ defmodule Witchcraft.DoNotationTest do
       end
 
     assert done == [3, 3, 3, 4, 4, 4, 6, 6, 6, 8, 8, 8]
+  end
+
+  test "recursive lets" do
+    done =
+      chain do
+        a <- [1, 2]
+        b <- [3, 4]
+        let [h | _] = [a * b]
+        c <- [a, b, h]
+        let tens = c * 10
+        d <- [c - 1, c + 1]
+        [a, b, c, d]
+    end
+
+    assert done == [
+      1, 3, 1, 0,
+      1, 3, 1, 2,
+      1, 3, 3, 2,
+      1, 3, 3, 4,
+      1, 3, 3, 2,
+      1, 3, 3, 4,
+      1, 4, 1, 0,
+      1, 4, 1, 2,
+      1, 4, 4, 3,
+      1, 4, 4, 5,
+      1, 4, 4, 3,
+      1, 4, 4, 5,
+      2, 3, 2, 1,
+      2, 3, 2, 3,
+      2, 3, 3, 2,
+      2, 3, 3, 4,
+      2, 3, 6, 5,
+      2, 3, 6, 7,
+      2, 4, 2, 1,
+      2, 4, 2, 3,
+      2, 4, 4, 3,
+      2, 4, 4, 5,
+      2, 4, 8, 7,
+      2, 4, 8, 9
+    ]
   end
 end
