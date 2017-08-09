@@ -418,19 +418,13 @@ defclass Witchcraft.Chain do
     |> Enum.reverse()
     |> Witchcraft.Foldable.left_fold(fn
       (continue, {:let, _, [{:=, _, [assign, value]}]}) ->
-        quote do
-          unquote(value) |> fn unquote(assign) -> unquote(continue) end.()
-        end
+        quote do: unquote(value) |> fn unquote(assign) -> unquote(continue) end.()
 
       (continue, {:<-, _, [assign, value]}) ->
-        quote do
-          unquote(value) >>> (fn unquote(assign) -> unquote(continue) end)
-        end
+        quote do: unquote(value) >>> (fn unquote(assign) -> unquote(continue) end)
 
       (continue, value) ->
-        quote do
-          unquote(value) >>> fn _ -> unquote(continue) end
-        end
+        quote do: unquote(value) >>> fn _ -> unquote(continue) end
     end)
   end
 

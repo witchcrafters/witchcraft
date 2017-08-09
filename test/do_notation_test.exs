@@ -90,4 +90,16 @@ defmodule Witchcraft.DoNotationTest do
 
     assert done == [1.0, 10.0, 100.0, 2.0, 20.0, 100.0, 3.0, 30.0, 100.0]
   end
+
+  test "destructiring let" do
+    done =
+      chain do
+        a <- [1, 2]
+        b <- [3, 4]
+        let [h | _] = [a * b]
+        [h, h, h]
+      end
+
+    assert done == [3, 3, 3, 4, 4, 4, 6, 6, 6, 8, 8, 8]
+  end
 end
