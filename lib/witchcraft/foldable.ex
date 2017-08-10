@@ -260,7 +260,6 @@ defclass Witchcraft.Foldable do
   @spec to_list(Foldable.t()) :: [any()]
   def to_list(list)   when is_list(list),        do: list
   def to_list(tuple)  when is_tuple(tuple),      do: Tuple.to_list(tuple)
-  def to_list(map)    when is_map(map),          do: Map.values(map)
   def to_list(string) when is_bitstring(string), do: String.to_charlist(string)
   def to_list(foldable), do: right_fold(foldable, [], fn(x, acc) -> [x | acc] end)
 

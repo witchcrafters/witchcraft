@@ -4,6 +4,6 @@ definst Witchcraft.Foldable, for: Map do
   def right_fold(map, seed, reducer) do
     map
     |> Map.values()
-    |> Enum.reduce(seed, reducer)
+    |> Witchcraft.Foldable.right_fold(seed, reducer)
   end
 end
