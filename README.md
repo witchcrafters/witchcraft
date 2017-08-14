@@ -137,7 +137,7 @@ use Witchcraft.Applicative, override_kernel: false
 
 # Or even
 
-use WItchcraft, override_kernel: false
+use Witchcraft, override_kernel: false
 ```
 
 ## Writing Class Instances
