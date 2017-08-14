@@ -24,7 +24,7 @@ Monoids, functors, monads, arrows, categories, and other dark magic right at you
 
 ```elixir
 def deps do
-  [{:witchcraft, "1.0.0-beta.4"}]
+  [{:witchcraft, "~> 1.0"}]
 end
 
 # ...
