@@ -219,7 +219,7 @@ More reference instances are available in [`Algae`](https://github.com/expede/al
 
 ## Prior Art and Further Reading
 
-This library draws heavy inspiration from mathematics, other laguages,
+This library draws heavy inspiration from mathematics, other languages,
 and other Elixir libraries. We would be a shame not to mention them here.
 There is much, much more out there, but these are the our highlights and inspirations.
 
@@ -241,28 +241,28 @@ it showed that we can write our own Haskell fanfic in all sorts of languages.
 
 Obviously the Haskell [`Prelude`](https://hackage.haskell.org/package/base-4.10.0.0/docs/Prelude.html)
 deserves mention. Haskell has inspired so many programmers to write clean,
-declaritive, functional code based on principled abstractions. We'll spare you
+declarative, functional code based on principled abstractions. We'll spare you
 the love letter to [SPJ](https://en.wikipedia.org/wiki/Simon_Peyton_Jones),
 the Glasgow team, and the original Haskell committee, but we're deeply appreciative
 of how they pushed the state of the art forward.
 
 [`classy-prelude`/`mono-traversable`](https://github.com/snoyberg/mono-traversable)
 have also made a lot of progress towards a base library that incorporates modern ideas
-in a clean package, and was an inspiration to taking a similar approach with Witchraft.
+in a clean package, and was an inspiration to taking a similar approach with Witchcraft.
 
 The [`semigroupoids`](https://hackage.haskell.org/package/semigroupoids) library
 from the eminent [Edward Kmett](https://github.com/ekmett) provided many
-refernce implementations and is helping set the future expansion of
+reference implementations and is helping set the future expansion of
 the foldable class lineage in Witchcraft.
 
-Interested in learning more of the underlying ideas? The maintainers can hearily
+Interested in learning more of the underlying ideas? The maintainers can heavily
 recommend [Conceptual Mathematics](http://www.cambridge.org/catalogue/catalogue.asp?isbn=9780521719162),
 [Category Theory for the Sciences](https://mitpress.mit.edu/books/category-theory-sciences),
 and [Categories for the Working Mathematician](https://en.wikipedia.org/wiki/Categories_for_the_Working_Mathematician).
 Reading these books probably won't change your code overnight. Some people call it
 "[general abstract nonsense](https://en.wikipedia.org/wiki/Abstract_nonsense)"
 for a reason. That said, it does provide a nice framework for thinking about
-these abstract ideas, and is a recommended pusuit for all that are curious.
+these abstract ideas, and is a recommended pursuit for all that are curious.
 
 ## Credits
 
