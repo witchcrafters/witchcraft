@@ -22,7 +22,7 @@ defmodule Witchcraft do
 
   Any options passed to `use` will be passed down to all dependencies.
 
-      use Witchcraft, execpt: [right_fold: 2]
+      use Witchcraft, except: [right_fold: 2]
 
   If you would like to not override the functions and operators from `Kernel`,
   you can pass the special option `override_kernel: false`.
