@@ -221,7 +221,7 @@ More reference instances are available in [`Algae`](https://github.com/expede/al
 
 This library draws heavy inspiration from mathematics, other languages,
 and other Elixir libraries. We would be a shame not to mention them here.
-There is much, much more out there, but these are the our highlights and inspirations.
+There is much, much more out there, but these are our highlights and inspirations.
 
 The [`Monad`](https://hexdocs.pm/monad/Monad.html) library predates `Witchcraft`
 by several years. This library proved that it is entirely possible
