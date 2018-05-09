@@ -11,7 +11,7 @@ defclass Witchcraft.Apply do
 
   ## Graphically
 
-  If function application looks like like
+  If function application looks like this
 
       data |> function == result
 
