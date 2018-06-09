@@ -148,7 +148,7 @@ defclass Witchcraft.Functor do
   defalias data ~> fun, as: :lift
 
   @doc ~S"""
-  `<~/2` with arguments flipped.
+  `~>/2` with arguments flipped.
 
       iex> (fn x -> x + 5 end) <~ [1,2,3]
       [6, 7, 8]
