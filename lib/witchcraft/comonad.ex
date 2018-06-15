@@ -29,7 +29,7 @@ defclass Witchcraft.Comonad do
 
   defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Extend,      unquote(opts)
+      use Witchcraft.Extend, unquote(opts)
       import unquote(__MODULE__), unquote(opts)
     end
   end

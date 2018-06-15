@@ -33,14 +33,14 @@ defclass Witchcraft.Ord do
 
     if Access.get(opts, :override_kernel, true) do
       quote do
-        import Kernel,               unquote(new_opts)
+        import Kernel, unquote(new_opts)
         use Witchcraft.Semigroupoid, unquote(opts)
-        import unquote(__MODULE__),  unquote(opts)
+        import unquote(__MODULE__), unquote(opts)
       end
     else
       quote do
         use Witchcraft.Semigroupoid, unquote(opts)
-        import unquote(__MODULE__),  unquote(new_opts)
+        import unquote(__MODULE__), unquote(new_opts)
       end
     end
   end
@@ -134,7 +134,7 @@ defclass Witchcraft.Ord do
   @spec greater?(Ord.t(), Ord.t()) :: boolean()
   def greater?(a, b), do: compare(a, b) == :greater
 
-  defalias a > b, [as: :greater?]
+  defalias a > b, as: :greater?
 
   @doc """
   Determine if an element is `:lesser` than another
@@ -151,7 +151,7 @@ defclass Witchcraft.Ord do
   @spec lesser?(Ord.t(), Ord.t()) :: boolean()
   def lesser?(a, b), do: compare(a, b) == :lesser
 
-  defalias a < b, [as: :lesser?]
+  defalias a < b, as: :lesser?
 
   @doc """
   Determine if an element is `:lesser` or `:equal` to another

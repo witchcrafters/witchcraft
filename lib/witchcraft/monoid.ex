@@ -21,7 +21,7 @@ defclass Witchcraft.Monoid do
 
   defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Semigroup,   unquote(opts)
+      use Witchcraft.Semigroup, unquote(opts)
       import unquote(__MODULE__), unquote(opts)
     end
   end
@@ -56,7 +56,7 @@ defclass Witchcraft.Monoid do
       false
 
   """
-  @spec empty?(Monoid.t) :: boolean
+  @spec empty?(Monoid.t()) :: boolean
   def empty?(monoid), do: empty(monoid) == monoid
 
   properties do

@@ -25,11 +25,11 @@ defclass Witchcraft.Semigroupoid do
 
     if Access.get(opts, :override_kernel, true) do
       quote do
-        import Kernel,              unquote(new_opts)
+        import Kernel, unquote(new_opts)
         import unquote(__MODULE__), unquote(opts)
       end
     else
-      quote do: import unquote(__MODULE__), unquote(new_opts)
+      quote do: import(unquote(__MODULE__), unquote(new_opts))
     end
   end
 
@@ -131,7 +131,7 @@ defclass Witchcraft.Semigroupoid do
       b = generate(data)
       c = generate(data)
 
-      left  = Semigroupoid.compose(Semigroupoid.compose(a, b), c)
+      left = Semigroupoid.compose(Semigroupoid.compose(a, b), c)
       right = Semigroupoid.compose(a, Semigroupoid.compose(b, c))
 
       equal?(left, right)

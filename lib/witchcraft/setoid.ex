@@ -28,11 +28,11 @@ defclass Witchcraft.Setoid do
 
     if Access.get(opts, :override_kernel, true) do
       quote do
-        import Kernel,              unquote(new_opts)
+        import Kernel, unquote(new_opts)
         import unquote(__MODULE__), unquote(opts)
       end
     else
-      quote do: import unquote(__MODULE__), unquote(new_opts)
+      quote do: import(unquote(__MODULE__), unquote(new_opts))
     end
   end
 
@@ -71,7 +71,7 @@ defclass Witchcraft.Setoid do
     def equivalent?(a, b)
   end
 
-  defalias a == b, [as: :equivalent?]
+  defalias a == b, as: :equivalent?
 
   @doc """
   The opposite of `equivalent?/2`
@@ -85,7 +85,7 @@ defclass Witchcraft.Setoid do
   @spec nonequivalent?(Setoid.t(), Setoid.t()) :: boolean()
   def nonequivalent?(a, b), do: not equivalent?(a, b)
 
-  defalias a != b, [as: :nonequivalent?]
+  defalias a != b, as: :nonequivalent?
 
   properties do
     def reflexivity(data) do

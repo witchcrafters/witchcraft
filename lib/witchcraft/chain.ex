@@ -44,7 +44,7 @@ defclass Witchcraft.Chain do
 
   defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Apply,       unquote(opts)
+      use Witchcraft.Apply, unquote(opts)
       import unquote(__MODULE__), unquote(opts)
     end
   end
@@ -205,7 +205,7 @@ defclass Witchcraft.Chain do
 
   """
   @spec join(Chain.t()) :: Chain.t()
-  def join(nested), do: nested >>> &Quark.id/1
+  def join(nested), do: nested >>> (&Quark.id/1)
 
   @spec flatten(Chain.t()) :: Chain.t()
   defalias flatten(nested), as: :join
@@ -415,17 +415,17 @@ defclass Witchcraft.Chain do
     |> normalize()
     |> Enum.reverse()
     |> Witchcraft.Foldable.left_fold(fn
-      (continue, {:let, _, [{:=, _, [assign, value]}]}) ->
-        quote do: unquote(value) |> fn unquote(assign) -> unquote(continue) end.()
+      continue, {:let, _, [{:=, _, [assign, value]}]} ->
+        quote do: unquote(value) |> (fn unquote(assign) -> unquote(continue) end).()
 
-      (continue, {:<-, _, [assign, value]}) ->
+      continue, {:<-, _, [assign, value]} ->
         quote do
           import Witchcraft.Chain, only: [>>>: 2]
 
-          unquote(value) >>> (fn unquote(assign) -> unquote(continue) end)
+          unquote(value) >>> fn unquote(assign) -> unquote(continue) end
         end
 
-      (continue, value) ->
+      continue, value ->
         quote do
           import Witchcraft.Chain, only: [>>>: 2]
           unquote(value) >>> fn _ -> unquote(continue) end
@@ -444,7 +444,7 @@ defclass Witchcraft.Chain do
       f = fn x -> Witchcraft.Applicative.of(a, inspect(x)) end
       g = fn y -> Witchcraft.Applicative.of(a, y <> y) end
 
-      left  = (a |> Chain.chain(f)) |> Chain.chain(g)
+      left = a |> Chain.chain(f) |> Chain.chain(g)
       right = a |> Chain.chain(fn x -> x |> f.() |> Chain.chain(g) end)
 
       equal?(left, right)
@@ -457,7 +457,7 @@ definst Witchcraft.Chain, for: Function do
   use Quark
 
   @spec chain(Chain.t(), (any() -> any())) :: Chain.t()
-  def chain(fun, chain_fun), do: fn(r) -> curry(chain_fun).(fun.(r)).(r) end
+  def chain(fun, chain_fun), do: fn r -> curry(chain_fun).(fun.(r)).(r) end
 end
 
 definst Witchcraft.Chain, for: List do

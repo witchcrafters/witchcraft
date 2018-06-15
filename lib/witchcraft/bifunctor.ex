@@ -27,7 +27,7 @@ defclass Witchcraft.Bifunctor do
 
   defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Functor,     unquote(opts)
+      use Witchcraft.Functor, unquote(opts)
       import unquote(__MODULE__), unquote(opts)
     end
   end
@@ -80,7 +80,7 @@ defclass Witchcraft.Bifunctor do
       h = &is_number/1
       i = &!/1
 
-      left  = a |> Bifunctor.bimap(fn x -> f.(g.(x)) end, fn y -> h.(i.(y)) end)
+      left = Bifunctor.bimap(a, fn x -> f.(g.(x)) end, fn y -> h.(i.(y)) end)
       right = a |> Bifunctor.bimap(g, i) |> Bifunctor.bimap(f, h)
 
       equal?(left, right)
@@ -111,7 +111,7 @@ defclass Witchcraft.Bifunctor do
 
   """
   @spec map_first(Bifunctor.t(), (any() -> any())) :: Bifunctor.t()
-  def map_first(data, f),  do: Bifunctor.bimap(data, f, &Quark.id/1)
+  def map_first(data, f), do: Bifunctor.bimap(data, f, &Quark.id/1)
 
   @doc """
   The same as `map_first`, but with a curried function

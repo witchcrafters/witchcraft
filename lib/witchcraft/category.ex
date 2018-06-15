@@ -29,7 +29,7 @@ defclass Witchcraft.Category do
   defmacro __using__(opts \\ []) do
     quote do
       use Witchcraft.Semigroupoid, unquote(opts)
-      import unquote(__MODULE__),  unquote(opts)
+      import unquote(__MODULE__), unquote(opts)
     end
   end
 

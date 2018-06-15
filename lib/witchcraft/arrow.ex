@@ -45,7 +45,7 @@ defclass Witchcraft.Arrow do
 
   defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Category,    unquote(opts)
+      use Witchcraft.Category, unquote(opts)
       import unquote(__MODULE__), unquote(opts)
     end
   end
@@ -74,7 +74,7 @@ defclass Witchcraft.Arrow do
     def arrow_identity(sample) do
       a = generate(nil)
 
-      left  = Arrow.arrowize(sample, &Quark.id/1)
+      left = Arrow.arrowize(sample, &Quark.id/1)
       right = &Quark.id/1
 
       equal?(a |> pipe(left), a |> pipe(right))
@@ -88,20 +88,20 @@ defclass Witchcraft.Arrow do
       f = fn x -> "#{x}-#{x}" end
       g = &inspect/1
 
-      left  = Arrow.arrowize(sample, f) <|> Arrow.arrowize(sample, g)
+      left = Arrow.arrowize(sample, f) <|> Arrow.arrowize(sample, g)
       right = Arrow.arrowize(sample, f <|> g)
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def first_commutativity(sample) do
-       a = {generate(nil), generate(nil)}
-       f = &inspect/1
+      a = {generate(nil), generate(nil)}
+      f = &inspect/1
 
-       left  = Witchcraft.Arrow.first(Arrow.arrowize(sample, f))
-       right = Arrow.arrowize(sample, Witchcraft.Arrow.first(f))
+      left = Witchcraft.Arrow.first(Arrow.arrowize(sample, f))
+      right = Arrow.arrowize(sample, Witchcraft.Arrow.first(f))
 
-       equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def first_composition(sample) do
@@ -110,20 +110,20 @@ defclass Witchcraft.Arrow do
       f = Arrow.arrowize(sample, fn x -> "#{x}-#{x}" end)
       g = Arrow.arrowize(sample, &inspect/1)
 
-      left  = Witchcraft.Arrow.first(f <|> g)
+      left = Witchcraft.Arrow.first(f <|> g)
       right = Witchcraft.Arrow.first(f) <|> Witchcraft.Arrow.first(g)
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def second_arrow_commutativity(sample) do
       a = {generate(nil), generate(nil)}
       f = &inspect/1
 
-      left  = Witchcraft.Arrow.second(Arrow.arrowize(sample, f))
+      left = Witchcraft.Arrow.second(Arrow.arrowize(sample, f))
       right = Arrow.arrowize(sample, Witchcraft.Arrow.second(f))
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def second_composition(sample) do
@@ -132,19 +132,19 @@ defclass Witchcraft.Arrow do
       f = Arrow.arrowize(sample, fn x -> "#{x}-#{x}" end)
       g = Arrow.arrowize(sample, &inspect/1)
 
-      left  = Witchcraft.Arrow.second(f <|> g)
+      left = Witchcraft.Arrow.second(f <|> g)
       right = Witchcraft.Arrow.second(f) <|> Witchcraft.Arrow.second(g)
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def product_composition(sample) do
       a = {generate(nil), generate(nil)}
 
       f = &inspect/1
-      g = fn x -> "#{inspect x}-#{inspect x}" end
+      g = fn x -> "#{inspect(x)}-#{inspect(x)}" end
 
-      left  =
+      left =
         Witchcraft.Arrow.product(
           Arrow.arrowize(sample, f),
           Arrow.arrowize(sample, g)
@@ -152,16 +152,16 @@ defclass Witchcraft.Arrow do
 
       right = Arrow.arrowize(sample, Witchcraft.Arrow.product(f, g))
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def fanout_composition(sample) do
       a = generate(nil)
 
       f = &inspect/1
-      g = fn x -> "#{inspect x}-#{inspect x}" end
+      g = fn x -> "#{inspect(x)}-#{inspect(x)}" end
 
-      left  =
+      left =
         Witchcraft.Arrow.fanout(
           Arrow.arrowize(sample, f),
           Arrow.arrowize(sample, g)
@@ -169,17 +169,17 @@ defclass Witchcraft.Arrow do
 
       right = Arrow.arrowize(sample, Witchcraft.Arrow.fanout(f, g))
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def first_reassociaton(sample) do
       a = {{generate(nil), generate(nil)}, {generate(nil), generate(nil)}}
-      f = fn x -> "#{inspect x}-#{inspect x}" end
+      f = fn x -> "#{inspect(x)}-#{inspect(x)}" end
 
       x = Witchcraft.Arrow.first(Arrow.arrowize(sample, f))
       y = Arrow.arrowize(sample, &Witchcraft.Arrow.reassociate/1)
 
-      left  = Witchcraft.Arrow.first(x) <~> y
+      left = Witchcraft.Arrow.first(x) <~> y
       right = y <~> x
 
       equal?(a |> pipe(left), a |> pipe(right))
@@ -187,27 +187,27 @@ defclass Witchcraft.Arrow do
 
     def first_identity(sample) do
       a = {generate(nil), generate(nil)}
-      f = fn x -> "#{inspect x}-#{inspect x}" end
+      f = fn x -> "#{inspect(x)}-#{inspect(x)}" end
 
-      left  = Witchcraft.Arrow.first(f) <~> Arrow.arrowize(sample, fn {x, _} -> x end)
+      left = Witchcraft.Arrow.first(f) <~> Arrow.arrowize(sample, fn {x, _} -> x end)
       right = Arrow.arrowize(sample, fn {x, _} -> x end) <~> f
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def first_product_commutativity(sample) do
       a = {generate(nil), generate(nil)}
 
       f = &inspect/1
-      g = fn x -> "#{inspect x}-#{inspect x}" end
+      g = fn x -> "#{inspect(x)}-#{inspect(x)}" end
 
       x = Arrow.arrowize(sample, Witchcraft.Arrow.product(&Quark.id/1, g))
       y = Witchcraft.Arrow.first(f)
 
-      left  = x <|> y
+      left = x <|> y
       right = y <|> x
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
   end
 
@@ -228,7 +228,7 @@ defclass Witchcraft.Arrow do
 
   """
   @spec product(Arrow.t(), Arrow.t()) :: Arrow.t()
-  def product(arrow_f, arrow_g), do: first(arrow_f) <~> (second(arrow_g))
+  def product(arrow_f, arrow_g), do: first(arrow_f) <~> second(arrow_g)
 
   @doc """
   Alias for `product/2`, meant to invoke a spacial metaphor
@@ -281,7 +281,7 @@ defclass Witchcraft.Arrow do
   """
   @spec first(Arrow.t()) :: Arrow.t()
   def first(arrow) do
-    arrowize(arrow, fn({x, y}) ->
+    arrowize(arrow, fn {x, y} ->
       {
         x |> pipe(arrow),
         y |> pipe(id_arrow(arrow))
@@ -300,7 +300,7 @@ defclass Witchcraft.Arrow do
   """
   @spec second(Arrow.t()) :: Arrow.t()
   def second(arrow) do
-    arrowize(arrow, fn({x, y}) ->
+    arrowize(arrow, fn {x, y} ->
       {
         x |> pipe(id_arrow(arrow)),
         y |> pipe(arrow)
@@ -338,7 +338,7 @@ defclass Witchcraft.Arrow do
   """
   @spec fanout(Arrow.t(), Arrow.t()) :: Arrow.t()
   def fanout(arrow_f, arrow_g) do
-    arrow_f |> arrowize(&split/1) <~> arrow_f ^^^ arrow_g
+    arrow_f |> arrowize(&split/1) <~> (arrow_f ^^^ arrow_g)
   end
 
   @doc """
@@ -403,7 +403,7 @@ defclass Witchcraft.Arrow do
       3
 
   """
-  @spec unsplit({any(), any()}, ((any(), any()) -> any())) :: any()
+  @spec unsplit({any(), any()}, (any(), any() -> any())) :: any()
   def unsplit({x, y}, combine), do: combine.(x, y)
 
   @doc """
@@ -419,9 +419,9 @@ defclass Witchcraft.Arrow do
       {1, {2, 3}}
 
   """
-  @spec reassociate({any(), {any(), any()}} | {{any(), any()}, any()})
-     :: {{any(), any()}, any()} | {any(), {any(), any()}}
-  def reassociate({{a, b}, c}), do: {a, {b,  c}}
+  @spec reassociate({any(), {any(), any()}} | {{any(), any()}, any()}) ::
+          {{any(), any()}, any()} | {any(), {any(), any()}}
+  def reassociate({{a, b}, c}), do: {a, {b, c}}
   def reassociate({a, {b, c}}), do: {{a, b}, c}
 
   @doc """
@@ -461,5 +461,5 @@ definst Witchcraft.Arrow, for: Function do
   use Quark
 
   def arrowize(_, fun), do: curry(fun)
-  def first(arrow), do: fn({target, unchanged}) -> {arrow.(target), unchanged} end
+  def first(arrow), do: fn {target, unchanged} -> {arrow.(target), unchanged} end
 end

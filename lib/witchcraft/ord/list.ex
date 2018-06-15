@@ -15,8 +15,8 @@ definst Witchcraft.Ord, for: List do
   def compare(list_a, list_b) do
     cond do
       list_a == list_b -> :equal
-      list_a < list_b  -> :lesser
-      true             -> :greater
+      list_a < list_b -> :lesser
+      true -> :greater
     end
   end
 end

@@ -32,7 +32,7 @@ defclass Witchcraft.Applicative do
 
   defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Apply,       unquote(opts)
+      use Witchcraft.Apply, unquote(opts)
       import unquote(__MODULE__), unquote(opts)
     end
   end
@@ -179,7 +179,7 @@ defclass Witchcraft.Applicative do
       a = generate(data)
       f = &inspect/1
 
-      left  = Applicative.of(a, arg) ~>> Applicative.of(a, f)
+      left = Applicative.of(a, arg) ~>> Applicative.of(a, f)
       right = Applicative.of(a, f.(arg))
 
       equal?(left, right)
@@ -190,7 +190,7 @@ defclass Witchcraft.Applicative do
       as = generate(data)
       fs = replace(as, &inspect/1)
 
-      left  = Applicative.of(as, arg) ~>> fs
+      left = Applicative.of(as, arg) ~>> fs
       right = fs ~>> Applicative.of(as, fn g -> g.(arg) end)
 
       equal?(left, right)

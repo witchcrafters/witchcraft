@@ -35,12 +35,12 @@ defmodule Witchcraft do
 
   defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Arrow,       unquote(opts)
-      use Witchcraft.Monoid,      unquote(opts)
-      use Witchcraft.Bifunctor,   unquote(opts)
+      use Witchcraft.Arrow, unquote(opts)
+      use Witchcraft.Monoid, unquote(opts)
+      use Witchcraft.Bifunctor, unquote(opts)
       use Witchcraft.Traversable, unquote(opts)
-      use Witchcraft.Monad,       unquote(opts)
-      use Witchcraft.Comonad,     unquote(opts)
+      use Witchcraft.Monad, unquote(opts)
+      use Witchcraft.Comonad, unquote(opts)
     end
   end
 end

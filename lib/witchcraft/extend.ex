@@ -34,7 +34,7 @@ defclass Witchcraft.Extend do
 
   defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Functor,     unquote(opts)
+      use Witchcraft.Functor, unquote(opts)
       import unquote(__MODULE__), unquote(opts)
     end
   end
@@ -85,8 +85,8 @@ defclass Witchcraft.Extend do
       else
         a = generate(data)
 
-        f = fn x -> "#{inspect x}-#{inspect x}" end
-        g = fn y -> "#{inspect y} / #{inspect y} / #{inspect y}" end
+        f = fn x -> "#{inspect(x)}-#{inspect(x)}" end
+        g = fn y -> "#{inspect(y)} / #{inspect(y)} / #{inspect(y)}" end
 
         left =
           a
@@ -144,7 +144,7 @@ defclass Witchcraft.Extend do
         arg1 = generate(monoid)
         arg2 = generate(monoid)
 
-        left  = Witchcraft.Extend.extend(fun, &Quark.id/1)
+        left = Witchcraft.Extend.extend(fun, &Quark.id/1)
         right = Witchcraft.Extend.nest(fun)
 
         equal?(left.(arg1).(arg2), right.(arg1).(arg2))
@@ -328,7 +328,8 @@ end
 
 definst Witchcraft.Extend, for: List do
   def nest([]), do: []
-  def nest(entire = [_head | tail]), do: [entire | nest(tail)] # Could be improved
+  # Could be improved
+  def nest(entire = [_head | tail]), do: [entire | nest(tail)]
 end
 
 definst Witchcraft.Extend, for: Tuple do

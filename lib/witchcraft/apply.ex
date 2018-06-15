@@ -124,12 +124,12 @@ defclass Witchcraft.Apply do
   extend Witchcraft.Functor
   use Witchcraft.Functor
 
-  @type t   :: any()
+  @type t :: any()
   @type fun :: any()
 
   defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Functor,     unquote(opts)
+      use Witchcraft.Functor, unquote(opts)
       import unquote(__MODULE__), unquote(opts)
     end
   end
@@ -159,13 +159,13 @@ defclass Witchcraft.Apply do
       fs = data |> generate() |> Functor.replace(fn x -> x <> x end)
       gs = data |> generate() |> Functor.replace(fn y -> y <> "foo" end)
 
-      left  = Apply.convey(Apply.convey(as, gs), fs)
+      left = Apply.convey(Apply.convey(as, gs), fs)
 
       right =
         fs
         |> Functor.lift(&compose/2)
-        |> fn x -> Apply.convey(gs, x) end.()
-        |> fn y -> Apply.convey(as, y) end.()
+        |> (fn x -> Apply.convey(gs, x) end).()
+        |> (fn y -> Apply.convey(as, y) end).()
 
       equal?(left, right)
     end
@@ -223,7 +223,7 @@ defclass Witchcraft.Apply do
   """
   @spec ap(Apply.fun(), Apply.t()) :: Apply.t()
   def ap(wrapped_funs, wrapped) do
-    lift(wrapped, wrapped_funs, fn(arg, fun) -> fun.(arg) end)
+    lift(wrapped, wrapped_funs, fn arg, fun -> fun.(arg) end)
   end
 
   @doc """
@@ -253,11 +253,13 @@ defclass Witchcraft.Apply do
   @spec async_convey(Apply.t(), Apply.fun()) :: Apply.t()
   def async_convey(wrapped_args, wrapped_funs) do
     wrapped_args
-    |> convey(lift(wrapped_funs, fn(fun, arg) ->
-      Task.async(fn ->
-        fun.(arg)
+    |> convey(
+      lift(wrapped_funs, fn fun, arg ->
+        Task.async(fn ->
+          fun.(arg)
+        end)
       end)
-    end))
+    )
     |> map(&Task.await/1)
   end
 
@@ -287,7 +289,7 @@ defclass Witchcraft.Apply do
   @spec async_ap(Apply.fun(), Apply.t()) :: Apply.t()
   def async_ap(wrapped_funs, wrapped_args) do
     wrapped_funs
-    |> lift(fn(fun, arg) ->
+    |> lift(fn fun, arg ->
       Task.async(fn ->
         fun.(arg)
       end)
@@ -437,7 +439,7 @@ defclass Witchcraft.Apply do
   def lift(a, b, fun) do
     a
     |> lift(fun)
-    |> fn f -> convey(b, f) end.()
+    |> (fn f -> convey(b, f) end).()
   end
 
   @doc """
@@ -481,7 +483,7 @@ defclass Witchcraft.Apply do
   def async_lift(a, b, fun) do
     a
     |> async_lift(fun)
-    |> fn f -> async_convey(b, f) end.()
+    |> (fn f -> async_convey(b, f) end).()
   end
 
   @doc """
@@ -600,7 +602,7 @@ end
 
 definst Witchcraft.Apply, for: List do
   def convey(val_list, fun_list) when is_list(fun_list) do
-    Enum.flat_map(val_list, fn(val) ->
+    Enum.flat_map(val_list, fn val ->
       Enum.map(fun_list, fn fun -> fun.(val) end)
     end)
   end
@@ -615,9 +617,10 @@ definst Witchcraft.Apply, for: Tuple do
     {generate(""), generate(1), generate(0), generate(""), generate(""), generate("")}
   end
 
-  def convey({v, w},          {a,          fun}), do: {v <> a, fun.(w)}
-  def convey({v, w, x},       {a, b,       fun}), do: {v <> a, w <> b, fun.(x)}
-  def convey({v, w, x, y},    {a, b, c,    fun}), do: {v <> a, w <> b, x <> c, fun.(y)}
+  def convey({v, w}, {a, fun}), do: {v <> a, fun.(w)}
+  def convey({v, w, x}, {a, b, fun}), do: {v <> a, w <> b, fun.(x)}
+  def convey({v, w, x, y}, {a, b, c, fun}), do: {v <> a, w <> b, x <> c, fun.(y)}
+
   def convey({v, w, x, y, z}, {a, b, c, d, fun}) do
     {
       a <> v,
@@ -636,8 +639,8 @@ definst Witchcraft.Apply, for: Tuple do
     |> Enum.zip(Tuple.to_list(tuple_b))
     |> Enum.with_index()
     |> Enum.map(fn
-      {{arg,  fun},   ^last_index} -> fun.(arg)
-      {{left, right}, _}           -> left <> right
+      {{arg, fun}, ^last_index} -> fun.(arg)
+      {{left, right}, _} -> left <> right
     end)
     |> List.to_tuple()
   end
