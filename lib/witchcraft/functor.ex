@@ -145,7 +145,7 @@ defclass Witchcraft.Functor do
       10
 
   """
-  defalias(data ~> fun, as: :lift)
+  defalias data ~> fun, as: :lift
 
   @doc ~S"""
   `~>/2` with arguments flipped.

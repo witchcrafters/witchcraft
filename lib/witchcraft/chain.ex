@@ -36,7 +36,7 @@ defclass Witchcraft.Chain do
   """
 
   alias __MODULE__
-  extend(Witchcraft.Apply)
+  extend Witchcraft.Apply
   use Witchcraft.Apply
 
   @type t :: any()
@@ -112,7 +112,7 @@ defclass Witchcraft.Chain do
   Provided as a convenience for those coming from other languages.
   """
   @spec bind(Chain.t(), Chain.link()) :: Chain.t()
-  defalias(bind(chainable, binder), as: :chain)
+  defalias bind(chainable, binder), as: :chain
 
   @doc """
   Operator alias for `chain/2`.
@@ -131,7 +131,7 @@ defclass Witchcraft.Chain do
 
   """
   @spec Chain.t() >>> Chain.link() :: Chain.t()
-  defalias(chainable >>> chain_fun, as: :chain)
+  defalias chainable >>> chain_fun, as: :chain
 
   @doc """
   Operator alias for `draw/2`
@@ -150,7 +150,7 @@ defclass Witchcraft.Chain do
 
   """
   @spec Chain.t() <<< Chain.link() :: Chain.t()
-  defalias(chain_fun <<< chainable, as: :draw)
+  defalias chain_fun <<< chainable, as: :draw
 
   @doc """
   Join together one nested level of a data structure that contains itself
@@ -208,7 +208,7 @@ defclass Witchcraft.Chain do
   def join(nested), do: nested >>> (&Quark.id/1)
 
   @spec flatten(Chain.t()) :: Chain.t()
-  defalias(flatten(nested), as: :join)
+  defalias flatten(nested), as: :join
 
   @doc """
   Compose link functions to create a new link function.

@@ -36,8 +36,8 @@ defclass Witchcraft.Monad do
                          [_]
   """
 
-  extend(Witchcraft.Applicative)
-  extend(Witchcraft.Chain)
+  extend Witchcraft.Applicative
+  extend Witchcraft.Chain
 
   use Witchcraft.Applicative
   use Witchcraft.Chain
@@ -295,8 +295,8 @@ defclass Witchcraft.Monad do
   end
 end
 
-definst(Witchcraft.Monad, for: Function)
-definst(Witchcraft.Monad, for: List)
+definst Witchcraft.Monad, for: Function
+definst Witchcraft.Monad, for: List
 
 definst Witchcraft.Monad, for: Tuple do
   use Witchcraft.Semigroup

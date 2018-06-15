@@ -79,7 +79,7 @@ defmodule Witchcraft.DoNotationTest do
   test "top let bindings" do
     done =
       chain do
-        let(values = [1, 2, 3])
+        let values = [1, 2, 3]
         a <- values
         b <- [a * 10]
         c <- [a + b]
@@ -107,7 +107,7 @@ defmodule Witchcraft.DoNotationTest do
       chain do
         a <- [1, 2]
         b <- [3, 4]
-        let([h | _] = [a * b])
+        let [h | _] = [a * b]
         [h, h, h]
       end
 
@@ -119,9 +119,9 @@ defmodule Witchcraft.DoNotationTest do
       chain do
         a <- [1, 2]
         b <- [3, 4]
-        let([h | _] = [a * b])
+        let [h | _] = [a * b]
         c <- [a, b, h]
-        let(tens = c * 10)
+        let tens = c * 10
         d <- [c - 1, c + 1]
         [a, b, c, d]
       end

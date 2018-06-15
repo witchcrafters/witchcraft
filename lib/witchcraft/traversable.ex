@@ -22,8 +22,8 @@ defclass Witchcraft.Traversable do
   alias __MODULE__
   alias Witchcraft.Foldable
 
-  extend(Witchcraft.Foldable)
-  extend(Witchcraft.Functor)
+  extend Witchcraft.Foldable
+  extend Witchcraft.Functor
 
   use Witchcraft.Applicative
   use Witchcraft.Foldable, except: [equal?: 2]

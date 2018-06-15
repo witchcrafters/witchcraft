@@ -81,7 +81,7 @@ defclass Witchcraft.Semigroup do
     def append(a, b)
   end
 
-  defalias(a <> b, as: :append)
+  defalias a <> b, as: :append
 
   @doc ~S"""
   Flatten a list of homogeneous semigroups to a single container

@@ -22,7 +22,7 @@ defclass Witchcraft.Comonad do
   """
 
   alias __MODULE__
-  extend(Witchcraft.Extend)
+  extend Witchcraft.Extend
   use Quark
 
   @type t :: any()

@@ -25,7 +25,7 @@ defclass Witchcraft.Extend do
   alias __MODULE__
   alias Witchcraft.Functor
 
-  extend(Witchcraft.Functor)
+  extend Witchcraft.Functor
 
   use Quark
 

@@ -22,7 +22,7 @@ defclass Witchcraft.Category do
   alias __MODULE__
   alias Witchcraft.Semigroupoid
 
-  extend(Witchcraft.Semigroupoid)
+  extend Witchcraft.Semigroupoid
 
   @type t :: any()
 
@@ -48,7 +48,7 @@ defclass Witchcraft.Category do
     def identity(category)
   end
 
-  defalias(id(category), as: :identity)
+  defalias id(category), as: :identity
 
   properties do
     def left_identity(data) do

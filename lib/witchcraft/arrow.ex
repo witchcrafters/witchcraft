@@ -101,7 +101,7 @@ defclass Witchcraft.Arrow do
       left = Witchcraft.Arrow.first(Arrow.arrowize(sample, f))
       right = Arrow.arrowize(sample, Witchcraft.Arrow.first(f))
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def first_composition(sample) do
@@ -240,7 +240,7 @@ defclass Witchcraft.Arrow do
 
   """
   @spec beside(Arrow.t(), Arrow.t()) :: Arrow.t()
-  defalias(beside(a, b), as: :product)
+  defalias beside(a, b), as: :product
 
   @doc """
   Operator alias for `product/2`
@@ -256,7 +256,7 @@ defclass Witchcraft.Arrow do
 
   """
   @spec Arrow.t() ^^^ Arrow.t() :: Arrow.t()
-  defalias(a ^^^ b, as: :product)
+  defalias a ^^^ b, as: :product
 
   @doc """
   Swap positions of elements in a tuple.
@@ -362,7 +362,7 @@ defclass Witchcraft.Arrow do
 
   """
   @spec Arrow.t() &&& Arrow.t() :: Arrow.t()
-  defalias(a &&& b, as: :fanout)
+  defalias a &&& b, as: :fanout
 
   @doc """
   Copy a single value into both positions of a 2-tuple.

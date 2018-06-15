@@ -15,7 +15,7 @@ defclass Witchcraft.Monoid do
   """
 
   alias __MODULE__
-  extend(Witchcraft.Semigroup, alias: true)
+  extend Witchcraft.Semigroup, alias: true
 
   @type t :: any()
 
@@ -42,7 +42,7 @@ defclass Witchcraft.Monoid do
     def empty(sample)
   end
 
-  defalias(zero(sample), as: :empty)
+  defalias zero(sample), as: :empty
 
   @doc """
   Check if a value is the empty element of that type

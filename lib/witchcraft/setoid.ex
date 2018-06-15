@@ -71,7 +71,7 @@ defclass Witchcraft.Setoid do
     def equivalent?(a, b)
   end
 
-  defalias(a == b, as: :equivalent?)
+  defalias a == b, as: :equivalent?
 
   @doc """
   The opposite of `equivalent?/2`
@@ -85,7 +85,7 @@ defclass Witchcraft.Setoid do
   @spec nonequivalent?(Setoid.t(), Setoid.t()) :: boolean()
   def nonequivalent?(a, b), do: not equivalent?(a, b)
 
-  defalias(a != b, as: :nonequivalent?)
+  defalias a != b, as: :nonequivalent?
 
   properties do
     def reflexivity(data) do
