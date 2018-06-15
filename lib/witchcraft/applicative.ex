@@ -98,7 +98,7 @@ defclass Witchcraft.Applicative do
 
   """
   @spec wrap(Applicative.t(), any()) :: Applicative.t()
-  defalias(wrap(sample, to_wrap), as: :of)
+  defalias wrap(sample, to_wrap), as: :of
 
   @doc """
   Alias for `of/2`, for cases that this helps legibility or style.
@@ -113,7 +113,7 @@ defclass Witchcraft.Applicative do
 
   """
   @spec pure(Applicative.t(), any()) :: Applicative.t()
-  defalias(pure(sample, to_wrap), as: :of)
+  defalias pure(sample, to_wrap), as: :of
 
   @doc """
   `of/2` with arguments reversed.
@@ -161,7 +161,7 @@ defclass Witchcraft.Applicative do
 
   """
   @spec unit(Applicative.t(), any()) :: Applicative.t()
-  defalias(unit(sample, to_wrap), as: :of)
+  defalias unit(sample, to_wrap), as: :of
 
   properties do
     import Witchcraft.Functor
