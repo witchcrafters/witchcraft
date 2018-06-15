@@ -299,8 +299,8 @@ defclass Witchcraft.Foldable do
   def length(list) when is_list(list), do: Kernel.length(list)
   def length(foldable), do: right_fold(foldable, 0, fn _, acc -> 1 + acc end)
 
-  defalias(count(foldable), as: :length)
-  defalias(size(foldable), as: :length)
+  defalias count(foldable), as: :length
+  defalias size(foldable), as: :length
 
   @doc """
   Check if a foldable structure contains a particular element
