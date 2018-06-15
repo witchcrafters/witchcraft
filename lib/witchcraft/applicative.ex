@@ -32,7 +32,7 @@ defclass Witchcraft.Applicative do
 
   defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Apply,       unquote(opts)
+      use Witchcraft.Apply, unquote(opts)
       import unquote(__MODULE__), unquote(opts)
     end
   end
@@ -98,7 +98,7 @@ defclass Witchcraft.Applicative do
 
   """
   @spec wrap(Applicative.t(), any()) :: Applicative.t()
-  defalias wrap(sample, to_wrap), as: :of
+  defalias(wrap(sample, to_wrap), as: :of)
 
   @doc """
   Alias for `of/2`, for cases that this helps legibility or style.
@@ -113,7 +113,7 @@ defclass Witchcraft.Applicative do
 
   """
   @spec pure(Applicative.t(), any()) :: Applicative.t()
-  defalias pure(sample, to_wrap), as: :of
+  defalias(pure(sample, to_wrap), as: :of)
 
   @doc """
   `of/2` with arguments reversed.
@@ -161,7 +161,7 @@ defclass Witchcraft.Applicative do
 
   """
   @spec unit(Applicative.t(), any()) :: Applicative.t()
-  defalias unit(sample, to_wrap), as: :of
+  defalias(unit(sample, to_wrap), as: :of)
 
   properties do
     import Witchcraft.Functor
@@ -179,7 +179,7 @@ defclass Witchcraft.Applicative do
       a = generate(data)
       f = &inspect/1
 
-      left  = Applicative.of(a, arg) ~>> Applicative.of(a, f)
+      left = Applicative.of(a, arg) ~>> Applicative.of(a, f)
       right = Applicative.of(a, f.(arg))
 
       equal?(left, right)
@@ -190,7 +190,7 @@ defclass Witchcraft.Applicative do
       as = generate(data)
       fs = replace(as, &inspect/1)
 
-      left  = Applicative.of(as, arg) ~>> fs
+      left = Applicative.of(as, arg) ~>> fs
       right = fs ~>> Applicative.of(as, fn g -> g.(arg) end)
 
       equal?(left, right)

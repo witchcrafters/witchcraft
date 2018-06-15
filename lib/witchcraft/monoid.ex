@@ -15,13 +15,13 @@ defclass Witchcraft.Monoid do
   """
 
   alias __MODULE__
-  extend Witchcraft.Semigroup, alias: true
+  extend(Witchcraft.Semigroup, alias: true)
 
   @type t :: any()
 
   defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Semigroup,   unquote(opts)
+      use Witchcraft.Semigroup, unquote(opts)
       import unquote(__MODULE__), unquote(opts)
     end
   end
@@ -42,7 +42,7 @@ defclass Witchcraft.Monoid do
     def empty(sample)
   end
 
-  defalias zero(sample), as: :empty
+  defalias(zero(sample), as: :empty)
 
   @doc """
   Check if a value is the empty element of that type
@@ -56,7 +56,7 @@ defclass Witchcraft.Monoid do
       false
 
   """
-  @spec empty?(Monoid.t) :: boolean
+  @spec empty?(Monoid.t()) :: boolean
   def empty?(monoid), do: empty(monoid) == monoid
 
   properties do

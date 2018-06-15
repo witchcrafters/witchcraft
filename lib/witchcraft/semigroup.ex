@@ -34,11 +34,11 @@ defclass Witchcraft.Semigroup do
 
     if Access.get(opts, :override_kernel, true) do
       quote do
-        import Kernel,              unquote(new_opts)
+        import Kernel, unquote(new_opts)
         import unquote(__MODULE__), unquote(opts)
       end
     else
-      quote do: import unquote(__MODULE__), unquote(new_opts)
+      quote do: import(unquote(__MODULE__), unquote(new_opts))
     end
   end
 
@@ -81,7 +81,7 @@ defclass Witchcraft.Semigroup do
     def append(a, b)
   end
 
-  defalias a <> b, as: :append
+  defalias(a <> b, as: :append)
 
   @doc ~S"""
   Flatten a list of homogeneous semigroups to a single container
@@ -109,7 +109,7 @@ defclass Witchcraft.Semigroup do
       [1, 2, 3, 1, 2, 3, 1, 2, 3]
 
   """
-  @spec repeat(Semigroup.t(), [times: non_neg_integer()]) :: Semigroup.t()
+  @spec repeat(Semigroup.t(), times: non_neg_integer()) :: Semigroup.t()
   # credo:disable-for-lines:6 Credo.Check.Refactor.PipeChainStart
   def repeat(to_repeat, times: times) do
     fn -> to_repeat end
@@ -124,7 +124,7 @@ defclass Witchcraft.Semigroup do
       b = generate(data)
       c = generate(data)
 
-      left  = a |> Semigroup.append(b) |> Semigroup.append(c)
+      left = a |> Semigroup.append(b) |> Semigroup.append(c)
       right = Semigroup.append(a, Semigroup.append(b, c))
 
       equal?(left, right)
@@ -176,7 +176,7 @@ definst Witchcraft.Semigroup, for: Tuple do
     tuple_a
     |> Tuple.to_list()
     |> Enum.zip(Tuple.to_list(tuple_b))
-    |> Enum.map(fn({x, y}) -> Witchcraft.Semigroup.append(x, y) end)
+    |> Enum.map(fn {x, y} -> Witchcraft.Semigroup.append(x, y) end)
     |> List.to_tuple()
   end
 end

@@ -49,17 +49,17 @@ defclass Witchcraft.Foldable do
     if Access.get(opts, :override_kernel, true) do
       quote do
         use Witchcraft.Semigroup, unquote(opts)
-        use Witchcraft.Ord,       unquote(opts)
+        use Witchcraft.Ord, unquote(opts)
 
-        import Kernel,            unquote(new_opts)
-        import unquote(__MODULE__),  unquote(opts)
+        import Kernel, unquote(new_opts)
+        import unquote(__MODULE__), unquote(opts)
       end
     else
       quote do
         use Witchcraft.Semigroup, unquote(opts)
-        use Witchcraft.Ord,       unquote(opts)
+        use Witchcraft.Ord, unquote(opts)
 
-        import unquote(__MODULE__),  unquote(new_opts)
+        import unquote(__MODULE__), unquote(new_opts)
       end
     end
   end
@@ -82,7 +82,7 @@ defclass Witchcraft.Foldable do
         15
 
     """
-    @spec right_fold(Foldable.t(), any(), ((any(), any()) -> any())) :: any()
+    @spec right_fold(Foldable.t(), any(), (any(), any() -> any())) :: any()
     def right_fold(foldable, seed, folder)
   end
 
@@ -90,7 +90,7 @@ defclass Witchcraft.Foldable do
     # Free theorm
     def naturality(data) do
       foldable = generate(data)
-      seed     = "seed"
+      seed = "seed"
 
       f = &Quark.constant/2
       g = &Quark.id/1
@@ -103,7 +103,7 @@ defclass Witchcraft.Foldable do
       right =
         foldable
         |> g.()
-        |> Witchcraft.Foldable.right_fold(seed, fn(x, acc) -> f.((g.(x)), acc) end)
+        |> Witchcraft.Foldable.right_fold(seed, fn x, acc -> f.(g.(x), acc) end)
 
       equal?(left, right)
     end
@@ -127,7 +127,7 @@ defclass Witchcraft.Foldable do
   @spec right_fold(Foldable.t(), fun()) :: any()
   def right_fold(foldable, folder) do
     case to_list(foldable) do
-      []       -> []
+      [] -> []
       [a | as] -> right_fold(as, a, folder)
     end
   end
@@ -165,10 +165,10 @@ defclass Witchcraft.Foldable do
       [[[[] | 1] | 2] | 3]
 
   """
-  @spec left_fold(Foldable.t(), any(), ((any(), any()) -> any())) :: any()
+  @spec left_fold(Foldable.t(), any(), (any(), any() -> any())) :: any()
   def left_fold(foldable, seed, folder) do
-    right_fold(foldable, &Quark.id/1, fn(b, g) ->
-      fn(x) ->
+    right_fold(foldable, &Quark.id/1, fn b, g ->
+      fn x ->
         x
         |> folder.(b)
         |> g.()
@@ -199,7 +199,7 @@ defclass Witchcraft.Foldable do
       0.5
 
   """
-  @spec left_fold(Foldable.t(), ((any(), any()) -> any())) :: any()
+  @spec left_fold(Foldable.t(), (any(), any() -> any())) :: any()
   def left_fold(foldable, folder) do
     [x | xs] = to_list(foldable)
     left_fold(xs, x, folder)
@@ -238,7 +238,7 @@ defclass Witchcraft.Foldable do
   """
   @spec fold_map(Foldable.t(), fun()) :: any()
   def fold_map(foldable, fun) do
-    right_fold(foldable, Monoid.empty(foldable), fn(element, acc) ->
+    right_fold(foldable, Monoid.empty(foldable), fn element, acc ->
       element
       |> fun.()
       |> Semigroup.append(acc)
@@ -258,10 +258,10 @@ defclass Witchcraft.Foldable do
 
   """
   @spec to_list(Foldable.t()) :: [any()]
-  def to_list(list)   when is_list(list),        do: list
-  def to_list(tuple)  when is_tuple(tuple),      do: Tuple.to_list(tuple)
+  def to_list(list) when is_list(list), do: list
+  def to_list(tuple) when is_tuple(tuple), do: Tuple.to_list(tuple)
   def to_list(string) when is_bitstring(string), do: String.to_charlist(string)
-  def to_list(foldable), do: right_fold(foldable, [], fn(x, acc) -> [x | acc] end)
+  def to_list(foldable), do: right_fold(foldable, [], fn x, acc -> [x | acc] end)
 
   @doc """
   Check if a foldable data structure is empty
@@ -279,7 +279,7 @@ defclass Witchcraft.Foldable do
 
   """
   @spec empty?(Foldable.t()) :: boolean
-  def empty?(foldable), do: right_fold(foldable, true, fn(_focus, _acc) -> false end)
+  def empty?(foldable), do: right_fold(foldable, true, fn _focus, _acc -> false end)
 
   @doc """
   Count the number of elements in a foldable structure
@@ -297,10 +297,10 @@ defclass Witchcraft.Foldable do
   """
   @spec length(Foldable.t()) :: non_neg_integer()
   def length(list) when is_list(list), do: Kernel.length(list)
-  def length(foldable), do: right_fold(foldable, 0, fn(_, acc) -> 1 + acc end)
+  def length(foldable), do: right_fold(foldable, 0, fn _, acc -> 1 + acc end)
 
-  defalias count(foldable), as: :length
-  defalias size(foldable),  as: :length
+  defalias(count(foldable), as: :length)
+  defalias(size(foldable), as: :length)
 
   @doc """
   Check if a foldable structure contains a particular element
@@ -322,7 +322,7 @@ defclass Witchcraft.Foldable do
   """
   @spec member?(Foldable.t(), any()) :: boolean()
   def member?(list, target) when is_list(list), do: Enum.member?(list, target)
-  def member?(map, target)  when is_map(map), do: map |> Map.values() |> Enum.member?(target)
+  def member?(map, target) when is_map(map), do: map |> Map.values() |> Enum.member?(target)
 
   def member?(tuple, target) when is_tuple(tuple) do
     tuple
@@ -337,7 +337,7 @@ defclass Witchcraft.Foldable do
   end
 
   def member?(foldable, target) do
-    right_fold(foldable, false, fn(focus, acc) -> acc or (focus == target) end)
+    right_fold(foldable, false, fn focus, acc -> acc or focus == target end)
   end
 
   @doc """
@@ -359,9 +359,9 @@ defclass Witchcraft.Foldable do
       2
 
   """
-  @spec max(Foldable.t(), by: ((any, any) -> Order.ordering())) :: Ord.t()
+  @spec max(Foldable.t(), by: (any, any -> Order.ordering())) :: Ord.t()
   def max(foldable, by: comparator) do
-    Witchcraft.Foldable.right_fold(foldable, fn(focus, acc) ->
+    Witchcraft.Foldable.right_fold(foldable, fn focus, acc ->
       case comparator.(focus, acc) do
         :greater -> focus
         _ -> acc
@@ -417,9 +417,9 @@ defclass Witchcraft.Foldable do
       8
 
   """
-  @spec min(Foldable.t(), by: ((any(), any()) -> Order.t())) :: any() | Maybe.t()
+  @spec min(Foldable.t(), by: (any(), any() -> Order.t())) :: any() | Maybe.t()
   def min(foldable, by: comparitor) do
-    right_fold(foldable, fn(focus, acc) ->
+    right_fold(foldable, fn focus, acc ->
       case comparitor.(focus, acc) do
         :lesser -> focus
         _ -> acc
@@ -476,9 +476,9 @@ defclass Witchcraft.Foldable do
     |> to_list
     |> safe(&Enum.random/1).()
     |> case do
-         %Enum.EmptyError{} -> Foldable.EmptyError.new(foldable)
-         value -> value
-       end
+      %Enum.EmptyError{} -> Foldable.EmptyError.new(foldable)
+      value -> value
+    end
   end
 
   @doc ~S"""
@@ -583,7 +583,7 @@ defclass Witchcraft.Foldable do
   @spec flat_map(Foldable.t(), (any() -> [any()])) :: [any()]
   def flat_map(foldable, mapper) do
     foldable
-    |> right_fold([], fn(inner_focus, acc) ->
+    |> right_fold([], fn inner_focus, acc ->
       [mapper.(inner_focus) | acc]
     end)
     |> flatten()
@@ -604,7 +604,7 @@ defclass Witchcraft.Foldable do
 
   """
   @spec null?(Foldable.t()) :: boolean()
-  def null?(foldable), do: right_fold(foldable, true, fn(_, _) -> false end)
+  def null?(foldable), do: right_fold(foldable, true, fn _, _ -> false end)
 
   @doc ~S"""
   Check if a foldable is full of only `true`s
@@ -652,7 +652,7 @@ defclass Witchcraft.Foldable do
   """
   @spec all?(Foldable.t(), (any() -> boolean())) :: boolean()
   def all?(foldable, predicate) do
-    right_fold(foldable, true, fn(focus, acc) -> predicate.(focus) and acc end)
+    right_fold(foldable, true, fn focus, acc -> predicate.(focus) and acc end)
   end
 
   @doc ~S"""
@@ -706,7 +706,7 @@ defclass Witchcraft.Foldable do
   """
   @spec any?(Foldable.t(), (any() -> boolean())) :: boolean()
   def any?(foldable, predicate) do
-    right_fold(foldable, false, fn(focus, acc) -> predicate.(focus) or acc end)
+    right_fold(foldable, false, fn focus, acc -> predicate.(focus) or acc end)
   end
 
   @doc """
@@ -779,7 +779,7 @@ defclass Witchcraft.Foldable do
   """
   @spec then_traverse(Foldable.t(), Apply.fun()) :: Apply.t()
   def then_traverse(foldable, fun) do
-    right_fold(foldable, of(foldable, %Unit{}), fn(step, acc) ->
+    right_fold(foldable, of(foldable, %Unit{}), fn step, acc ->
       step
       |> fun.()
       |> then(acc)
@@ -811,5 +811,4 @@ defclass Witchcraft.Foldable do
   """
   @spec then_traverse(Apply.fun(), Foldable.t()) :: Apply.t()
   def then_through(fun, traversable), do: then_traverse(traversable, fun)
-
 end

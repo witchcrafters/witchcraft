@@ -15,10 +15,10 @@ defmodule Witchcraft.Foldable.EmptyError do
   alias __MODULE__
 
   @type t :: %EmptyError{
-    message:     String.t(),
-    data:        any(),
-    plug_status: pos_integer()
-  }
+          message: String.t(),
+          data: any(),
+          plug_status: pos_integer()
+        }
 
   @base_message "Unable to process empty data"
 
@@ -29,7 +29,7 @@ defmodule Witchcraft.Foldable.EmptyError do
       case __ENV__.function do
         {fun_name, arity} ->
           %EmptyError{
-            data:     unquote(data),
+            data: unquote(data),
             message: "Unable to process empty data in #{__MODULE__}.#{fun_name}/#{arity}"
           }
 

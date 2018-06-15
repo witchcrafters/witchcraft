@@ -67,7 +67,7 @@ defclass Witchcraft.Functor do
       f = fn x -> inspect(wrapped == x) end
       g = fn x -> inspect(wrapped != x) end
 
-      left  = Functor.map(wrapped, fn x -> x |> g.() |> f.() end)
+      left = Functor.map(wrapped, fn x -> x |> g.() |> f.() end)
       right = wrapped |> Functor.map(g) |> Functor.map(f)
 
       equal?(left, right)
@@ -145,7 +145,7 @@ defclass Witchcraft.Functor do
       10
 
   """
-  defalias data ~> fun, as: :lift
+  defalias(data ~> fun, as: :lift)
 
   @doc ~S"""
   `~>/2` with arguments flipped.
@@ -182,7 +182,7 @@ defclass Witchcraft.Functor do
 
   """
   @spec replace(Functor.t(), any()) :: Functor.t()
-  def replace(wrapped, replace_with), do: wrapped ~> &constant(replace_with, &1)
+  def replace(wrapped, replace_with), do: wrapped ~> (&constant(replace_with, &1))
 
   @doc """
   `map` a function over a data structure, with each mapping occuring asynchronously.
@@ -206,7 +206,7 @@ defclass Witchcraft.Functor do
   @spec async_map(Functor.t(), (any() -> any())) :: Functor.t()
   def async_map(functor, fun) do
     functor
-    |> Functor.map(fn(item) ->
+    |> Functor.map(fn item ->
       Task.async(fn ->
         fun.(item)
       end)

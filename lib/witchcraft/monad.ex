@@ -36,8 +36,8 @@ defclass Witchcraft.Monad do
                          [_]
   """
 
-  extend Witchcraft.Applicative
-  extend Witchcraft.Chain
+  extend(Witchcraft.Applicative)
+  extend(Witchcraft.Chain)
 
   use Witchcraft.Applicative
   use Witchcraft.Chain
@@ -45,7 +45,7 @@ defclass Witchcraft.Monad do
   defmacro __using__(opts \\ []) do
     quote do
       use Witchcraft.Applicative, unquote(opts)
-      use Witchcraft.Chain,       unquote(opts)
+      use Witchcraft.Chain, unquote(opts)
       import unquote(__MODULE__), unquote(opts)
     end
   end
@@ -58,7 +58,7 @@ defclass Witchcraft.Monad do
       a = generate(data)
       f = &Witchcraft.Functor.replace(a, inspect(&1))
 
-      left  = a |> of(a) |> chain(f)
+      left = a |> of(a) |> chain(f)
       right = f.(a)
 
       equal?(left, right)
@@ -66,7 +66,7 @@ defclass Witchcraft.Monad do
 
     def right_identity(data) do
       a = generate(data)
-      left = a >>> &of(a, &1)
+      left = a >>> (&of(a, &1))
 
       equal?(a, left)
     end
@@ -295,8 +295,8 @@ defclass Witchcraft.Monad do
   end
 end
 
-definst Witchcraft.Monad, for: Function
-definst Witchcraft.Monad, for: List
+definst(Witchcraft.Monad, for: Function)
+definst(Witchcraft.Monad, for: List)
 
 definst Witchcraft.Monad, for: Tuple do
   use Witchcraft.Semigroup

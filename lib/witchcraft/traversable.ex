@@ -22,8 +22,8 @@ defclass Witchcraft.Traversable do
   alias __MODULE__
   alias Witchcraft.Foldable
 
-  extend Witchcraft.Foldable
-  extend Witchcraft.Functor
+  extend(Witchcraft.Foldable)
+  extend(Witchcraft.Functor)
 
   use Witchcraft.Applicative
   use Witchcraft.Foldable, except: [equal?: 2]
@@ -35,8 +35,8 @@ defclass Witchcraft.Traversable do
 
   defmacro __using__(opts \\ []) do
     quote do
-      use Witchcraft.Foldable,    unquote(opts)
-      use Witchcraft.Functor,     unquote(opts)
+      use Witchcraft.Foldable, unquote(opts)
+      use Witchcraft.Functor, unquote(opts)
       import unquote(__MODULE__), unquote(opts)
     end
   end
@@ -238,11 +238,11 @@ definst Witchcraft.Traversable, for: List do
   use Witchcraft.Foldable
 
   def traverse([], link), do: of(link.([]), [])
-  def traverse(list = [head | _], link) do
-    right_fold(list, of(link.(head), []), fn(x, acc) ->
 
+  def traverse(list = [head | _], link) do
+    right_fold(list, of(link.(head), []), fn x, acc ->
       # credo:disable-for-lines:2 Credo.Check.Refactor.PipeChainStart
-      fn(link_head, link_tail) -> [link_head | link_tail] end
+      fn link_head, link_tail -> [link_head | link_tail] end
       |> over(link.(x), acc)
     end)
   end
