@@ -6,8 +6,8 @@ defmodule Witchcraft.Mixfile do
       app: :witchcraft,
       name: "Witchcraft",
       description: "Monads and other dark magic (monoids, functors, traversables, &c)",
-      version: "1.0.0",
-      elixir: "~> 1.6",
+      version: "1.0.1",
+      elixir: "~> 1.5",
       package: [
         maintainers: ["Brooklyn Zelenka"],
         licenses: ["MIT"],
