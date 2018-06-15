@@ -94,7 +94,7 @@ defmodule Witchcraft.DoNotationTest do
       chain do
         a <- [1, 2, 3]
         b <- [a * 10]
-        let(foo = b / a)
+        let foo = b / a
         c <- [foo * foo]
         [a, b, c]
       end
