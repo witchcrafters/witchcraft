@@ -18,7 +18,7 @@ defclass Witchcraft.Bifunctor do
 
   """
 
-  extend(Witchcraft.Functor)
+  extend Witchcraft.Functor
 
   alias __MODULE__
   use Quark
@@ -80,7 +80,7 @@ defclass Witchcraft.Bifunctor do
       h = &is_number/1
       i = &!/1
 
-      left = a |> Bifunctor.bimap(fn x -> f.(g.(x)) end, fn y -> h.(i.(y)) end)
+      left = Bifunctor.bimap(a, fn x -> f.(g.(x)) end, fn y -> h.(i.(y)) end)
       right = a |> Bifunctor.bimap(g, i) |> Bifunctor.bimap(f, h)
 
       equal?(left, right)

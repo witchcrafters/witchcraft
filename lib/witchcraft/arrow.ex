@@ -38,7 +38,7 @@ defclass Witchcraft.Arrow do
   """
 
   alias __MODULE__
-  extend(Witchcraft.Category)
+  extend Witchcraft.Category
   use Witchcraft.Category
 
   @type t :: fun()
@@ -91,7 +91,7 @@ defclass Witchcraft.Arrow do
       left = Arrow.arrowize(sample, f) <|> Arrow.arrowize(sample, g)
       right = Arrow.arrowize(sample, f <|> g)
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def first_commutativity(sample) do
@@ -113,7 +113,7 @@ defclass Witchcraft.Arrow do
       left = Witchcraft.Arrow.first(f <|> g)
       right = Witchcraft.Arrow.first(f) <|> Witchcraft.Arrow.first(g)
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def second_arrow_commutativity(sample) do
@@ -123,7 +123,7 @@ defclass Witchcraft.Arrow do
       left = Witchcraft.Arrow.second(Arrow.arrowize(sample, f))
       right = Arrow.arrowize(sample, Witchcraft.Arrow.second(f))
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def second_composition(sample) do
@@ -135,7 +135,7 @@ defclass Witchcraft.Arrow do
       left = Witchcraft.Arrow.second(f <|> g)
       right = Witchcraft.Arrow.second(f) <|> Witchcraft.Arrow.second(g)
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def product_composition(sample) do
@@ -152,7 +152,7 @@ defclass Witchcraft.Arrow do
 
       right = Arrow.arrowize(sample, Witchcraft.Arrow.product(f, g))
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def fanout_composition(sample) do
@@ -169,7 +169,7 @@ defclass Witchcraft.Arrow do
 
       right = Arrow.arrowize(sample, Witchcraft.Arrow.fanout(f, g))
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def first_reassociaton(sample) do
@@ -192,7 +192,7 @@ defclass Witchcraft.Arrow do
       left = Witchcraft.Arrow.first(f) <~> Arrow.arrowize(sample, fn {x, _} -> x end)
       right = Arrow.arrowize(sample, fn {x, _} -> x end) <~> f
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
 
     def first_product_commutativity(sample) do
@@ -207,7 +207,7 @@ defclass Witchcraft.Arrow do
       left = x <|> y
       right = y <|> x
 
-      equal?(a |> pipe(left), a |> pipe(right))
+      equal?(pipe(a, left), pipe(a, right))
     end
   end
 

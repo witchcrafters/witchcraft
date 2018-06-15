@@ -121,7 +121,7 @@ defclass Witchcraft.Apply do
   use Quark
 
   alias Witchcraft.Functor
-  extend(Witchcraft.Functor)
+  extend Witchcraft.Functor
   use Witchcraft.Functor
 
   @type t :: any()
@@ -322,7 +322,7 @@ defclass Witchcraft.Apply do
       [5, 6, 4, 5, 6, 7, 5, 6, 8, 9, 7, 8, 10, 11, 9, 10]
 
   """
-  defalias(wrapped_funs <<~ wrapped, as: :provide)
+  defalias wrapped_funs <<~ wrapped, as: :provide
 
   @doc """
   Operator alias for `reverse_ap/2`, moving in the pipe direction
@@ -341,7 +341,7 @@ defclass Witchcraft.Apply do
       [5.0, 10.0, 2.0, 4.0, 10.0, 20.0, 4.0, 8.0]
 
   """
-  defalias(wrapped ~>> wrapped_funs, as: :supply)
+  defalias wrapped ~>> wrapped_funs, as: :supply
 
   @doc """
   Same as `convey/2`, but with all functions curried.
