@@ -10,5 +10,5 @@
   "operator": {:hex, :operator, "0.2.0", "b613bdb520a20dbc016d921d444fd2ef2212136be9385d6dca448a2a38d0577f", [:mix], [], "hexpm"},
   "poison": {:hex, :poison, "3.1.0", "d9eb636610e096f86f25d9a46f35a9facac35609a7591b3be3326e99a0484665", [:mix], [], "hexpm"},
   "quark": {:hex, :quark, "2.3.0", "3742ddc14441b4930c7067741879cb5b3e4881f391ea0aed7b138f20d16b30bb", [:mix], [], "hexpm"},
-  "type_class": {:hex, :type_class, "1.2.4", "2049a5606c7ca215347cb1488db5c5306665dc166be3fdea111c42adb447f382", [:mix], [{:exceptional, "~> 2.1", [hex: :exceptional, repo: "hexpm", optional: false]}], "hexpm"},
+  "type_class": {:hex, :type_class, "1.2.5", "b972bb22202e801d83e8670228d9a1476cd2c9fc7da00b7039b19d6d06b17905", [:mix], [{:exceptional, "~> 2.1", [hex: :exceptional, repo: "hexpm", optional: false]}], "hexpm"},
 }
