@@ -8,9 +8,9 @@ Monoids, functors, monads, arrows, categories, and other dark magic right at you
 [![API Docs](https://img.shields.io/badge/api-docs-MediumPurple.svg?style=flat)](http://hexdocs.pm/witchcraft/)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/expede/witchcraft/blob/master/LICENSE)
 
-![](https://opencollective.com/witchcraft/tiers/backer.svg?avatarHeight=50)
+[![](https://opencollective.com/witchcraft/tiers/backer.svg?avatarHeight=50)](https://opencollective.com/witchcraft/contribute/tier/8074-backer)
 
-![](https://opencollective.com/witchcraft/tiers/sponsor.svg?avatarHeight=50)
+[![](https://opencollective.com/witchcraft/tiers/sponsor.svg?avatarHeight=50)](https://opencollective.com/witchcraft/contribute/tier/8075-sponsor)
 
 # README
 
