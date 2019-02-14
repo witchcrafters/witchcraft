@@ -17,7 +17,7 @@ defmodule Witchcraft.Mixfile do
       homepage_url: "https://github.com/expede/witchcraft",
       aliases: [quality: ["test", "credo --strict", "inch"]],
       deps: [
-        {:inch_ex, "~> 0.5", only: [:dev, :docs, :test]},
+        {:inch_ex, "~> 2.0", only: [:dev, :docs, :test]},
         {:credo, "~> 0.8", only: [:dev, :test]},
         {:benchfella, "~> 0.3", only: [:dev, :test]},
         {:dialyxir, "~> 0.3", only: :dev},
