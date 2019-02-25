@@ -44,8 +44,7 @@ defclass Witchcraft.Semigroup do
 
   where do
     @doc ~S"""
-    `append`enate two data of the same type. Can be chained an arbitrary number of times.
-    These can be chained together an arbitrary number of times. For example:
+    `append`enate two data of the same type. These can be chained together an arbitrary number of times. For example:
 
         iex> 1 |> append(2) |> append(3)
         6
@@ -84,7 +83,7 @@ defclass Witchcraft.Semigroup do
   defalias a <> b, as: :append
 
   @doc ~S"""
-  Flatten a list of homogeneous semigroups to a single container
+  Flatten a list of homogeneous semigroups to a single container.
 
   ## Example
 
@@ -101,7 +100,7 @@ defclass Witchcraft.Semigroup do
   end
 
   @doc ~S"""
-  Repeat the contents of a semigroup a certain number of times
+  Repeat the contents of a semigroup a certain number of times.
 
   ## Examples
 
