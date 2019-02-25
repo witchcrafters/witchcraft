@@ -105,7 +105,7 @@ Semigroupoid  Semigroup  Setoid   Foldable   Functor -----------┐
                                               Monad           Comonad
 ```
 
-Having a clean slate, we have been able to use a clean of typeclasses. This is largely
+Having a clean slate, we have been able to use a clean set of type classes. This is largely
 taken from the [Fantasy Land Specification](https://github.com/fantasyland/fantasy-land)
 and Edward Kmett's [`semigroupoids`](https://hackage.haskell.org/package/semigroupoids) package.
 
@@ -226,12 +226,12 @@ More reference instances are available in [`Algae`](https://github.com/expede/al
 ## Prior Art and Further Reading
 
 This library draws heavy inspiration from mathematics, other languages,
-and other Elixir libraries. We would be a shame not to mention them here.
+and other Elixir libraries. We would be ashamed not to mention them here.
 There is much, much more out there, but these are our highlights and inspirations.
 
 The [`Monad`](https://hexdocs.pm/monad/Monad.html) library predates `Witchcraft`
 by several years. This library proved that it is entirely possible
-to bring do-notation to Elixir. It takers a very different approach:
+to bring do-notation to Elixir. It takes a very different approach:
 it is very up-front that it has a very loose definition of what it means for
 something to be a "monad", and relies on `behaviour`s rather than ad-hoc polymorphism.
 
