@@ -81,7 +81,7 @@ defclass Witchcraft.Semigroupoid do
   def pipe(data, fun), do: apply(fun, [data])
 
   @doc """
-  `Compose`, but with the arguments flipped (same direction as `|>`)
+  `compose/2`, but with the arguments flipped (same direction as `|>`).
 
   ## Examples
 
@@ -94,7 +94,7 @@ defclass Witchcraft.Semigroupoid do
   def pipe_compose(b, a), do: compose(a, b)
 
   @doc """
-  Composition operator "the math way"
+  Composition operator "the math way". Alias for `compose/2`.
 
   ## Examples
 
@@ -110,7 +110,7 @@ defclass Witchcraft.Semigroupoid do
   def g <|> f, do: compose(g, f)
 
   @doc """
-  Composition operator "the pipe way"
+  Composition operator "the pipe way". Alias for `pipe_compose/2`.
 
   ## Examples
 
