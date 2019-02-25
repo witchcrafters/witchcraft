@@ -2,7 +2,7 @@ import TypeClass
 
 defclass Witchcraft.Setoid do
   @moduledoc ~S"""
-  A setoid is a type with an equivalence relation
+  A setoid is a type with an equivalence relation.
 
   This is most useful when equivalence of some data is not the same as equality.
 
@@ -40,9 +40,9 @@ defclass Witchcraft.Setoid do
 
   where do
     @doc ~S"""
-    Compare two setoids and determine if they are equivalent
+    Compare two setoids and determine if they are equivalent.
 
-    Aliased as `==`
+    Aliased as `==`.
 
     ## Examples
 
@@ -74,7 +74,7 @@ defclass Witchcraft.Setoid do
   defalias a == b, as: :equivalent?
 
   @doc """
-  The opposite of `equivalent?/2`
+  The opposite of `equivalent?/2`.
 
   ## Examples
 
