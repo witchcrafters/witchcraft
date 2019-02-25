@@ -35,7 +35,8 @@ defclass Witchcraft.Semigroupoid do
 
   where do
     @doc """
-    Take some value and return it again
+    Take two morphisms and return their composition "the math way".
+    That is, `(b -> c) -> (a -> b) -> (a -> c)`.
 
     ## Examples
 
