@@ -2,7 +2,7 @@ import TypeClass
 
 defclass Witchcraft.Semigroupoid do
   @moduledoc """
-  A semigroupoid describes some way of composing morphisms on between some
+  A semigroupoid describes some way of composing morphisms between some
   collection of objects.
 
   ## Type Class
