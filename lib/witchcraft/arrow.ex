@@ -231,7 +231,7 @@ defclass Witchcraft.Arrow do
   def product(arrow_f, arrow_g), do: first(arrow_f) <~> second(arrow_g)
 
   @doc """
-  Alias for `product/2`, meant to invoke a spacial metaphor
+  Alias for `product/2`, meant to invoke a spacial metaphor.
 
   ## Examples
 
@@ -243,7 +243,7 @@ defclass Witchcraft.Arrow do
   defalias beside(a, b), as: :product
 
   @doc """
-  Operator alias for `product/2`
+  Operator alias for `product/2`.
 
   ## Examples
 
@@ -271,7 +271,7 @@ defclass Witchcraft.Arrow do
   def swap({x, y}), do: {y, x}
 
   @doc """
-  Target the first element of a tuple
+  Target the first element of a tuple.
 
   ## Examples
 
@@ -290,7 +290,7 @@ defclass Witchcraft.Arrow do
   end
 
   @doc """
-  Target the second element of a tuple
+  Target the second element of a tuple.
 
   ## Examples
 
@@ -309,7 +309,7 @@ defclass Witchcraft.Arrow do
   end
 
   @doc """
-  The identity function lifted into an arrow of the correct type
+  The identity function lifted into an arrow of the correct type.
 
   ## Examples
 
@@ -342,7 +342,7 @@ defclass Witchcraft.Arrow do
   end
 
   @doc """
-  Operator alias for `fanout/2`
+  Operator alias for `fanout/2`.
 
   ## Examples
 
@@ -407,8 +407,8 @@ defclass Witchcraft.Arrow do
   def unsplit({x, y}, combine), do: combine.(x, y)
 
   @doc """
-  Switch te associativity of a nested tuple. Helpful since many arrows act
-  on a subset of a tuple, and you may want to move portions in and oit of that stream.
+  Switch the associativity of a nested tuple. Helpful since many arrows act
+  on a subset of a tuple, and you may want to move portions in and out of that stream.
 
   ## Examples
 
