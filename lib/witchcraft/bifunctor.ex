@@ -44,7 +44,7 @@ defclass Witchcraft.Bifunctor do
 
                    ┌------------------------------------┐
                    ↓                                    |
-        %Combo{a: 50, b: :ok, c: "hello"} |> bimap(&(&1 * 100), &String.upcase/1)
+        %Combo{a: 5, b: :ok, c: "hello"} |> bimap(&(&1 * 100), &String.upcase/1)
                                      ↑                                 |
                                      └---------------------------------┘
         #=> %Combo{a: 500, b: :ok, c: "HELLO"}
