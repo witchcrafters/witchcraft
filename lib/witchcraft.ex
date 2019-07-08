@@ -12,7 +12,7 @@ defmodule Witchcraft do
                                                    ↘    ↙             ↓
                                                    Monad           Comonad
 
-  ## `use Wicthcraft`
+  ## `use Witchcraft`
 
   There is a convenient `use` macro to import *all* functions in the library.
 
