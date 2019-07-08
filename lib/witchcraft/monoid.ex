@@ -28,7 +28,7 @@ defclass Witchcraft.Monoid do
 
   where do
     @doc ~S"""
-    An "emptied out" or "starting position" of the passed data
+    An "emptied out" or "starting position" of the passed data.
 
     ## Example
 
@@ -45,7 +45,7 @@ defclass Witchcraft.Monoid do
   defalias zero(sample), as: :empty
 
   @doc """
-  Check if a value is the empty element of that type
+  Check if a value is the empty element of that type.
 
   ## Examples
 

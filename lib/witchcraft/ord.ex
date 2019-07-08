@@ -2,7 +2,7 @@ import TypeClass
 
 defclass Witchcraft.Ord do
   @moduledoc ~S"""
-  `Ord` describes how to order elements of a data type
+  `Ord` describes how to order elements of a data type.
 
   This is a total order, so all elements are either `:equal`, `:greater`, or `:lesser`
   than each other.
@@ -105,7 +105,7 @@ defclass Witchcraft.Ord do
   end
 
   @doc """
-  Determine if two elements are `:equal`
+  Determine if two elements are `:equal`.
 
   ## Examples
 
@@ -120,7 +120,7 @@ defclass Witchcraft.Ord do
   def equal?(a, b), do: compare(a, b) == :equal
 
   @doc """
-  Determine if an element is `:greater` than another
+  Determine if an element is `:greater` than another.
 
   ## Examples
 
@@ -137,7 +137,7 @@ defclass Witchcraft.Ord do
   defalias a > b, as: :greater?
 
   @doc """
-  Determine if an element is `:lesser` than another
+  Determine if an element is `:lesser` than another.
 
   ## Examples
 
@@ -154,7 +154,7 @@ defclass Witchcraft.Ord do
   defalias a < b, as: :lesser?
 
   @doc """
-  Determine if an element is `:lesser` or `:equal` to another
+  Determine if an element is `:lesser` or `:equal` to another.
 
   ## Examples
 
@@ -174,7 +174,7 @@ defclass Witchcraft.Ord do
   def a <= b, do: compare(a, b) != :greater
 
   @doc """
-  Determine if an element is `:greater` or `:equal` to another
+  Determine if an element is `:greater` or `:equal` to another.
 
   ## Examples
 

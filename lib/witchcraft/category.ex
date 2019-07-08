@@ -4,9 +4,9 @@ defclass Witchcraft.Category do
   @moduledoc """
   A category is some collection of objects and relationships (morphisms) between them.
 
-  This idea is captured by the idea of an identity function for objects,
+  This idea is captured by the notion of an identity function for objects,
   and the ability to compose relationships between objects. In most cases,
-  these are very straightforward and composition and identity are the standard
+  these are very straightforward, and composition and identity are the standard
   functions from the `Quark` package or similar.
 
   ## Type Class
@@ -35,7 +35,7 @@ defclass Witchcraft.Category do
 
   where do
     @doc """
-    Take some value and return it again
+    Take some value and return it again.
 
     ## Examples
 
