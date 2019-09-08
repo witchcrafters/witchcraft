@@ -53,9 +53,10 @@ defmodule Witchcraft.Mixfile do
 
   defp package do
     [
-      maintainers: ["Brooklyn Zelenka"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/witchcrafters/witchcraft"}
+      links: %{"GitHub" => "https://github.com/witchcrafters/witchcraft"},
+      maintainers: ["Brooklyn Zelenka", "Steven Vandevelde"],
+      organization: "witchcrafters"
     ]
   end
 end
