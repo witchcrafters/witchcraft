@@ -1,0 +1,21 @@
+on:
+  push:         { "branches": [ "main" ] }
+  pull_request: { "branches": [ "main" ] }
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
+    strategy:
+      matrix:
+        otp: ['23.0']
+        elixir: ['1.11.3']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-elixir@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+      - run: MIX_ENV=test mix deps.get
+      - run: MIX_ENV=test mix test
+      - run: MIX_ENV=test mix credo --strict
