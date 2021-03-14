@@ -35,7 +35,7 @@
 in
 
 pkgs.mkShell {
-  name = "Quark";
+  name = "Witchcraft";
   nativeBuildInputs = builtins.concatLists [
     deps.common 
     deps.elixir
