@@ -60,10 +60,9 @@ defmodule Witchcraft.Mixfile do
 
   defp package do
     [
-      licenses: ["MIT"],
+      licenses: ["Apache-2.0"],
       links: %{"GitHub" => "https://github.com/witchcrafters/witchcraft"},
-      maintainers: ["Brooklyn Zelenka", "Steven Vandevelde"],
-      organization: "witchcrafters"
+      maintainers: ["Brooklyn Zelenka", "Steven Vandevelde"]
     ]
   end
 end
