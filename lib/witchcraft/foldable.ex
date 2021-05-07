@@ -748,7 +748,7 @@ defclass Witchcraft.Foldable do
       |> hd()
       |> of(%Unit{})
 
-    right_fold(foldable_monad, seed, &then/2)
+    right_fold(foldable_monad, seed, &Witchcraft.Apply.then/2)
   end
 
   @doc """
@@ -782,7 +782,7 @@ defclass Witchcraft.Foldable do
     right_fold(foldable, of(foldable, %Unit{}), fn step, acc ->
       step
       |> fun.()
-      |> then(acc)
+      |> Witchcraft.Apply.then(acc)
     end)
   end
 
