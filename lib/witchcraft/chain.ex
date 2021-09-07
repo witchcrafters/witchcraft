@@ -410,7 +410,7 @@ defclass Witchcraft.Chain do
 
   @doc false
   # credo:disable-for-lines:31 Credo.Check.Refactor.Nesting
-  def do_notation(input, chainer) do
+  def do_notation(input, _chainer) do
     input
     |> normalize()
     |> Enum.reverse()
