@@ -45,7 +45,7 @@ defmodule Witchcraft.Mixfile do
 
       {:operator,    "~> 0.2"},
 
-      {:quark,       "~> 2.2"},
+      {:quark, git: "https://github.com/witchcrafters/quark.git", ref: "b05a8a0"},
       {:type_class,  "~> 1.2"}
     ]
   end
