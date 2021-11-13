@@ -203,6 +203,13 @@ defclass Witchcraft.Monad do
       [1]
 
       iex> monad [] do
+      ...>   monad {999} do
+      ...>     return 1
+      ...>   end
+      ...> end
+      {1}
+
+      iex> monad [] do
       ...>  a <- [1,2,3]
       ...>  b <- [4,5,6]
       ...>  return(a * b)
@@ -288,6 +295,12 @@ defclass Witchcraft.Monad do
   def desugar_return(ast, sample) do
     ast
     |> Macro.prewalk(fn
+      {:monad = f, ctx, [inner_sample, inner_ast]} ->
+        {f, ctx, [inner_sample, desugar_return(inner_ast, inner_sample)]}
+
+      {{:., _, [_aliases, :monad]} = f, ctx, [inner_sample, inner_ast]} ->
+        {f, ctx, [inner_sample, desugar_return(inner_ast, inner_sample)]}
+
       {:return, _ctx, [inner]} ->
         quote do: Witchcraft.Applicative.of(unquote(sample), unquote(inner))
 
