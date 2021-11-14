@@ -1,8 +1,15 @@
 defmodule Witchcraft.Internal do
-  def use_multi(modules, opts) do
-    for module <- modules do
-      quote do
-        use unquote(module), unquote(opts)
+  defmacro __using__(opts \\ []) do
+    overrides = Keyword.get(opts, :overrides, [])
+    deps = Keyword.get(opts, :deps, [])
+
+    quote do
+      @overrides unquote(overrides)
+
+      import Kernel, except: unquote(overrides)
+
+      defmacro __using__(opts \\ []) do
+        Witchcraft.Internal.import_helper(opts, unquote(overrides), unquote(deps), __MODULE__)
       end
     end
   end
@@ -34,24 +41,17 @@ defmodule Witchcraft.Internal do
     end
   end
 
+  def use_multi(modules, opts) do
+    for module <- modules do
+      quote do
+        use unquote(module), unquote(opts)
+      end
+    end
+  end
+
   defp kernel_imports(excepts, nil), do: Macro.escape(except: excepts)
   defp kernel_imports(_, only), do: Macro.escape(except: only)
 
   defp module_imports(excepts, nil), do: Macro.escape(except: excepts)
   defp module_imports(excepts, only), do: Macro.escape(only: only -- excepts)
-
-  defmacro __using__(opts \\ []) do
-    overrides = Keyword.get(opts, :overrides, [])
-    deps = Keyword.get(opts, :deps, [])
-
-    quote do
-      @overrides unquote(overrides)
-
-      import Kernel, except: unquote(overrides)
-
-      defmacro __using__(opts \\ []) do
-        Witchcraft.Internal.import_helper(opts, unquote(overrides), unquote(deps), __MODULE__)
-      end
-    end
-  end
 end
