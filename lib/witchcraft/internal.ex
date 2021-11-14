@@ -9,11 +9,12 @@ defmodule Witchcraft.Internal do
 
   def import_helper(opts, overrides, deps, module) do
     excepts = Keyword.get(opts, :except, [])
+    only = Keyword.get(opts, :only)
     deps_quoted = use_multi(deps, opts)
 
-    if Access.get(opts, :override_kernel, true) do
-      kernel_imports = Macro.escape(except: overrides -- excepts)
-      module_imports = Macro.escape(except: excepts)
+    if Keyword.get(opts, :override_kernel, true) do
+      kernel_imports = kernel_imports(overrides -- excepts, only)
+      module_imports = module_imports(excepts, only)
 
       quote do
         import Kernel, unquote(kernel_imports)
@@ -23,7 +24,7 @@ defmodule Witchcraft.Internal do
         import unquote(module), unquote(module_imports)
       end
     else
-      module_imports = Macro.escape(except: Enum.uniq(overrides ++ excepts))
+      module_imports = module_imports(Enum.uniq(overrides ++ excepts), only)
 
       quote do
         unquote(deps_quoted)
@@ -32,6 +33,12 @@ defmodule Witchcraft.Internal do
       end
     end
   end
+
+  defp kernel_imports(excepts, nil), do: Macro.escape(except: excepts)
+  defp kernel_imports(_, only), do: Macro.escape(except: only)
+
+  defp module_imports(excepts, nil), do: Macro.escape(except: excepts)
+  defp module_imports(excepts, only), do: Macro.escape(only: only -- excepts)
 
   defmacro __using__(opts \\ []) do
     overrides = Keyword.get(opts, :overrides, [])
