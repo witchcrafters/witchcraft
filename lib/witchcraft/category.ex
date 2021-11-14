@@ -24,16 +24,9 @@ defclass Witchcraft.Category do
 
   extend Witchcraft.Semigroupoid
 
+  use Witchcraft.Internal, deps: [Witchcraft.Semigroupoid]
+
   @type t :: any()
-
-  defmacro __using__(opts \\ []) do
-    module_imports = [except: Keyword.get(opts, :except, [])]
-
-    quote do
-      use Witchcraft.Semigroupoid, unquote(opts)
-      import unquote(__MODULE__), unquote(module_imports)
-    end
-  end
 
   where do
     @doc """

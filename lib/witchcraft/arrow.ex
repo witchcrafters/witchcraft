@@ -39,18 +39,12 @@ defclass Witchcraft.Arrow do
 
   alias __MODULE__
   extend Witchcraft.Category
+
+  use Witchcraft.Internal, deps: [Witchcraft.Category]
+
   use Witchcraft.Category
 
   @type t :: fun()
-
-  defmacro __using__(opts \\ []) do
-    module_imports = [except: Keyword.get(opts, :except, [])]
-
-    quote do
-      use Witchcraft.Category, unquote(opts)
-      import unquote(__MODULE__), unquote(module_imports)
-    end
-  end
 
   where do
     @doc """

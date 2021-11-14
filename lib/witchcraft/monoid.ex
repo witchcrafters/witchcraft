@@ -17,16 +17,9 @@ defclass Witchcraft.Monoid do
   alias __MODULE__
   extend Witchcraft.Semigroup, alias: true
 
+  use Witchcraft.Internal, deps: [Witchcraft.Semigroup]
+
   @type t :: any()
-
-  defmacro __using__(opts \\ []) do
-    module_imports = [except: Keyword.get(opts, :except, [])]
-
-    quote do
-      use Witchcraft.Semigroup, unquote(opts)
-      import unquote(__MODULE__), unquote(module_imports)
-    end
-  end
 
   where do
     @doc ~S"""

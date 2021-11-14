@@ -122,19 +122,13 @@ defclass Witchcraft.Apply do
 
   alias Witchcraft.Functor
   extend Witchcraft.Functor
+
+  use Witchcraft.Internal, deps: [Witchcraft.Functor]
+
   use Witchcraft.Functor
 
   @type t :: any()
   @type fun :: any()
-
-  defmacro __using__(opts \\ []) do
-    module_imports = [except: Keyword.get(opts, :except, [])]
-
-    quote do
-      use Witchcraft.Functor, unquote(opts)
-      import unquote(__MODULE__), unquote(module_imports)
-    end
-  end
 
   where do
     @doc """

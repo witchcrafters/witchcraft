@@ -18,17 +18,12 @@ defclass Witchcraft.Functor do
   """
 
   alias __MODULE__
+
+  use Witchcraft.Internal
+
   use Quark
 
   @type t :: any()
-
-  defmacro __using__(opts \\ []) do
-    module_imports = [except: Keyword.get(opts, :except, [])]
-
-    quote do
-      import unquote(__MODULE__), unquote(module_imports)
-    end
-  end
 
   where do
     @doc ~S"""
