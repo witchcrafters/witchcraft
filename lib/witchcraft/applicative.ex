@@ -26,6 +26,7 @@ defclass Witchcraft.Applicative do
   """
 
   alias __MODULE__
+
   extend Witchcraft.Apply
 
   use Witchcraft.Internal, deps: [Witchcraft.Apply]

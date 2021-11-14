@@ -15,6 +15,7 @@ defclass Witchcraft.Monoid do
   """
 
   alias __MODULE__
+
   extend Witchcraft.Semigroup, alias: true
 
   use Witchcraft.Internal, deps: [Witchcraft.Semigroup]

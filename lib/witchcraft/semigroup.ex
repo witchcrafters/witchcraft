@@ -22,6 +22,7 @@ defclass Witchcraft.Semigroup do
   """
 
   alias __MODULE__
+
   use Witchcraft.Internal, overrides: [<>: 2]
 
   @type t :: any()

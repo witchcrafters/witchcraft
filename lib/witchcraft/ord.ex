@@ -16,14 +16,14 @@ defclass Witchcraft.Ord do
         ↓
        Ord    [compare/2]
   """
+  alias __MODULE__
 
   extend Witchcraft.Setoid
 
+  use Witchcraft.Internal, overrides: [<: 2, >: 2, <=: 2, >=: 2]
+
   @type t :: any()
   @type ordering :: :lesser | :equal | :greater
-
-  alias __MODULE__
-  use Witchcraft.Internal, overrides: [<: 2, >: 2, <=: 2, >=: 2]
 
   where do
     @doc """

@@ -14,9 +14,9 @@ defclass Witchcraft.Semigroupoid do
 
   alias __MODULE__
 
-  @type t :: any()
-
   use Witchcraft.Internal, overrides: [apply: 2]
+
+  @type t :: any()
 
   where do
     @doc """

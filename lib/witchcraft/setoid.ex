@@ -18,6 +18,7 @@ defclass Witchcraft.Setoid do
   """
 
   alias __MODULE__
+
   use Witchcraft.Internal, overrides: [==: 2, !=: 2]
 
   @type t :: any()

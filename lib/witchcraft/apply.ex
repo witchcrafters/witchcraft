@@ -118,14 +118,14 @@ defclass Witchcraft.Apply do
   """
 
   alias __MODULE__
-  use Quark
-
   alias Witchcraft.Functor
+
   extend Witchcraft.Functor
 
   use Witchcraft.Internal, deps: [Witchcraft.Functor]
 
   use Witchcraft.Functor
+  use Quark
 
   @type t :: any()
   @type fun :: any()

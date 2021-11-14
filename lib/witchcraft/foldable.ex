@@ -35,6 +35,7 @@ defclass Witchcraft.Foldable do
   require Foldable.EmptyError
 
   use Witchcraft.Internal, overrides: [min: 2, max: 2, length: 1], deps: [Semigroup, Ord]
+
   use Witchcraft.Applicative
   use Quark
 

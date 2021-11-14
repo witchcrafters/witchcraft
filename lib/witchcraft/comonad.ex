@@ -22,6 +22,7 @@ defclass Witchcraft.Comonad do
   """
 
   alias __MODULE__
+
   extend Witchcraft.Extend
 
   use Witchcraft.Internal, deps: [Witchcraft.Extend]

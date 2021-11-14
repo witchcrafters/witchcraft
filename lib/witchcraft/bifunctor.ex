@@ -19,6 +19,7 @@ defclass Witchcraft.Bifunctor do
   """
 
   alias __MODULE__
+
   extend Witchcraft.Functor
 
   use Witchcraft.Internal
