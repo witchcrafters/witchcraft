@@ -1,4 +1,23 @@
 defmodule Witchcraft.Internal do
+  @moduledoc """
+  A module for handling `use Witchcraft` and other modules
+
+  Provides support for overriding `Kernel` functions and for auto dependecies using via `__using__/1` macro.
+  """
+
+  @doc ~S"""
+  Generates `Kernel` import and `__using__/1` macro in module where used.
+
+  ## Options
+
+  - `:overrides` – List of overrides in module where used
+  - `:deps` – List of modules that will be used in generated `__using__/1` macro
+
+  ## Generated `__usnig__(opts \\ [])` macro supports the following options:
+
+  - `:override_kernel` – If true, overrides function from `Kernel` in module where used. Defaults to true
+  - `:except` and `:only` – Keyword of functions (Like in [import](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#import/2-selector)). Example: `[fun: <arity>]` where `<arity>` is function `fun` arity
+  """
   defmacro __using__(opts \\ []) do
     overrides = Keyword.get(opts, :overrides, [])
     deps = Keyword.get(opts, :deps, [])
@@ -14,6 +33,7 @@ defmodule Witchcraft.Internal do
     end
   end
 
+  @doc false
   def import_helper(opts, overrides, deps, module) do
     excepts = Keyword.get(opts, :except, [])
     only = Keyword.get(opts, :only)
@@ -41,7 +61,7 @@ defmodule Witchcraft.Internal do
     end
   end
 
-  def use_multi(modules, opts) do
+  defp use_multi(modules, opts) do
     for module <- modules do
       quote do
         use unquote(module), unquote(opts)
