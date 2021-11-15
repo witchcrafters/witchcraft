@@ -33,5 +33,13 @@ defmodule Witchcraft do
   the dependency chart (above).
   """
 
-  use Witchcraft.Internal, deps: [Witchcraft.Arrow, Witchcraft.Monoid, Witchcraft.Bifunctor, Witchcraft.Traversable, Witchcraft.Monad, Witchcraft.Comonad]
+  use Witchcraft.Internal,
+    deps: [
+      Witchcraft.Arrow,
+      Witchcraft.Monoid,
+      Witchcraft.Bifunctor,
+      Witchcraft.Traversable,
+      Witchcraft.Monad,
+      Witchcraft.Comonad
+    ]
 end
