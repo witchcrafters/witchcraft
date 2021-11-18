@@ -13,7 +13,7 @@ defmodule Witchcraft.Internal do
   - `:overrides` – List of overrides in module where used
   - `:deps` – List of modules that will be used in generated `__using__/1` macro
 
-  ## Generated `__usnig__(opts \\ [])` macro supports the following options:
+  ## Generated `__using__(opts \\ [])` macro supports the following options:
 
   - `:override_kernel` – If true, overrides function from `Kernel` in module where used. Defaults to true
   - `:except` and `:only` – Keyword of functions (Like in [import](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#import/2-selector)). Example: `[fun: <arity>]` where `<arity>` is function `fun` arity
