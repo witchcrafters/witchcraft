@@ -39,18 +39,10 @@ defclass Witchcraft.Monad do
   extend Witchcraft.Applicative
   extend Witchcraft.Chain
 
+  use Witchcraft.Internal, deps: [Witchcraft.Applicative, Witchcraft.Chain]
+
   use Witchcraft.Applicative
   use Witchcraft.Chain
-
-  defmacro __using__(opts \\ []) do
-    module_imports = [except: Keyword.get(opts, :except, [])]
-
-    quote do
-      use Witchcraft.Applicative, unquote(opts)
-      use Witchcraft.Chain, unquote(opts)
-      import unquote(__MODULE__), unquote(module_imports)
-    end
-  end
 
   properties do
     import Witchcraft.Applicative

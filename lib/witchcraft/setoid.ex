@@ -18,28 +18,8 @@ defclass Witchcraft.Setoid do
   """
 
   alias __MODULE__
-  import Kernel, except: [==: 2, !=: 2]
 
-  defmacro __using__(opts \\ []) do
-    overrides = [==: 2, !=: 2]
-    excepts = Keyword.get(opts, :except, [])
-
-    if Access.get(opts, :override_kernel, true) do
-      kernel_imports = Macro.escape(except: overrides -- excepts)
-      module_imports = Macro.escape(except: excepts)
-
-      quote do
-        import Kernel, unquote(kernel_imports)
-        import unquote(__MODULE__), unquote(module_imports)
-      end
-    else
-      module_imports = Macro.escape(except: Enum.uniq(overrides ++ excepts))
-
-      quote do
-        import unquote(__MODULE__), unquote(module_imports)
-      end
-    end
-  end
+  use Witchcraft.Internal, overrides: [==: 2, !=: 2]
 
   @type t :: any()
 

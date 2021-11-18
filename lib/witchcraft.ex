@@ -33,14 +33,13 @@ defmodule Witchcraft do
   the dependency chart (above).
   """
 
-  defmacro __using__(opts \\ []) do
-    quote do
-      use Witchcraft.Arrow, unquote(opts)
-      use Witchcraft.Monoid, unquote(opts)
-      use Witchcraft.Bifunctor, unquote(opts)
-      use Witchcraft.Traversable, unquote(opts)
-      use Witchcraft.Monad, unquote(opts)
-      use Witchcraft.Comonad, unquote(opts)
-    end
-  end
+  use Witchcraft.Internal,
+    deps: [
+      Witchcraft.Arrow,
+      Witchcraft.Monoid,
+      Witchcraft.Bifunctor,
+      Witchcraft.Traversable,
+      Witchcraft.Monad,
+      Witchcraft.Comonad
+    ]
 end

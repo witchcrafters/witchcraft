@@ -13,30 +13,10 @@ defclass Witchcraft.Semigroupoid do
   """
 
   alias __MODULE__
-  import Kernel, except: [apply: 2]
+
+  use Witchcraft.Internal, overrides: [apply: 2]
 
   @type t :: any()
-
-  defmacro __using__(opts \\ []) do
-    overrides = [apply: 2]
-    excepts = Keyword.get(opts, :except, [])
-
-    if Access.get(opts, :override_kernel, true) do
-      kernel_imports = Macro.escape(except: overrides -- excepts)
-      module_imports = Macro.escape(except: excepts)
-
-      quote do
-        import Kernel, unquote(kernel_imports)
-        import unquote(__MODULE__), unquote(module_imports)
-      end
-    else
-      module_imports = Macro.escape(except: Enum.uniq(overrides ++ excepts))
-
-      quote do
-        import unquote(__MODULE__), unquote(module_imports)
-      end
-    end
-  end
 
   where do
     @doc """

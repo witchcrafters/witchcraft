@@ -36,20 +36,15 @@ defclass Witchcraft.Chain do
   """
 
   alias __MODULE__
+
   extend Witchcraft.Apply
+
+  use Witchcraft.Internal, deps: [Witchcraft.Apply]
+
   use Witchcraft.Apply
 
   @type t :: any()
   @type link :: (any() -> Chain.t())
-
-  defmacro __using__(opts \\ []) do
-    module_imports = [except: Keyword.get(opts, :except, [])]
-
-    quote do
-      use Witchcraft.Apply, unquote(opts)
-      import unquote(__MODULE__), unquote(module_imports)
-    end
-  end
 
   where do
     @doc """
