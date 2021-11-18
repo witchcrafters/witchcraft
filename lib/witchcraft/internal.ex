@@ -2,7 +2,7 @@ defmodule Witchcraft.Internal do
   @moduledoc """
   A module for handling `use Witchcraft` and other modules
 
-  Provides support for overriding `Kernel` functions and for auto dependecies using via `__using__/1` macro.
+  Provides support for overriding `Kernel` functions and for auto dependencies using via `__using__/1` macro.
   """
 
   @doc ~S"""
