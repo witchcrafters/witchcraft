@@ -1,4 +1,6 @@
 defmodule Witchcraft.Comonad.TupleBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Comonad
 

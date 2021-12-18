@@ -1,4 +1,6 @@
 defmodule Witchcraft.Foldable.MapBench do
+  @moduledoc false
+
   require Integer
 
   use Benchfella

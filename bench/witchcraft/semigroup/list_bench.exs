@@ -1,4 +1,6 @@
 defmodule Witchcraft.Semigroup.ListBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Semigroup
 

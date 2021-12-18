@@ -1,4 +1,6 @@
 defmodule Witchcraft.Traversable.ListBench do
+  @moduledoc false
+
   require Integer
 
   use Benchfella

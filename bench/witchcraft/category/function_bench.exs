@@ -1,4 +1,6 @@
 defmodule Witchcraft.Category.FunctionBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Category
 

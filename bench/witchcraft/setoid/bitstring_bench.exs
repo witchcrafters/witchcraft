@@ -1,4 +1,6 @@
 defmodule Witchcraft.Setoid.BitStringBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Setoid
 

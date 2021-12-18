@@ -1,4 +1,6 @@
 defmodule Witchcraft.Functor.FunctionBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Functor
 

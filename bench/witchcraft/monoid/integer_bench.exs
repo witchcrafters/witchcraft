@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monoid.IntegerBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Monoid
 

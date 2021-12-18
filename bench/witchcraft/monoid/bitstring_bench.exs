@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monoid.BitStringBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Monoid
 

@@ -1,4 +1,6 @@
 defmodule Witchcraft.Ord.BitStringBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Ord
 

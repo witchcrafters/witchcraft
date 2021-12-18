@@ -1,4 +1,6 @@
 defmodule Witchcraft.Setoid.MapSetBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Setoid
 

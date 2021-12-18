@@ -1,4 +1,6 @@
 defmodule Witchcraft.Semigroup.BitStringBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Semigroup
 

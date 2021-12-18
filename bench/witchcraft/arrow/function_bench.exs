@@ -1,4 +1,6 @@
 defmodule Witchcraft.Arrow.FunctionBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Arrow
 

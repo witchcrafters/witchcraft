@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monoid.MapSetBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Monoid
 

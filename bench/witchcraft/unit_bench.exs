@@ -1,4 +1,6 @@
 defmodule Witchcraft.UnitBench do
+  @moduledoc false
+
   use Benchfella
   import Witchcraft.Unit
 
