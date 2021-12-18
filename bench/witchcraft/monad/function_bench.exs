@@ -52,7 +52,7 @@ defmodule Witchcraft.Monad.FunctionBench do
   end
 
   bench "async_draw/2" do
-    fn h ->h <|> h end
+    fn h -> h <|> h end
     |> async_draw((fn f ->
       fn g ->
         f <|> g <|> g <|> f
