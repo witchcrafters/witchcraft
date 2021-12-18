@@ -1,6 +1,9 @@
 defmodule Witchcraft.Apply.FunBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Apply
+
 
   #########
   # Setup #

@@ -1,4 +1,6 @@
 defmodule Witchcraft.Apply.ListBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Apply
 
