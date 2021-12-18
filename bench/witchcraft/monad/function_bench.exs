@@ -13,7 +13,7 @@ defmodule Witchcraft.Monad.FunctionBench do
   # Data Types #
   # ---------- #
 
-  def fun(x), do: "#{inspect x}-#{inspect x}"
+  def fun(x), do: "#{inspect(x)}-#{inspect(x)}"
 
   #########
   # Monad #
@@ -52,13 +52,14 @@ defmodule Witchcraft.Monad.FunctionBench do
   end
 
   bench "async_draw/2" do
-    fn h ->h <|> h end
-    |> async_draw((fn f ->
-      fn g ->
-        f <|> g <|> g <|> f
+    fn h -> h <|> h end
+    |> async_draw(
+      fn f ->
+        fn g ->
+          f <|> g <|> g <|> f
+        end
       end
-    end
-    |> async_draw(&fun/1)))
+      |> async_draw(&fun/1)
+    )
   end
-
 end

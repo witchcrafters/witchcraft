@@ -20,7 +20,7 @@ defmodule Witchcraft.Apply.ListBench do
   end
 
   def fun_list_b do
-    @list_a |> replace(fn x -> "#{inspect x}-#{inspect x}" end)
+    @list_a |> replace(fn x -> "#{inspect(x)}-#{inspect(x)}" end)
   end
 
   def slow_fun_list_a do
@@ -29,20 +29,17 @@ defmodule Witchcraft.Apply.ListBench do
         Process.sleep(20)
         x + 1
       end,
-
       fn x ->
         Process.sleep(20)
         x * 10
       end,
-
       fn x ->
         Process.sleep(20)
         x - 4
       end,
-
       fn x ->
         Process.sleep(20)
-        inspect x
+        inspect(x)
       end
     ]
   end
@@ -50,7 +47,7 @@ defmodule Witchcraft.Apply.ListBench do
   def slow_fun_list_b do
     replace(@list_b, fn x ->
       Process.sleep(20)
-      "#{inspect x}-#{inspect x}"
+      "#{inspect(x)}-#{inspect(x)}"
     end)
   end
 
@@ -62,49 +59,55 @@ defmodule Witchcraft.Apply.ListBench do
   # Data #
   # ==== #
 
-  bench "data convey/2", do: @list_a |> convey(fun_list_a())
-  bench "data ap/2", do: fun_list_a() |> ap(@list_b)
+  bench("data convey/2", do: @list_a |> convey(fun_list_a()))
+  bench("data ap/2", do: fun_list_a() |> ap(@list_b))
 
-  bench "data <<~/2", do: fun_list_a() <<~ @list_a
-  bench "data <<~/2", do: fun_list_a() <<~ @list_a
+  bench("data <<~/2", do: fun_list_a() <<~ @list_a)
+  bench("data <<~/2", do: fun_list_a() <<~ @list_a)
 
-  bench "data ~>>/2", do: @list_a ~>> fun_list_a()
-  bench "data ~>>/2", do: @list_a ~>> fun_list_a()
+  bench("data ~>>/2", do: @list_a ~>> fun_list_a())
+  bench("data ~>>/2", do: @list_a ~>> fun_list_a())
 
-  bench "data provide/2", do: fun_list_a() |> provide(@list_a)
-  bench "data supply/2",  do: @list_a |> supply(fun_list_a())
+  bench("data provide/2", do: fun_list_a() |> provide(@list_a))
+  bench("data supply/2", do: @list_a |> supply(fun_list_a()))
 
-  bench "data lift/3", do: lift(@list_a, @list_a, &+/2)
-  bench "data lift/4", do: lift(@list_a, @list_a, fn(x, y, z) -> x + y + z end)
-  bench "data lift/5", do: lift(@list_a, @list_a, @list_a, fn(w, x, y, z) -> w + x + y + z end)
+  bench("data lift/3", do: lift(@list_a, @list_a, &+/2))
+  bench("data lift/4", do: lift(@list_a, @list_a, fn x, y, z -> x + y + z end))
+  bench("data lift/5", do: lift(@list_a, @list_a, @list_a, fn w, x, y, z -> w + x + y + z end))
 
-  bench "data over/3", do: over(&+/2, @list_a, @list_a)
-  bench "data over/4", do: over(fn(x, y, z) -> x + y + z end, @list_a, @list_a)
-  bench "data over/5", do: over(fn(w, x, y, z) -> w + x + y + z end, @list_a, @list_a, @list_a)
+  bench("data over/3", do: over(&+/2, @list_a, @list_a))
+  bench("data over/4", do: over(fn x, y, z -> x + y + z end, @list_a, @list_a))
+  bench("data over/5", do: over(fn w, x, y, z -> w + x + y + z end, @list_a, @list_a, @list_a))
 
-  bench "following/2", do: @list_a |> following(@list_a)
-  bench "then/2",      do: @list_a |> then(@list_a)
+  bench("following/2", do: @list_a |> following(@list_a))
+  bench("then/2", do: @list_a |> then(@list_a))
 
   # ----- #
   # Async #
   # ----- #
 
-  bench "data async_convey/2", do: @list_a |> async_convey(fun_list_a())
-  bench "data async_ap/2", do: fun_list_a() |> async_ap(@list_a)
+  bench("data async_convey/2", do: @list_a |> async_convey(fun_list_a()))
+  bench("data async_ap/2", do: fun_list_a() |> async_ap(@list_a))
 
-  bench "async_lift/3", do: async_lift(@list_a, @list_a, &+/2)
-  bench "async_lift/4", do: async_lift(@list_a, @list_a, fn(x, y, z) -> x + y + z end)
-  bench "async_lift/5", do: async_lift(@list_a, @list_a, @list_a, fn(w, x, y, z) -> w + x + y + z end)
+  bench("async_lift/3", do: async_lift(@list_a, @list_a, &+/2))
+  bench("async_lift/4", do: async_lift(@list_a, @list_a, fn x, y, z -> x + y + z end))
 
-  bench "async_over/3", do: async_over(&+/2, @list_a, @list_a)
-  bench "async_over/4", do: async_over(fn(x, y, z) -> x + y + z end, @list_a, @list_a)
-  bench "async_over/5", do: async_over(fn(w, x, y, z) -> w + x + y + z end, @list_a, @list_a, @list_a)
+  bench("async_lift/5",
+    do: async_lift(@list_a, @list_a, @list_a, fn w, x, y, z -> w + x + y + z end)
+  )
 
-  bench "!!! convey/2", do: @list_a |> convey(slow_fun_list_a())
-  bench "!!! ap/2", do: slow_fun_list_a() |> ap(@list_a)
+  bench("async_over/3", do: async_over(&+/2, @list_a, @list_a))
+  bench("async_over/4", do: async_over(fn x, y, z -> x + y + z end, @list_a, @list_a))
+
+  bench("async_over/5",
+    do: async_over(fn w, x, y, z -> w + x + y + z end, @list_a, @list_a, @list_a)
+  )
+
+  bench("!!! convey/2", do: @list_a |> convey(slow_fun_list_a()))
+  bench("!!! ap/2", do: slow_fun_list_a() |> ap(@list_a))
 
   bench "!!! lift/3" do
-    lift(@list_a, @list_a, fn(x, y) ->
+    lift(@list_a, @list_a, fn x, y ->
       Process.sleep(20)
       x + y
     end)
@@ -128,7 +131,7 @@ defmodule Witchcraft.Apply.ListBench do
   # end
 
   bench "!!! over/3" do
-    fn(x, y) ->
+    fn x, y ->
       Process.sleep(20)
       x + y
     end
@@ -153,32 +156,32 @@ defmodule Witchcraft.Apply.ListBench do
   #   |> over(@list_a, @list_a, @list_a, @list_a)
   # end
 
-  bench "!!! async_convey/2", do: @list_a |> async_convey(slow_fun_list_a())
-  bench "!!! async_ap/2", do: slow_fun_list_a() |> async_ap(@list_a)
+  bench("!!! async_convey/2", do: @list_a |> async_convey(slow_fun_list_a()))
+  bench("!!! async_ap/2", do: slow_fun_list_a() |> async_ap(@list_a))
 
   bench "!!! async_lift/3" do
-    async_lift(@list_a, @list_a, fn(x, y) ->
+    async_lift(@list_a, @list_a, fn x, y ->
       Process.sleep(20)
       x + y
     end)
   end
 
   bench "!!! async_lift/4" do
-    async_lift(@list_a, @list_a, @list_a, fn(x, y, z) ->
+    async_lift(@list_a, @list_a, @list_a, fn x, y, z ->
       Process.sleep(20)
       x + y + z
     end)
   end
 
   bench "!!! async_lift/5" do
-    async_lift(@list_a, @list_a, @list_a, @list_a, fn(w, x, y, z) ->
+    async_lift(@list_a, @list_a, @list_a, @list_a, fn w, x, y, z ->
       Process.sleep(20)
       w + x + y + z
     end)
   end
 
   bench "!!! async_over/3" do
-    fn(x, y) ->
+    fn x, y ->
       Process.sleep(20)
       x + y
     end
@@ -186,7 +189,7 @@ defmodule Witchcraft.Apply.ListBench do
   end
 
   bench "!!! async_over/4" do
-    fn(x, y, z) ->
+    fn x, y, z ->
       Process.sleep(20)
       x + y + z
     end
@@ -194,7 +197,7 @@ defmodule Witchcraft.Apply.ListBench do
   end
 
   bench "!!! async_over/5" do
-    fn(w, x, y, z) ->
+    fn w, x, y, z ->
       Process.sleep(20)
       w + x + y + z
     end
@@ -205,41 +208,47 @@ defmodule Witchcraft.Apply.ListBench do
   # Funs #
   # ==== #
 
-  bench "funs convey/2", do: @list_b |> convey(fun_list_b())
-  bench "funs ap/2", do: fun_list_b() |> ap(@list_b)
+  bench("funs convey/2", do: @list_b |> convey(fun_list_b()))
+  bench("funs ap/2", do: fun_list_b() |> ap(@list_b))
 
-  bench "funs <<~/2", do: fun_list_b() <<~ @list_b
-  bench "funs <<~/2", do: fun_list_b() <<~ @list_b
+  bench("funs <<~/2", do: fun_list_b() <<~ @list_b)
+  bench("funs <<~/2", do: fun_list_b() <<~ @list_b)
 
-  bench "funs ~>>/2", do: @list_b ~>> fun_list_b()
-  bench "funs ~>>/2", do: @list_b ~>> fun_list_b()
+  bench("funs ~>>/2", do: @list_b ~>> fun_list_b())
+  bench("funs ~>>/2", do: @list_b ~>> fun_list_b())
 
-  bench "funs provide/2", do: fun_list_b() |> provide(@list_b)
-  bench "funs supply/2",  do: @list_b |> supply(fun_list_b())
+  bench("funs provide/2", do: fun_list_b() |> provide(@list_b))
+  bench("funs supply/2", do: @list_b |> supply(fun_list_b()))
 
-  bench "following/2", do: @list_b |> following(@list_b)
-  bench "then/2",      do: @list_b |> then(@list_b)
+  bench("following/2", do: @list_b |> following(@list_b))
+  bench("then/2", do: @list_b |> then(@list_b))
 
   # ----- #
   # Async #
   # ----- #
 
-  bench "funs async_convey/2", do: @list_b |> async_convey(fun_list_b())
-  bench "funs async_ap/2", do: fun_list_b() |> async_ap(@list_b)
+  bench("funs async_convey/2", do: @list_b |> async_convey(fun_list_b()))
+  bench("funs async_ap/2", do: fun_list_b() |> async_ap(@list_b))
 
-  bench "funs async_lift/3", do: async_lift(@list_b, @list_b, &+/2)
-  bench "funs async_lift/4", do: async_lift(@list_b, @list_b, fn(x, y, z) -> x + y + z end)
-  bench "funs async_lift/5", do: async_lift(@list_b, @list_b, @list_b, fn(w, x, y, z) -> w + x + y + z end)
+  bench("funs async_lift/3", do: async_lift(@list_b, @list_b, &+/2))
+  bench("funs async_lift/4", do: async_lift(@list_b, @list_b, fn x, y, z -> x + y + z end))
 
-  bench "funs async_over/3", do: async_over(&+/2, @list_b, @list_b)
-  bench "funs async_over/4", do: async_over(fn(x, y, z) -> x + y + z end, @list_b, @list_b)
-  bench "funs async_over/5", do: async_over(fn(w, x, y, z) -> w + x + y + z end, @list_b, @list_b, @list_b)
+  bench("funs async_lift/5",
+    do: async_lift(@list_b, @list_b, @list_b, fn w, x, y, z -> w + x + y + z end)
+  )
 
-  bench "!!! convey/2", do: @list_b |> convey(slow_fun_list_b())
-  bench "!!! ap/2", do: slow_fun_list_b() |> ap(@list_b)
+  bench("funs async_over/3", do: async_over(&+/2, @list_b, @list_b))
+  bench("funs async_over/4", do: async_over(fn x, y, z -> x + y + z end, @list_b, @list_b))
+
+  bench("funs async_over/5",
+    do: async_over(fn w, x, y, z -> w + x + y + z end, @list_b, @list_b, @list_b)
+  )
+
+  bench("!!! convey/2", do: @list_b |> convey(slow_fun_list_b()))
+  bench("!!! ap/2", do: slow_fun_list_b() |> ap(@list_b))
 
   bench "!!! funs lift/3" do
-    lift(@list_b, @list_b, fn(x, y) ->
+    lift(@list_b, @list_b, fn x, y ->
       Process.sleep(20)
       x + y
     end)
@@ -264,7 +273,7 @@ defmodule Witchcraft.Apply.ListBench do
   # end
 
   bench "!!! funs over/3" do
-    fn(x, y) ->
+    fn x, y ->
       Process.sleep(20)
       x + y
     end
@@ -289,32 +298,32 @@ defmodule Witchcraft.Apply.ListBench do
   #   |> over(@list_b, @list_b, @list_b, @list_b)
   # end
 
-  bench "!!! funs async_convey/2", do: @list_b |> async_convey(slow_fun_list_b())
-  bench "!!! funs async_ap/2", do: slow_fun_list_b() |> async_ap(@list_b)
+  bench("!!! funs async_convey/2", do: @list_b |> async_convey(slow_fun_list_b()))
+  bench("!!! funs async_ap/2", do: slow_fun_list_b() |> async_ap(@list_b))
 
   bench "!!! funs async_lift/3" do
-    async_lift(@list_b, @list_b, fn(x, y) ->
+    async_lift(@list_b, @list_b, fn x, y ->
       Process.sleep(20)
       x + y
     end)
   end
 
   bench "!!! funs async_lift/4" do
-    async_lift(@list_b, @list_b, @list_b, fn(x, y, z) ->
+    async_lift(@list_b, @list_b, @list_b, fn x, y, z ->
       Process.sleep(20)
       x + y + z
     end)
   end
 
   bench "!!! funs async_lift/5" do
-    async_lift(@list_b, @list_b, @list_b, @list_b, fn(w, x, y, z) ->
+    async_lift(@list_b, @list_b, @list_b, @list_b, fn w, x, y, z ->
       Process.sleep(20)
       w + x + y + z
     end)
   end
 
   bench "!!! funs async_over/3" do
-    fn(x, y) ->
+    fn x, y ->
       Process.sleep(20)
       x + y
     end
@@ -322,7 +331,7 @@ defmodule Witchcraft.Apply.ListBench do
   end
 
   bench "!!! funs async_over/4" do
-    fn(x, y, z) ->
+    fn x, y, z ->
       Process.sleep(20)
       x + y + z
     end
@@ -330,11 +339,10 @@ defmodule Witchcraft.Apply.ListBench do
   end
 
   bench "!!! funs async_over/5" do
-    fn(w, x, y, z) ->
+    fn w, x, y, z ->
       Process.sleep(20)
       w + x + y + z
     end
     |> async_over(@list_b, @list_b, @list_b, @list_b)
   end
-
 end

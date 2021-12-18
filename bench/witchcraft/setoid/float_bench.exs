@@ -19,22 +19,22 @@ defmodule Witchcraft.Setoid.FloatBench do
   # Kernel #
   ##########
 
-  bench "Kernel.==/2", do: Kernel.==(@float_a, @float_b)
-  bench "Kernel.!=/2", do: Kernel.!=(@float_a, @float_b)
+  bench("Kernel.==/2", do: Kernel.==(@float_a, @float_b))
+  bench("Kernel.!=/2", do: Kernel.!=(@float_a, @float_b))
 
   ##########
   # Setoid #
   ##########
 
-  bench "equivalent?/2",    do: equivalent?(@float_a, @float_b)
-  bench "nonequivalent?/2", do: nonequivalent?(@float_a, @float_b)
+  bench("equivalent?/2", do: equivalent?(@float_a, @float_b))
+  bench("nonequivalent?/2", do: nonequivalent?(@float_a, @float_b))
 
   # --------- #
   # Operators #
   # --------- #
 
-  bench "==/2", do: @float_a == @float_b
-  bench "!=/2", do: @float_a != @float_b
+  bench("==/2", do: @float_a == @float_b)
+  bench("!=/2", do: @float_a != @float_b)
 
   # ---------- #
   # Large Data #
@@ -43,9 +43,9 @@ defmodule Witchcraft.Setoid.FloatBench do
   @big_float_a 1_234_567.890
   @big_float_b 9_876.543210
 
-  bench "$$$ Kernel.==/2", do: Kernel.==(@big_float_a, @big_float_b)
-  bench "$$$ Kernel.!=/2", do: Kernel.!=(@big_float_a, @big_float_b)
+  bench("$$$ Kernel.==/2", do: Kernel.==(@big_float_a, @big_float_b))
+  bench("$$$ Kernel.!=/2", do: Kernel.!=(@big_float_a, @big_float_b))
 
-  bench "$$$ ==/2", do: @big_float_a == @big_float_b
-  bench "$$$ !=/2", do: @big_float_a != @big_float_b
+  bench("$$$ ==/2", do: @big_float_a == @big_float_b)
+  bench("$$$ !=/2", do: @big_float_a != @big_float_b)
 end

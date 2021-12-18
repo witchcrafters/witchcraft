@@ -12,12 +12,11 @@ defmodule Witchcraft.Category.FunctionBench do
   # Data Types #
   # ---------- #
 
-  defp f(x), do: "#{inspect x}/#{inspect x}"
+  defp f(x), do: "#{inspect(x)}/#{inspect(x)}"
 
   ################
   # Semigroupoid #
   ################
 
-  bench "identity/1", do: identity(&f/1)
-
+  bench("identity/1", do: identity(&f/1))
 end

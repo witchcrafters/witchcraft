@@ -19,20 +19,20 @@ defmodule Witchcraft.Semigroup.MapBench do
   # MapSet #
   ##########
 
-  bench "MapSet.union/2", do: MapSet.union(@map_set_a, @map_set_b)
+  bench("MapSet.union/2", do: MapSet.union(@map_set_a, @map_set_b))
 
   #############
   # Semigroup #
   #############
 
-  bench "append/2", do: append(@map_set_a, @map_set_b)
-  bench "repeat/2", do: repeat(@map_set_a, times: 100)
+  bench("append/2", do: append(@map_set_a, @map_set_b))
+  bench("repeat/2", do: repeat(@map_set_a, times: 100))
 
   # --------- #
   # Operators #
   # --------- #
 
-  bench "<>/2", do: @map_set_a <> @map_set_b
+  bench("<>/2", do: @map_set_a <> @map_set_b)
 
   # ---------- #
   # Large Data #
@@ -41,8 +41,7 @@ defmodule Witchcraft.Semigroup.MapBench do
   @big_map_set_a MapSet.new(0..1_000)
   @big_map_set_b MapSet.new(99..999)
 
-  bench "$$$ MapSet.union/2", do: MapSet.union(@big_mapset_a, @big_mapset_b)
-  bench "$$$ append/2",       do: append(@big_mapset_a, @big_mapset_b)
-  bench "$$$ <>/2",           do: @big_mapset_a <> @big_mapset_b
-
+  bench("$$$ MapSet.union/2", do: MapSet.union(@big_mapset_a, @big_mapset_b))
+  bench("$$$ append/2", do: append(@big_mapset_a, @big_mapset_b))
+  bench("$$$ <>/2", do: @big_mapset_a <> @big_mapset_b)
 end

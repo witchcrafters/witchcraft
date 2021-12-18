@@ -45,11 +45,17 @@ defmodule Witchcraft.Monad.ListBench do
   end
 
   bench "async_draw/2" do
-    async_draw(fn a ->
-      async_draw(fn b ->
-        [a * b]
-      end, @list_b)
-    end, @list_a)
+    async_draw(
+      fn a ->
+        async_draw(
+          fn b ->
+            [a * b]
+          end,
+          @list_b
+        )
+      end,
+      @list_a
+    )
   end
 
   # ----- #
@@ -59,6 +65,7 @@ defmodule Witchcraft.Monad.ListBench do
   bench "!!! Enum.flat_map/2" do
     Enum.flat_map(@list_a, fn a ->
       Process.sleep(50)
+
       Enum.flat_map(@list_b, fn b ->
         Process.sleep(50)
         [a * b]
@@ -69,6 +76,7 @@ defmodule Witchcraft.Monad.ListBench do
   bench "!!! chain/2" do
     chain(@list_a, fn a ->
       Process.sleep(50)
+
       chain(@list_b, fn b ->
         Process.sleep(50)
         [a * b]
@@ -77,18 +85,26 @@ defmodule Witchcraft.Monad.ListBench do
   end
 
   bench "!!! draw/2" do
-    draw(fn a ->
-      Process.sleep(50)
-      draw(fn b ->
+    draw(
+      fn a ->
         Process.sleep(50)
-        [a * b]
-      end, @list_b)
-    end, @list_a)
+
+        draw(
+          fn b ->
+            Process.sleep(50)
+            [a * b]
+          end,
+          @list_b
+        )
+      end,
+      @list_a
+    )
   end
 
   bench "!!! async_chain/2" do
     async_chain(@list_a, fn a ->
       Process.sleep(50)
+
       async_chain(@list_b, fn b ->
         Process.sleep(50)
         [a * b]
@@ -97,13 +113,20 @@ defmodule Witchcraft.Monad.ListBench do
   end
 
   bench "!!! async_draw/2" do
-    async_draw(fn a ->
-      Process.sleep(50)
-      async_draw(fn b ->
+    async_draw(
+      fn a ->
         Process.sleep(50)
-        [a * b]
-      end, @list_b)
-    end, @list_a)
+
+        async_draw(
+          fn b ->
+            Process.sleep(50)
+            [a * b]
+          end,
+          @list_b
+        )
+      end,
+      @list_a
+    )
   end
 
   # ---------- #
@@ -128,5 +151,4 @@ defmodule Witchcraft.Monad.ListBench do
       return(a * b)
     end
   end
-
 end

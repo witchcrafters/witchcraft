@@ -18,8 +18,8 @@ defmodule Witchcraft.Monoid.TupleBench do
   # Monoid #
   ##########
 
-  bench "empty/1",  do: empty(@tuple)
-  bench "empty?/1", do: empty?(@tuple)
+  bench("empty/1", do: empty(@tuple))
+  bench("empty?/1", do: empty?(@tuple))
 
   # ---------- #
   # Large Data #
@@ -27,7 +27,6 @@ defmodule Witchcraft.Monoid.TupleBench do
 
   @big_tuple 0..100_000 |> Enum.to_list() |> List.to_tuple()
 
-  bench "$$$ empty/1",  do: empty(@big_tuple)
-  bench "$$$ empty?/1", do: empty?(@big_tuple)
-
+  bench("$$$ empty/1", do: empty(@big_tuple))
+  bench("$$$ empty?/1", do: empty?(@big_tuple))
 end

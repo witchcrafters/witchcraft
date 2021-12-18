@@ -12,8 +12,8 @@ defmodule Witchcraft.Chain.FunctionBench do
   # Data Types #
   # ---------- #
 
-  def fun_a(x), do: "#{inspect x}-#{inspect x}"
-  def fun_b(y), do: "#{inspect y}!#{inspect y}"
+  def fun_a(x), do: "#{inspect(x)}-#{inspect(x)}"
+  def fun_b(y), do: "#{inspect(y)}!#{inspect(y)}"
 
   #########
   # Chain #
