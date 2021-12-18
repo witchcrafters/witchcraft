@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monad.ListBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Monad
   use Quark

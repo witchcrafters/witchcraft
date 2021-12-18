@@ -1,4 +1,6 @@
 defmodule Witchcraft.Semigroupoid.FunctionBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Semigroupoid
 

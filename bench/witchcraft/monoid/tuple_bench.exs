@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monoid.TupleBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Monoid
 

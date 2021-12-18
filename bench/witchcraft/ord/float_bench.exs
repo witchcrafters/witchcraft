@@ -1,4 +1,6 @@
 defmodule Witchcraft.Ord.FloatBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Ord
 

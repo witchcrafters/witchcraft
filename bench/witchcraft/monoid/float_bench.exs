@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monoid.FloatBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Monoid
 

@@ -1,4 +1,6 @@
 defmodule Witchcraft.Semigroup.FloatBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Semigroup
 

@@ -1,4 +1,6 @@
 defmodule Witchcraft.Extend.TupleBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Extend
 

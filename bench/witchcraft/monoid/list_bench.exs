@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monoid.ListBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Monoid
 

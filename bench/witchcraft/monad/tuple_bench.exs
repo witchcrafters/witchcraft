@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monad.TupleBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Monad
   use Quark

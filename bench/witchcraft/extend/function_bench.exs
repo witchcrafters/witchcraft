@@ -1,4 +1,6 @@
 defmodule Witchcraft.Extend.FunctionBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Extend
   use Quark

@@ -1,4 +1,6 @@
 defmodule Witchcraft.Ord.IntegerBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Ord
 

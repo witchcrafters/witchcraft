@@ -1,4 +1,6 @@
 defmodule Witchcraft.Ord.TupleBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Ord
 

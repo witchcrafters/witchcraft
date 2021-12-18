@@ -1,4 +1,6 @@
 defmodule Witchcraft.Foldable.BitStringBench do
+  @moduledoc false
+
   require Integer
 
   use Benchfella

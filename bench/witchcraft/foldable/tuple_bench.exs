@@ -1,4 +1,6 @@
 defmodule Witchcraft.Foldable.TupleBench do
+  @moduledoc false
+
   require Integer
 
   use Benchfella

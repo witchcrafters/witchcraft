@@ -1,4 +1,6 @@
 defmodule Witchcraft.Bifunctor.TupleBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Bifunctor
 
