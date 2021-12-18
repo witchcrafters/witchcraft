@@ -1,4 +1,6 @@
 defmodule Witchcraft.Apply.TupleBench do
+  import Kernel, except: [then: 2]
+  
   use Benchfella
   use Witchcraft.Apply
 

@@ -15,7 +15,7 @@ defmodule Witchcraft.Arrow.FunctionBench do
 
   defp f(x), do: "#{inspect x}/#{inspect x}"
   defp g(y), do: "#{inspect y}-#{inspect y}-#{inspect y}"
-  defp h(z), do: "!#{inspect y}!"
+  defp h(z), do: "!#{inspect z}!"
 
   #########
   # Arrow #

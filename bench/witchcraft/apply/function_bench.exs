@@ -1,6 +1,9 @@
 defmodule Witchcraft.Apply.FunBench do
+  import Kernel, except: [then: 2]
+
   use Benchfella
   use Witchcraft.Apply
+
 
   #########
   # Setup #
