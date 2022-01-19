@@ -9,7 +9,7 @@
   ],
   import_deps: [
     :operator,
-    :quark,
+    :doma_quark,
     :type_class
   ]
 ]
