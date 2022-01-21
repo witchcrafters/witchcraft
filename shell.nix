@@ -1,45 +1,20 @@
- let
-  sources  = import ./nix/sources.nix;
-  commands = import ./nix/commands.nix;
-
-  nixos    = import sources.nixpkgs  {};
-  darwin   = import sources.darwin   {};
-  unstable = import sources.unstable {};
-
-  pkgs  = if darwin.stdenv.isDarwin then darwin else nixos;
-  tasks = commands {
-    inherit pkgs;
-    inherit unstable;
-  };
-
-  deps = {
-    common =
-      [  pkgs.niv
-      ];
-
-    elixir =
-      [ unstable.elixir
-      ];
-
-    platform =
-      if pkgs.stdenv.isDarwin then
-        [ unstable.darwin.apple_sdk.frameworks.CoreServices
-          unstable.darwin.apple_sdk.frameworks.Foundation
-        ]
-      else if pkgs.stdenv.isLinux then
-        [ pkgs.inotify-tools
-        ]
-      else
-        [];
-  };
-in
-
-pkgs.mkShell {
-  name = "Witchcraft";
-  nativeBuildInputs = builtins.concatLists [
-    deps.common 
-    deps.elixir
-    deps.platform
-    tasks
-  ];
+let
+  nixpkgs = import (fetchTarball {
+    url = "https://github.com/jechol/nixpkgs/archive/21.11-otp24-no-jit.tar.gz";
+    sha256 = "sha256:1lka707hrnkp70vny99m9fmp4a8136vl7addmpfsdvkwb81d1jk9";
+  }) { };
+  platform = if nixpkgs.stdenv.isDarwin then [
+    nixpkgs.darwin.apple_sdk.frameworks.CoreServices
+    nixpkgs.darwin.apple_sdk.frameworks.Foundation
+  ] else if nixpkgs.stdenv.isLinux then
+    [ nixpkgs.inotify-tools ]
+  else
+    [ ];
+in nixpkgs.mkShell {
+  buildInputs = with nixpkgs;
+    [
+      # OTP
+      erlang
+      elixir
+    ] ++ platform;
 }

@@ -9,3 +9,4 @@ erl_crash.dump
 /docs/all.json
 /bench/snapshots
 /bench/graphs
+.mix
