@@ -121,7 +121,7 @@ defmodule Witchcraft.DoNotationTest do
         b <- [3, 4]
         let [h | _] = [a * b]
         c <- [a, b, h]
-        let tens = c * 10
+        let _tens = c * 10
         d <- [c - 1, c + 1]
         [a, b, c, d]
       end
