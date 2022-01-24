@@ -54,9 +54,9 @@ defclass Witchcraft.Foldable do
     ## Examples
 
         iex> sum = fn xs -> right_fold(xs, 0, &+/2) end
-        ...> sum.([1, 2, 3])
+        iex> sum.([1, 2, 3])
         6
-        ...> sum.([4, 5, 6])
+        iex> sum.([4, 5, 6])
         15
 
     """
@@ -120,9 +120,9 @@ defclass Witchcraft.Foldable do
   ## Examples
 
       iex> sum = fn xs -> right_fold(xs, 0, &+/2) end
-      ...> sum.([1, 2, 3])
+      iex> sum.([1, 2, 3])
       6
-      ...> sum.([4, 5, 6])
+      iex> sum.([4, 5, 6])
       15
 
       iex> left_fold([1, 2, 3], [], fn(acc, x) -> [x | acc] end)
@@ -265,7 +265,7 @@ defclass Witchcraft.Foldable do
   ## Examples
 
       iex> use Witchcraft.Foldable
-      ...> length(%{})
+      iex> length(%{})
       0
       iex> length(%{a: 1, b: 2})
       2
@@ -356,9 +356,9 @@ defclass Witchcraft.Foldable do
   ## Examples
 
       iex> use Witchcraft.Foldable
-      ...> max([2, 3, 1])
+      iex> max([2, 3, 1])
       3
-      ...> max([[4], [1, 2, 3, 4]])
+      iex> max([[4], [1, 2, 3, 4]])
       [4]
 
       %BinaryTree{
@@ -414,9 +414,9 @@ defclass Witchcraft.Foldable do
   ## Examples
 
       iex> use Witchcraft.Foldable
-      ...> min([2, 3, 1])
+      iex> min([2, 3, 1])
       1
-      ...> min([[4], [1, 2, 3, 4]])
+      iex> min([[4], [1, 2, 3, 4]])
       [1, 2, 3, 4]
 
       %BinaryTree{
@@ -614,7 +614,7 @@ defclass Witchcraft.Foldable do
   ## Examples
 
       iex> import Integer
-      ...> all?([1, 2, 3], &is_odd/1)
+      iex> all?([1, 2, 3], &is_odd/1)
       false
 
       %BinaryTree{
@@ -668,7 +668,7 @@ defclass Witchcraft.Foldable do
   ## Examples
 
       iex> require Integer
-      ...> any?([1, 2, 3], &Integer.is_odd/1)
+      iex> any?([1, 2, 3], &Integer.is_odd/1)
       true
 
       %BinaryTree{
