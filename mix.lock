@@ -17,5 +17,5 @@
   "nimble_parsec": {:hex, :nimble_parsec, "1.2.0", "b44d75e2a6542dcb6acf5d71c32c74ca88960421b6874777f79153bbbbd7dccc", [:mix], [], "hexpm", "52b2871a7515a5ac49b00f214e4165a40724cf99798d8e4a65e4fd64ebd002c1"},
   "operator": {:hex, :operator, "0.2.1", "4572312bbd3e63a5c237bf15c3a7670d568e3651ea744289130780006e70e5f5", [:mix], [], "hexpm", "1990cc6dc651d7fff04636eef06fc64e6bc1da83a1da890c08ca3432e17e267a"},
   "quark": {:hex, :quark, "2.3.2", "066e0d431440d077684469967f54d732443ea2a48932e0916e974633e8b39c95", [:mix], [], "hexpm", "2f6423779b02afe7e3e4af3cfecfcd94572f2051664d4d8329ffa872d24b10a8"},
-  "type_class": {:hex, :type_class, "1.2.5", "b972bb22202e801d83e8670228d9a1476cd2c9fc7da00b7039b19d6d06b17905", [:mix], [{:exceptional, "~> 2.1", [hex: :exceptional, repo: "hexpm", optional: false]}], "hexpm", "554cf5c49e92d3a371b85239ad842b2e69d034fed65921f4f99d7d910b6c50fe"},
+  "type_class": {:hex, :type_class, "1.2.8", "349db84be8c664e119efaae1a09a44b113bc8e81af1d032f4e3e38feef4fac32", [:mix], [{:exceptional, "~> 2.1", [hex: :exceptional, repo: "hexpm", optional: false]}], "hexpm", "bb93de2cacfd6f0ee43f4616f7a139816a73deba4ae8ee3364bcfa4abe3eef3e"},
 }
