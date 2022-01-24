@@ -449,7 +449,7 @@ defclass Witchcraft.Arrow do
       430
 
   """
-  @spec precompose(Arrow.t(), fun()) :: Arrow.t()
+  @spec postcompose(Arrow.t(), fun()) :: Arrow.t()
   def postcompose(arrow, fun), do: arrow <~> arrowize(arrow, fun)
 end
 

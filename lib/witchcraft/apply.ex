@@ -545,7 +545,7 @@ defclass Witchcraft.Apply do
       [-2, -3, -1, -2, 1, 0, 3, 2]
 
   """
-  @spec over(fun(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
+  @spec over(fun(), Apply.t(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
   def over(fun, a, b, c, d), do: fun |> over(a, b, c) |> ap(d)
 
   @doc """
@@ -587,7 +587,7 @@ defclass Witchcraft.Apply do
       [-2, -3, -1, -2, 1, 0, 3, 2]
 
   """
-  @spec async_over(fun(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
+  @spec async_over(fun(), Apply.t(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
   def async_over(fun, a, b, c, d), do: fun |> async_over(a, b, c) |> async_ap(d)
 end
 

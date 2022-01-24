@@ -337,7 +337,7 @@ defclass Witchcraft.Foldable do
       2
 
   """
-  @spec max(Foldable.t(), by: (any, any -> Order.ordering())) :: Ord.t()
+  @spec max(Foldable.t(), by: (any, any -> Ord.ordering())) :: Ord.t()
   def max(foldable, by: comparator) do
     Witchcraft.Foldable.right_fold(foldable, fn focus, acc ->
       case comparator.(focus, acc) do
@@ -395,7 +395,7 @@ defclass Witchcraft.Foldable do
       8
 
   """
-  @spec min(Foldable.t(), by: (any(), any() -> Order.t())) :: any() | Maybe.t()
+  @spec min(Foldable.t(), by: (any(), any() -> Ord.t())) :: any()
   def min(foldable, by: comparitor) do
     right_fold(foldable, fn focus, acc ->
       case comparitor.(focus, acc) do
@@ -787,6 +787,6 @@ defclass Witchcraft.Foldable do
       ]
 
   """
-  @spec then_traverse(Apply.fun(), Foldable.t()) :: Apply.t()
+  @spec then_through(Apply.fun(), Foldable.t()) :: Apply.t()
   def then_through(fun, traversable), do: then_traverse(traversable, fun)
 end
