@@ -254,7 +254,7 @@ defclass Witchcraft.Chain do
 
   Sequences chainable actions. Note that each line must be of the same type.
 
-  For a version with `return`, please see `Witchcraft.Monad.do/2`
+  For a version with `return`, please see `Witchcraft.Monad.monad/2`
 
   ## Examples
 

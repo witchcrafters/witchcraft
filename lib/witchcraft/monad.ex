@@ -19,7 +19,7 @@ defclass Witchcraft.Monad do
   For a nice, illustrated introduction,
   see [Functors, Applicatives, And Monads In Pictures](http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html).
 
-  Having `of` also lets us enhance do-notation with a convenuenct `return` function (see `monad/2`)
+  Having `of` also lets us enhance do-notation with a convenient `return` function (see `monad/2`)
 
   ## Type Class
 
@@ -36,6 +36,8 @@ defclass Witchcraft.Monad do
                          [_]
   """
 
+  alias Witchcraft.Chain
+
   extend Witchcraft.Applicative
   extend Witchcraft.Chain
 
@@ -43,6 +45,8 @@ defclass Witchcraft.Monad do
 
   use Witchcraft.Applicative
   use Witchcraft.Chain
+
+  @type t :: any()
 
   properties do
     import Witchcraft.Applicative
@@ -110,7 +114,7 @@ defclass Witchcraft.Monad do
   end
 
   @doc "Alias for `async_chain/2`"
-  @spec async_chain(Chain.t(), Chain.link()) :: Chain.t()
+  @spec async_bind(Chain.t(), Chain.link()) :: Chain.t()
   def async_bind(chainable, link), do: async_chain(chainable, link)
 
   @doc """
