@@ -1,6 +1,8 @@
 defmodule Witchcraft.Apply.ListBench do
   @moduledoc false
 
+  import Kernel, except: [then: 2]
+
   use Benchfella
   use Witchcraft.Apply
 
