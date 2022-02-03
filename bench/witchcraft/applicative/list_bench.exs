@@ -1,4 +1,6 @@
 defmodule Witchcraft.Applicative.ListBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Applicative
 
@@ -23,7 +25,6 @@ defmodule Witchcraft.Applicative.ListBench do
   # Applicative #
   ###############
 
-  bench "of/1", do: to_list(@to_wrap)
-  bench "of/2", do: of(@list, @to_wrap)
-
+  bench("of/1", do: to_list(@to_wrap))
+  bench("of/2", do: of(@list, @to_wrap))
 end

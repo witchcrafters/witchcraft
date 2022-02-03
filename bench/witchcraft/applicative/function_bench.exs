@@ -1,4 +1,6 @@
 defmodule Witchcraft.Applicative.FunctionBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Applicative
 
@@ -10,7 +12,7 @@ defmodule Witchcraft.Applicative.FunctionBench do
   # Data Types #
   # ---------- #
 
-  def fun(x), do: "#{inspect x}-#{inspect x}"
+  def fun(x), do: "#{inspect(x)}-#{inspect(x)}"
 
   # -------------- #
   # Test Functions #
@@ -23,7 +25,6 @@ defmodule Witchcraft.Applicative.FunctionBench do
   # Applicative #
   ###############
 
-  bench "of/1", do: to_fun(42)
-  bench "of/2", do: of(&fun/1, &twice/1)
-
+  bench("of/1", do: to_fun(42))
+  bench("of/2", do: of(&fun/1, &twice/1))
 end

@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monad.TupleBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Monad
   use Quark
@@ -43,11 +45,17 @@ defmodule Witchcraft.Monad.TupleBench do
   end
 
   bench "async_draw/2" do
-    async_draw(fn a ->
-      async_draw(fn b ->
-        {a * b, a}
-      end, @tuple_b)
-    end, @tuple_a)
+    async_draw(
+      fn a ->
+        async_draw(
+          fn b ->
+            {a * b, a}
+          end,
+          @tuple_b
+        )
+      end,
+      @tuple_a
+    )
   end
 
   # ----- #
@@ -57,6 +65,7 @@ defmodule Witchcraft.Monad.TupleBench do
   bench "!!! chain/2" do
     chain(@tuple_a, fn a ->
       Process.sleep(50)
+
       chain(@tuple_b, fn b ->
         Process.sleep(50)
         {a * b, a}
@@ -65,18 +74,26 @@ defmodule Witchcraft.Monad.TupleBench do
   end
 
   bench "!!! draw/2" do
-    draw(fn a ->
-      Process.sleep(50)
-      draw(fn b ->
+    draw(
+      fn a ->
         Process.sleep(50)
-        {a * b, a}
-      end, @tuple_b)
-    end, @tuple_a)
+
+        draw(
+          fn b ->
+            Process.sleep(50)
+            {a * b, a}
+          end,
+          @tuple_b
+        )
+      end,
+      @tuple_a
+    )
   end
 
   bench "!!! async_chain/2" do
     async_chain(@tuple_a, fn a ->
       Process.sleep(50)
+
       async_chain(@tuple_b, fn b ->
         Process.sleep(50)
         {a * b, a}
@@ -85,13 +102,20 @@ defmodule Witchcraft.Monad.TupleBench do
   end
 
   bench "!!! async_draw/2" do
-    async_draw(fn a ->
-      Process.sleep(50)
-      async_draw(fn b ->
+    async_draw(
+      fn a ->
         Process.sleep(50)
-        {a * b, a}
-      end, @tuple_b)
-    end, @tuple_a)
+
+        async_draw(
+          fn b ->
+            Process.sleep(50)
+            {a * b, a}
+          end,
+          @tuple_b
+        )
+      end,
+      @tuple_a
+    )
   end
 
   # -------- #
@@ -121,5 +145,4 @@ defmodule Witchcraft.Monad.TupleBench do
       return(a * b)
     end
   end
-
 end

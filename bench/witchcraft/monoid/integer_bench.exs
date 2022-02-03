@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monoid.IntegerBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Monoid
 
@@ -16,8 +18,8 @@ defmodule Witchcraft.Monoid.IntegerBench do
   # Monoid #
   ##########
 
-  bench "empty/1",  do: empty(@int)
-  bench "empty?/1", do: empty?(@int)
+  bench("empty/1", do: empty(@int))
+  bench("empty?/1", do: empty?(@int))
 
   # ---------- #
   # Large Data #
@@ -25,7 +27,6 @@ defmodule Witchcraft.Monoid.IntegerBench do
 
   @big_int 1_234_567_890
 
-  bench "$$$ empty/1",  do: empty(@int)
-  bench "$$$ empty?/1", do: empty?(@int)
-
+  bench("$$$ empty/1", do: empty(@int))
+  bench("$$$ empty?/1", do: empty?(@int))
 end

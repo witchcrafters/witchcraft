@@ -1,4 +1,6 @@
 defmodule Witchcraft.Semigroup.FunctionBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Semigroup
 
@@ -10,7 +12,7 @@ defmodule Witchcraft.Semigroup.FunctionBench do
   # Data Types #
   # ---------- #
 
-  def fun(x), do: "#{inspect x}-#{inspect x}"
+  def fun(x), do: "#{inspect(x)}-#{inspect(x)}"
 
   # -------------- #
   # Test Functions #
@@ -23,22 +25,21 @@ defmodule Witchcraft.Semigroup.FunctionBench do
   ##########
 
   bench "naive compose function" do
-    fn(f, g) ->
-      fn x -> x |> f.() |> g.() end
-    end.(&fun/1, &twice/1)
+    (fn f, g ->
+       fn x -> x |> f.() |> g.() end
+     end).(&fun/1, &twice/1)
   end
 
   #############
   # Semigroup #
   #############
 
-  bench "append/2", do: append(&fun/1, &twice/1)
-  bench "repeat/2", do: repeat(&fun/1, times: 100)
+  bench("append/2", do: append(&fun/1, &twice/1))
+  bench("repeat/2", do: repeat(&fun/1, times: 100))
 
   # --------- #
   # Operators #
   # --------- #
 
-  bench "<>/2", do: (&fun/1) <> (&twice/1)
-
+  bench("<>/2", do: (&fun/1) <> &twice/1)
 end

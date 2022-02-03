@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monoid.FunctionBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Monoid
 
@@ -16,7 +18,6 @@ defmodule Witchcraft.Monoid.FunctionBench do
   # Monoid #
   ##########
 
-  bench "empty/1",  do: empty(@fun)
-  bench "empty?/1", do: empty?(@fun)
-
+  bench("empty/1", do: empty(@fun))
+  bench("empty?/1", do: empty?(@fun))
 end

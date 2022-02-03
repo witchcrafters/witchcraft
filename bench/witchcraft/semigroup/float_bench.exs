@@ -1,4 +1,6 @@
 defmodule Witchcraft.Semigroup.FloatBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Semigroup
 
@@ -17,20 +19,20 @@ defmodule Witchcraft.Semigroup.FloatBench do
   # Kernel #
   ##########
 
-  bench "Kernel.+/2", do: @float_a + @float_b
+  bench("Kernel.+/2", do: @float_a + @float_b)
 
   #############
   # Semigroup #
   #############
 
-  bench "append/2", do: append(@float_a, @float_b)
-  bench "repeat/2", do: repeat(@float_a, times: 100)
+  bench("append/2", do: append(@float_a, @float_b))
+  bench("repeat/2", do: repeat(@float_a, times: 100))
 
   # --------- #
   # Operators #
   # --------- #
 
-  bench "<>/2", do: @float_a <> @float_b
+  bench("<>/2", do: @float_a <> @float_b)
 
   # ---------- #
   # Large Data #
@@ -39,8 +41,7 @@ defmodule Witchcraft.Semigroup.FloatBench do
   @big_float_a 1_234_567.890
   @big_float_b 9_876.6543210
 
-  bench "$$$ Kernel.+/2", do: @big_float_a + @big_float_b
-  bench "$$$ append/2",   do: append(@big_float_a, @big_float_b)
-  bench "$$$ <>/2",       do: @big_float_a <> @big_float_b
-
+  bench("$$$ Kernel.+/2", do: @big_float_a + @big_float_b)
+  bench("$$$ append/2", do: append(@big_float_a, @big_float_b))
+  bench("$$$ <>/2", do: @big_float_a <> @big_float_b)
 end

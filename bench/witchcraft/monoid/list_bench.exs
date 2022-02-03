@@ -1,4 +1,6 @@
 defmodule Witchcraft.Monoid.ListBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Monoid
 
@@ -16,8 +18,8 @@ defmodule Witchcraft.Monoid.ListBench do
   # Monoid #
   ##########
 
-  bench "empty/1",  do: empty(@list)
-  bench "empty?/1", do: empty?(@list)
+  bench("empty/1", do: empty(@list))
+  bench("empty?/1", do: empty?(@list))
 
   # ---------- #
   # Large Data #
@@ -25,7 +27,6 @@ defmodule Witchcraft.Monoid.ListBench do
 
   @big_list 0..100_000 |> Enum.to_list()
 
-  bench "$$$ empty/1",  do: empty(@big_list)
-  bench "$$$ empty?/1", do: empty?(@big_list)
-
+  bench("$$$ empty/1", do: empty(@big_list))
+  bench("$$$ empty?/1", do: empty?(@big_list))
 end

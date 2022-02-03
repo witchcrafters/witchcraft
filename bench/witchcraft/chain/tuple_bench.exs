@@ -1,4 +1,6 @@
 defmodule Witchcraft.Chain.TupleBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Chain
 

@@ -1,4 +1,6 @@
 defmodule Witchcraft.Applicative.TupleBench do
+  @moduledoc false
+
   use Benchfella
   use Witchcraft.Applicative
 
@@ -23,7 +25,6 @@ defmodule Witchcraft.Applicative.TupleBench do
   # Applicative #
   ###############
 
-  bench "of/1", do: to_tuple(@to_wrap)
-  bench "of/2", do: of(@tuple, @to_wrap)
-
+  bench("of/1", do: to_tuple(@to_wrap))
+  bench("of/2", do: of(@tuple, @to_wrap))
 end
