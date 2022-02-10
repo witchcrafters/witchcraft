@@ -5,7 +5,7 @@ defclass Witchcraft.Comonad do
   The dual of monads, `Comonad` brings an unwrapping function to `Extend`able data.
 
   Note that the unwrapping function (`extract`) *must return a value*, and is not
-  available on many data structres that have an empty element. For example,
+  available on many data structures that have an empty element. For example,
   there is no `Comonad` instance for `List` because we cannot pull a value
   out of `[]`.
 
