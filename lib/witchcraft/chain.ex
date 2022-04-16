@@ -407,7 +407,7 @@ defclass Witchcraft.Chain do
 
   @doc false
   # credo:disable-for-lines:31 Credo.Check.Refactor.Nesting
-  def do_notation(input, _chainer) do
+  def do_notation(input, chainer) do
     input
     |> normalize()
     |> Enum.reverse()
@@ -416,17 +416,10 @@ defclass Witchcraft.Chain do
         quote do: unquote(value) |> (fn unquote(assign) -> unquote(continue) end).()
 
       continue, {:<-, _, [assign, value]} ->
-        quote do
-          import Witchcraft.Chain, only: [>>>: 2]
-
-          unquote(value) >>> fn unquote(assign) -> unquote(continue) end
-        end
+        quote do: unquote(value) |> unquote(chainer).(fn unquote(assign) -> unquote(continue) end)
 
       continue, value ->
-        quote do
-          import Witchcraft.Chain, only: [>>>: 2]
-          unquote(value) >>> fn _ -> unquote(continue) end
-        end
+        quote do: unquote(value) |> unquote(chainer).(fn _ -> unquote(continue) end)
     end)
   end
 
