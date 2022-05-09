@@ -536,13 +536,12 @@ defclass Witchcraft.Apply do
   def over(fun, a, b, c), do: fun |> over(a, b) |> ap(c)
 
   @doc """
-  Extends `over` to apply arguments to a ternary function
+  Extends `over` to apply arguments to a quaternary function
 
   ## Examples
-
-      iex> fn(a, b, c) -> a * b - c end
-      ...> |> over([1, 2], [3, 4], [5, 6])
-      [-2, -3, -1, -2, 1, 0, 3, 2]
+      iex> fn(a, b, c, d) -> a * b - c + d end
+      ...> |> over([1, 2], [3, 4], [5, 6], [7, 8])
+      [5, 6, 4, 5, 6, 7, 5, 6, 8, 9, 7, 8, 10, 11, 9, 10]
 
   """
   @spec over(fun(), Apply.t(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
@@ -578,13 +577,12 @@ defclass Witchcraft.Apply do
   def async_over(fun, a, b, c), do: fun |> async_over(a, b) |> async_ap(c)
 
   @doc """
-  Extends `async_over` to apply arguments to a ternary function
+  Extends `async_over` to apply arguments to a quaternary function
 
   ## Examples
-
-      iex> fn(a, b, c) -> a * b - c end
-      ...> |> async_over([1, 2], [3, 4], [5, 6])
-      [-2, -3, -1, -2, 1, 0, 3, 2]
+      iex> fn(a, b, c, d) -> a * b - c + d end
+      ...> |> async_over([1, 2], [3, 4], [5, 6], [7, 8])
+      [5, 6, 4, 5, 6, 7, 5, 6, 8, 9, 7, 8, 10, 11, 9, 10]
 
   """
   @spec async_over(fun(), Apply.t(), Apply.t(), Apply.t(), Apply.t()) :: Apply.t()
