@@ -239,22 +239,6 @@ defclass Witchcraft.Arrow do
   defalias beside(a, b), as: :product
 
   @doc """
-  Operator alias for `product/2`.
-
-  ## Examples
-
-      iex> arr = fn x -> x - 10 end ^^^ fn y -> y <> "!" end
-      ...> arr.({42, "Hi"})
-      {32, "Hi!"}
-
-      iex> {42, "Hi"} |> (fn x -> x - 10 end ^^^ fn y -> y <> "!" end).()
-      {32, "Hi!"}
-
-  """
-  @spec Arrow.t() ^^^ Arrow.t() :: Arrow.t()
-  defalias a ^^^ b, as: :product
-
-  @doc """
   Swap positions of elements in a tuple.
 
   ## Examples
@@ -334,7 +318,7 @@ defclass Witchcraft.Arrow do
   """
   @spec fanout(Arrow.t(), Arrow.t()) :: Arrow.t()
   def fanout(arrow_f, arrow_g) do
-    arrow_f |> arrowize(&split/1) <~> (arrow_f ^^^ arrow_g)
+    arrow_f |> arrowize(&split/1) <~> product(arrow_f, arrow_g)
   end
 
   @doc """
@@ -449,7 +433,7 @@ defclass Witchcraft.Arrow do
       430
 
   """
-  @spec postcompose(Arrow.t(), fun()) :: Arrow.t()
+  @spec precompose(Arrow.t(), fun()) :: Arrow.t()
   def postcompose(arrow, fun), do: arrow <~> arrowize(arrow, fun)
 end
 

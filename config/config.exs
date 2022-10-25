@@ -2,6 +2,16 @@
 # and its dependencies with the aid of the Mix.Config module.
 import Config
 
+toBool = fn
+  "true", _ -> true
+  "false", _ -> false
+  nil, default -> default
+end
+
+config :type_class,
+  skip_check_props?: toBool.(System.get_env("SKIP_PROPS_CHECK"), true)
+
+
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,
